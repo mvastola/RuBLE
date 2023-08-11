@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "SimpleRbBLE"
+
+# FIXME: Hacky, I know. Haven't written much in the way of native Ruby extensions, so need to figure out how to do this automagically
+require_relative '../tmp/x86_64-linux/SimpleRbBLE/3.1.4/SimpleRbBLE.so'
+
+@adapter = SimpleRbBLE::Adapter.get_adapters.first
+@adapter.set_callback_on_scan_found(->(*args) { pp args }) # FIXME: segfaulting currently
+
+# Testing out connecting to a device so I can send a command
+@adapter.scan_start
+sleep 2
+@dev = @adapter.scan_get_results.detect { _1.identifier == 'S&B VOLCANO H' }
+@dev.connect
+at_exit { @dev.disconnect }
+@svc3 = @dev.services.detect { _1.uuid == '10110000-5354-4f52-5a26-4249434b454c' }
+@chars = @svc3.characteristics
+@char = @chars.detect { _1.uuid == '10110013-5354-4f52-5a26-4249434b454c' }
+
+require "irb"
+IRB.start(__FILE__)
