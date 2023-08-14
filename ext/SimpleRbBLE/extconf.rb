@@ -4,7 +4,6 @@
 #ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", __dir__)
 #require "bundler/setup" # Set up gems listed in the Gemfile.
 
-require 'rice'
 require 'mkmf-rice'
 
 # FIXME: hardcoded for now, but need to figure out best way to implement this
