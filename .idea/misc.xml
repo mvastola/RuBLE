@@ -7,12 +7,14 @@
   <component name="MakefileSettings">
     <option name="linkedExternalProjectsSettings">
       <MakefileProjectSettings>
+        <option name="buildTarget" value="SimpleRbBLE.so" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/ext/SimpleRbBLE" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/ext/SimpleRbBLE" />
           </set>
         </option>
+        <option name="switches" value="V=1" />
         <option name="version" value="2" />
       </MakefileProjectSettings>
     </option>
