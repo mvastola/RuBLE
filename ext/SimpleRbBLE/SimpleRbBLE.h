@@ -5,6 +5,7 @@
 #include <rice/stl.hpp>
 #include <simpleble/SimpleBLE.h>
 #include <simpleble/Adapter.h>
+#include "CallbackHolder.h"
 
 using namespace Rice;
 using namespace std::placeholders;
@@ -17,24 +18,27 @@ using SimpleBLE::Adapter,
         SimpleBLE::Descriptor,
         SimpleBLE::BluetoothAddressType;
 
-struct CallbackHolder {
-    Rice::Object callback_;
+using Descriptor_DT = Data_Type<Descriptor>;
+using BluetoothAddressType_DT = Enum<BluetoothAddressType>;
+using Adapter_DT = Data_Type<Adapter>;
+using Characteristic_DT = Data_Type<Characteristic>;
+using Service_DT = Data_Type<Service>;
+using Peripheral_DT = Data_Type<Peripheral>;
+using CallbackHolder_DT = Data_Type<CallbackHolder>;
 
-    CallbackHolder() = default;
-    CallbackHolder(CallbackHolder&&) = default;
-    CallbackHolder(const CallbackHolder&) = default;
+extern Module rb_mSimpleRbBLE;
+extern Descriptor_DT rb_cDescriptor;
+extern BluetoothAddressType_DT rb_cBluetoothAddressType;
+extern Adapter_DT rb_cAdapter;
+extern Characteristic_DT rb_cCharacteristic;
+extern Service_DT rb_cService;
+extern Peripheral_DT rb_cPeripheral;
+extern CallbackHolder_DT rb_cCallbackHolder;
 
-    inline void set(const Rice::Object &cb) { callback_ = cb; }
-    template<class... Types>
-    Object operator()(Types... args) const {
-        return callback_.call("call", args...);
-    }
+extern void Init_Descriptor();
+extern void Init_BluetoothAddressType();
+extern void Init_Characteristic();
+extern void Init_Service();
+extern void Init_Peripheral();
+extern void Init_Adapter();
 
-    Object fire() const {
-        return (*this)();
-    }
-//    template<class... Types>
-//    Object fire(Types... args) const {
-//        return (*this)(args...);
-//    }
-};

@@ -1,12 +1,14 @@
 #include "SimpleRbBLE.h"
 
-Data_Type<Peripheral> Init_SimpleRbBLEPeripheral(Module &rb_mSimpleRbBLE) {
-    using PeripheralReadMethod1 = ByteArray(Peripheral::*)(BluetoothUUID const &, BluetoothUUID const &);
-    using PeripheralReadMethod2 = ByteArray(Peripheral::*)(BluetoothUUID const &, BluetoothUUID const &,
-                                                           BluetoothUUID const &);
+using PeripheralReadMethod1 = ByteArray(Peripheral::*)(BluetoothUUID const &, BluetoothUUID const &);
+using PeripheralReadMethod2 = ByteArray(Peripheral::*)(BluetoothUUID const &, BluetoothUUID const &,
+                                                       BluetoothUUID const &);
 
+Peripheral_DT rb_cPeripheral;
+
+void Init_Peripheral() {
     // TODO: why is CLion indenting like this? (Need to fix code style settings)
-    return define_class_under<Peripheral>(rb_mSimpleRbBLE, "Peripheral")
+     rb_cPeripheral = define_class_under<Peripheral>(rb_mSimpleRbBLE, "Peripheral")
             .define_constructor(Constructor<Peripheral>())
             .define_method("initialized", &Peripheral::initialized)
             .define_method("identifier", &Peripheral::identifier)

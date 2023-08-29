@@ -1,0 +1,15 @@
+module SimpleRbBLE
+  class CallbackHolder
+    attr_accessor :cb
+
+    def initialize(cb)
+      @cb = cb
+    end
+
+    def set? = @cb.present?
+
+    delegate_missing_to :@cb
+    alias_method :fire, :call
+  end
+end
+

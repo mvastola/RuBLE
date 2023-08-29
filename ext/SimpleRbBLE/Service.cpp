@@ -1,7 +1,9 @@
 #include "SimpleRbBLE.h"
 
-Data_Type<Service> Init_SimpleRbBLEService(Module &rb_mSimpleRbBLE) {
-    return define_class_under<Service>(rb_mSimpleRbBLE, "Service")
+Service_DT rb_cService;
+
+void Init_Service() {
+    rb_cService = define_class_under<Service>(rb_mSimpleRbBLE, "Service")
             .define_constructor(Constructor<Service>())
             .define_method("uuid", &Service::uuid) // returns BluetoothUUID
             .define_method("data", &Service::data) // returns ByteArray
