@@ -9,35 +9,39 @@ using namespace std::string_literals;
 using OnAdapterScanFoundCallbackMap = std::map<std::string, std::shared_ptr<Data_Object<CallbackHolder>>>;
 Adapter_DT rb_cAdapter;
 
+CallbackHolder adapter_on_scan_found;
 auto get_instance() { return Rice::detail::Registries::instance; }
 
-void set_adapter_callback_on_scan_found(Adapter* adapterPtr, Object cb) {
-    static OnAdapterScanFoundCallbackMap on_adapter_scan_found_callbacks {};
-    Data_Object<Adapter> adapter(adapterPtr);
+void set_adapter_callback_on_scan_found(Adapter&  adapter, Object value) {
+//    static OnAdapterScanFoundCallbackMap on_adapter_scan_found_callbacks {};
+//    Data_Object<Adapter> adapter(adapterPtr);
 //    Adapter *chPtr = detail::From_Ruby<Adapter*>().convert(rbAdapter);
-    std::cout << "Debug: in set_callback_on_scan_found:" << ((long unsigned) static_cast<void*>(adapter.get())) << std::endl << std::flush;
-    std::cout << "Debug: rbAdapter " << adapter->address() << std::endl << std::flush;
+//    std::cout << "Debug: in set_callback_on_scan_found:" << ((long unsigned) static_cast<void*>(adapter.get())) << std::endl << std::flush;
+    std::cout << "Debug: rbAdapter " << adapter.address() << std::endl << std::flush;
+    adapter_on_scan_found.set(value);
+    std::cout << "Adapter Callback Set for " << adapter.address() << std::endl << std::flush;
 //    rb_need_block();
 //    VALUE rbCb = rb_block_proc();
 
-    const SimpleBLE::BluetoothAddress addr = adapter->address();
-    on_adapter_scan_found_callbacks[addr] = std::make_shared<Data_Object<CallbackHolder>>(cb);
+//    const SimpleBLE::BluetoothAddress addr = adapter->address();
+//    on_adapter_scan_found_callbacks[addr] = std::make_shared<Data_Object<CallbackHolder>>(cb);
 //    adapter.iv_set("@scan_found_callback", ch);
-    std::function<void (SimpleBLE::Peripheral)> c_callback = [&addr] (Peripheral p) -> void {
-        std::cout << "Debug: in scan found cb: " << "foo" << std::endl << std::flush;
+//    std::function<void (SimpleBLE::Peripheral)> c_callback = [&addr] (Peripheral p) -> void {
+//        std::cout << "Debug: in scan found cb: " << "foo" << std::endl << std::flush;
 //        std::cout << "Debug: rbAdapter " << adapter->address() << std::endl << std::flush;
 //        on_adapter_scan_found_callbacks[addr]->fire();
-    };
-    adapter->set_callback_on_scan_found(c_callback);
+//    };
+//    adapter->set_callback_on_scan_found(c_callback);
 
 }
 
-void fire_adapter_callback_on_scan_found(std::shared_ptr<Adapter> adapter, Peripheral peripheral) {
+void fire_adapter_callback_on_scan_found(Adapter &adapter, Rice::Object value) {
 
 //    std::cout << "Debug: in fire_callback_on_scan_found: " << ((long unsigned) static_cast<void*>(adapter.get())) << std::endl << std::flush;
 //    Data_Object<Adapter> adapter(realAdapter.get(), false);
 
-    std::cout << "Debug: rbAdapter " << adapter->address() << std::endl << std::flush;
+    std::cout << "Debug: rbAdapter " << adapter.address() << std::endl << std::flush;
+    adapter_on_scan_found.fire(value);
 //    Data_Object<Adapter> adapter(realAdapter, false);
 
 //    (*globalCallback)->fire();
@@ -46,7 +50,7 @@ void fire_adapter_callback_on_scan_found(std::shared_ptr<Adapter> adapter, Perip
 //    cb->fire();
 //    Data_Object<Adapter> adapter(realAdapter, false);
 //    rb_cCallbackHolder
-//    Object callback = adapter.iv_get("@scan_found_callback");
+//    Object callback = adapter->iv_get("@scan_found_callback");
 //    if (callback.is_nil()) {
 //        std::cout << "@scan_found_callback is nil. Skipping." << std::endl << std::flush;
 //        return;
@@ -94,9 +98,9 @@ void Init_Adapter() {
     // FIXME: this is not working currently (segfaulting, IIRC). Need to figure out correct way to fire a ruby block
     // on a C callback. Example @ https://github.com/jasonroelofs/rice/blob/master/sample/callbacks/sample_callbacks.cpp,
     // but I could be missing something.
-    .define_method("set_callback_on_scan_found", set_adapter_callback_on_scan_found);
+    .define_method("set_callback_on_scan_found", set_adapter_callback_on_scan_found)
 //    .define_method("set_callback_on_scan_found", &set_adapter_callback_on_scan_found, Arg("cb").keepAlive());
-//    .define_method("fire_callback_on_scan_found", &fire_adapter_callback_on_scan_found);
+    .define_method("fire_callback_on_scan_found", &fire_adapter_callback_on_scan_found);
 
     // TODO:
     //    virtual ~Adapter()
