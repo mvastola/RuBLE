@@ -12,3 +12,4 @@ tmp/
 {cmake-,}build*/
 Makefile
 tmp/
+.gdb_history

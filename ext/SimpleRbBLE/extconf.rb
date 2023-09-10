@@ -11,8 +11,11 @@ require 'mkmf-rice'
 # build it, and statically link in the library so it's not a runtime dependency to be installed system wide.
 # Users should be able to specify a custom library path though.
 
-$CFLAGS << ' -ggdb3 -O0 -std=c++20 -fno-inline'
-$CPPFLAGS << ' -ggdb3 -O0 -std=c++20 -fno-inline'
+# Remove any builtin CXX standards version
+$CXXFLAGS.gsub!(/(\s+|\b)-?-std=c\+\+[A-Za-z0-9-]+(\s+|\b)/, ' ')
+
+$CXXFLAGS << ' -ggdb3 -O0 -std=c++23 -fno-inline'
+# $CPPFLAGS << ' -ggdb3 -O0 -std=c++23 -fno-inline'
 $libs << ' -L/usr/local/lib -lsimpleble-debug'
 
 

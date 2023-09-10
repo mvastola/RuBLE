@@ -18,11 +18,13 @@ using SimpleBLE::Adapter,
         SimpleBLE::Descriptor,
         SimpleBLE::BluetoothAddressType;
 
-#include "CallbackHolder.h"
+class AdapterProxy;
+using AdapterProxyPtr = std::shared_ptr<AdapterProxy>;
 
+#include "CallbackHolder.h"
 using Descriptor_DT = Data_Type<Descriptor>;
 using BluetoothAddressType_DT = Enum<BluetoothAddressType>;
-using Adapter_DT = Data_Type<Adapter>;
+using Adapter_DT = Data_Type<AdapterProxy>;
 using Characteristic_DT = Data_Type<Characteristic>;
 using Service_DT = Data_Type<Service>;
 using Peripheral_DT = Data_Type<Peripheral>;
@@ -43,4 +45,6 @@ extern void Init_Characteristic();
 extern void Init_Service();
 extern void Init_Peripheral();
 extern void Init_Adapter();
+extern void Init_CallbackHolder();
+
 

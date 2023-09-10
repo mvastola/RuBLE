@@ -13,4 +13,4 @@ Layout/LineLength:
   Max: 120
 
 Lint/AmbiguousOperator:
-  Enabled: false
+  Enabled: falsew

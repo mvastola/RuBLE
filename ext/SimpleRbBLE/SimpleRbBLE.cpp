@@ -1,5 +1,4 @@
 #include "SimpleRbBLE.h"
-//#include "CallbackHolder.h"
 
 Module rb_mSimpleRbBLE;
 Descriptor_DT rb_cDescriptor;
@@ -29,7 +28,6 @@ void Init_SimpleRbBLE() {
     detail::Registries::instance.instances.isEnabled = true;
     rb_mSimpleRbBLE = define_module("SimpleRbBLE");
     Init_BluetoothAddressType();
-    Init_CallbackHolder();
     Init_Descriptor();
     Init_Characteristic();
     Init_Service();

@@ -2,123 +2,45 @@
 #pragma ide diagnostic ignored "performance-unnecessary-value-param"
 #pragma ide diagnostic ignored "modernize-avoid-bind"
 #include "SimpleRbBLE.h"
-
+#include "AdapterProxyRegistry.h"
 #include <functional>
 using namespace std::string_literals;
 
-//using OnAdapterScanFoundCallbackMap = std::map<std::string, std::shared_ptr<Data_Object<CallbackHolder>>>;
 Adapter_DT rb_cAdapter;
 
-//CallbackHolder adapter_on_scan_found;
-
-//void set_adapter_callback_on_scan_found(Adapter& adapter, Object value) {
-
-//    static OnAdapterScanFoundCallbackMap on_adapter_scan_found_callbacks {};
-//    Data_Object<Adapter> adapter(adapterPtr);
-//    Adapter *chPtr = detail::From_Ruby<Adapter*>().convert(rbAdapter);
-//    std::cout << "Debug: in set_callback_on_scan_found:" << ((long unsigned) static_cast<void*>(adapter.get())) << std::endl << std::flush;
-//    std::cout << "Debug: rbAdapter " << adapter.address() << std::endl << std::flush;
-//    adapter_on_scan_found.set(value);
-//    std::cout << "Adapter Callback Set for " << adapter.address() << std::endl << std::flush;
-//    rb_need_block();
-//    VALUE rbCb = rb_block_proc();
-
-//    const SimpleBLE::BluetoothAddress addr = adapter->address();
-//    on_adapter_scan_found_callbacks[addr] = std::make_shared<Data_Object<CallbackHolder>>(cb);
-//    adapter.iv_set("@scan_found_callback", ch);
-//    std::function<void (SimpleBLE::Peripheral)> c_callback = [&addr] (Peripheral p) -> void {
-//        std::cout << "Debug: in scan found cb: " << "foo" << std::endl << std::flush;
-//        std::cout << "Debug: rbAdapter " << adapter->address() << std::endl << std::flush;
-//        on_adapter_scan_found_callbacks[addr]->fire();
-//    };
-//    adapter->set_callback_on_scan_found(c_callback);
-
-//}
-
-//void fire_adapter_callback_on_scan_found(Adapter &adapter, Rice::Object value) {
-
-//    std::cout << "Debug: in fire_callback_on_scan_found: " << ((long unsigned) static_cast<void*>(adapter.get())) << std::endl << std::flush;
-//    Data_Object<Adapter> adapter(realAdapter.get(), false);
-
-//    std::cout << "Debug: rbAdapter " << adapter.address() << std::endl << std::flush;
-//    adapter_on_scan_found.fire(value);
-//    Data_Object<Adapter> adapter(realAdapter, false);
-
-//    (*globalCallback)->fire();
-
-    //    auto cb = Data_Object<CallbackHolder>(globalCallbackPtr.get(), false);
-//    cb->fire();
-//    Data_Object<Adapter> adapter(realAdapter, false);
-//    rb_cCallbackHolder
-//    Object callback = adapter->iv_get("@scan_found_callback");
-//    if (callback.is_nil()) {
-//        std::cout << "@scan_found_callback is nil. Skipping." << std::endl << std::flush;
-//        return;
-//    }
-//    callback.call("call", peripheral);
-//    std::cout << std::flush;
-//}
-
-//void setup_adapter_callbacks(Adapter &realAdapter) {
-//        std::cout << "Debug: in setup_callbacks: " << ((long unsigned) static_cast<void*>(adapter.get())) << std::endl << std::flush;
-//    Data_Object<Adapter> adapter(realAdapter, false);
-//    adapter->set_callback_on_scan_found([&adapter](Peripheral realPeripheral) {
-//        Data_Object<Peripheral> peripheral(realPeripheral, false);
-//        adapter.call("fire_on_scan_found", peripheral);
-//    });
-//
-//    auto ownedAdapter = detail::From_Ruby<Adapter>::convert()
-//    adapter->set_callback_on_scan_found([adapter] (Peripheral p) -> void {
-//        std::cout << "Debug: cb " << (*globalCallback).inspect() << std::endl << std::flush;
-
-//        globalCallbackPtr->fire();
-//        auto cb = Data_Object<CallbackHolder>(globalCallbackPtr.get(), false);
-//        cb->fire();
-//        globalCallback->fire();
-//        (*globalCallback)->fire();
-//        fire_adapter_callback_on_scan_found(adapter, p);
-//}
-
-void adapter_setup_callbacks(Object adapter) {
-    auto onScanFound = [&adapter](Peripheral per) {
-        std::cout << "fire_on_scan_found begin" << std::endl;
-        adapter.call("fire_on_scan_found", per);
-        std::cout << "fire_on_scan_found end" << std::endl;
-    };
-    Adapter *adapt = detail::From_Ruby<Adapter*>().convert(adapter.value());
-    adapt->set_callback_on_scan_found(onScanFound);
-}
-
 void Init_Adapter() {
-    rb_cAdapter = define_class_under<Adapter>(rb_mSimpleRbBLE, "Adapter");
+    
 //    auto adapterFoundCallbackMap = define_map_under<std::map<
 //            std::string,
 //            std::shared_ptr<Adapter>>
 //            >(rb_mSimpleRbBLE, "adapterFoundCallbackMap");
-    rb_cAdapter
-            .define_constructor(Constructor<Adapter>())
-            .define_singleton_function("bluetooth_enabled", &Adapter::bluetooth_enabled) // returns bool
-            .define_singleton_function("get_adapters", &Adapter::get_adapters, Return().takeOwnership()) // returns vector<Adapter>
-            .define_method("initialized", &Adapter::initialized)
-            .define_method("identifier", &Adapter::identifier)
-            .define_method("address", &Adapter::address) // returns BluetoothAddress (alias of std::string)
-            .define_method("scan_start", &Adapter::scan_start)
-            .define_method("scan_stop", &Adapter::scan_stop)
-            .define_method("scan_for", &Adapter::scan_for) // takes (int timeout_ms)
-            .define_method("scan_is_active", &Adapter::scan_is_active)
-            .define_method("scan_get_results", &Adapter::scan_get_results) // returns vector<Peripheral>
-            .define_method("get_paired_peripherals", &Adapter::get_paired_peripherals) // returns vector<Peripheral>
+    rb_cAdapter = define_class_under<AdapterProxy>(rb_mSimpleRbBLE, "Adapter")
+//            .define_constructor(Constructor<AdapterProxy>())
+            .define_singleton_function("bluetooth_enabled", &AdapterProxy::bluetooth_enabled) // returns bool
+            .define_singleton_function("get_adapters", &AdapterProxy::get_adapters, Return().takeOwnership()) // returns vector<Adapter>
+            .define_method("initialized", &AdapterProxy::initialized)
+            .define_method("identifier", &AdapterProxy::identifier)
+            .define_method("address", &AdapterProxy::address) // returns BluetoothAddress (alias of std::string)
+            .define_method("scan_start", &AdapterProxy::scan_start)
+            .define_method("scan_stop", &AdapterProxy::scan_stop)
+            .define_method("scan_for", &AdapterProxy::scan_for) // takes (int timeout_ms)
+            .define_method("scan_is_active", &AdapterProxy::scan_is_active)
+            .define_method("scan_get_results", &AdapterProxy::scan_get_results) // returns vector<Peripheral>
+            .define_method("get_paired_peripherals", &AdapterProxy::get_paired_peripherals) // returns vector<Peripheral>
+            .define_method("on_scan_start", &AdapterProxy::on_scan_start)
+            .define_method("on_scan_stop", &AdapterProxy::on_scan_stop)
+            .define_method("on_scan_update", &AdapterProxy::on_scan_update)
+            .define_method("on_scan_find", &AdapterProxy::on_scan_find)
+            .define_method("fire_scan_started", &AdapterProxy::fire_on_scan_started)
+            .define_method("fire_scan_stopped", &AdapterProxy::fire_on_scan_stopped)
+            .define_method("fire_scan_updated", &AdapterProxy::fire_on_scan_updated)
+            .define_method("fire_scan_found", &AdapterProxy::fire_on_scan_found)
+            ;
 
-    // FIXME: this is not working currently (segfaulting, IIRC). Need to figure out correct way to fire a ruby block
+
+    // FIXME: Callbacks are not working currently (segfaulting, IIRC). Need to figure out correct way to implement
     // on a C callback. Example @ https://github.com/jasonroelofs/rice/blob/master/sample/callbacks/sample_callbacks.cpp,
     // but I could be missing something.
-      .define_method("setup_callbacks", &adapter_setup_callbacks);
-//    .define_method("set_callback_on_scan_found", set_adapter_callback_on_scan_found)
-//    .define_method("set_callback_on_scan_found", &set_adapter_callback_on_scan_found, Arg("cb").keepAlive());
-//    .define_method("fire_callback_on_scan_found", &fire_adapter_callback_on_scan_found);
-
-    // TODO:
-    //    virtual ~Adapter()
     //    void set_callback_on_scan_start(std::function<void()> on_scan_start)
     //    void set_callback_on_scan_stop(std::function<void()> on_scan_stop)
     //    void set_callback_on_scan_updated(std::function<void(Peripheral)> on_scan_updated)
