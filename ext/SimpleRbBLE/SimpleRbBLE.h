@@ -5,7 +5,6 @@
 #include <rice/stl.hpp>
 #include <simpleble/SimpleBLE.h>
 #include <simpleble/Adapter.h>
-#include "CallbackHolder.h"
 
 using namespace Rice;
 using namespace std::placeholders;
@@ -14,9 +13,12 @@ using SimpleBLE::Adapter,
         SimpleBLE::Service,
         SimpleBLE::ByteArray,
         SimpleBLE::BluetoothUUID,
+        SimpleBLE::BluetoothAddress,
         SimpleBLE::Characteristic,
         SimpleBLE::Descriptor,
         SimpleBLE::BluetoothAddressType;
+
+#include "CallbackHolder.h"
 
 using Descriptor_DT = Data_Type<Descriptor>;
 using BluetoothAddressType_DT = Enum<BluetoothAddressType>;
