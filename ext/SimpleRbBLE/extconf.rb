@@ -15,7 +15,7 @@ require 'mkmf-rice'
 $CXXFLAGS.gsub!(/(\s+|\b)-?-std=c\+\+[A-Za-z0-9-]+(\s+|\b)/, ' ')
 
 $CXXFLAGS << ' -ggdb3 -O0 -std=c++23 -fno-inline'
-# $CPPFLAGS << ' -ggdb3 -O0 -std=c++23 -fno-inline'
+#$CPPFLAGS << ' '
 $libs << ' -L/usr/local/lib -lsimpleble-debug'
 
 

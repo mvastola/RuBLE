@@ -19,9 +19,9 @@ using SimpleBLE::Adapter,
         SimpleBLE::BluetoothAddressType;
 
 class AdapterProxy;
+class CallbackHolder;
 using AdapterProxyPtr = std::shared_ptr<AdapterProxy>;
 
-#include "CallbackHolder.h"
 using Descriptor_DT = Data_Type<Descriptor>;
 using BluetoothAddressType_DT = Enum<BluetoothAddressType>;
 using Adapter_DT = Data_Type<AdapterProxy>;

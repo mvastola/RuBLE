@@ -27,6 +27,7 @@ extern "C"
 void Init_SimpleRbBLE() {
     detail::Registries::instance.instances.isEnabled = true;
     rb_mSimpleRbBLE = define_module("SimpleRbBLE");
+    Init_CallbackHolder();
     Init_BluetoothAddressType();
     Init_Descriptor();
     Init_Characteristic();

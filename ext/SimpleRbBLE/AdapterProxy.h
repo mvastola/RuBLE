@@ -3,6 +3,7 @@
 #pragma once
 
 #include "SimpleRbBLE.h"
+#include "CallbackHolder.h"
 #include <functional>
 #include <algorithm>
 #include <ranges>
@@ -11,17 +12,13 @@ using namespace std::string_literals;
 class AdapterProxy;
 
 class AdapterProxy {
-public:
-    using NoArgCallback = std::function<void()>;
-    using UnaryPeripheralCallback = std::function<void(Peripheral)>;
-
-private:
+    AdapterProxyPtr::weak_type _self;
     std::shared_ptr<Adapter> _adapter = nullptr;
     BluetoothAddress _addr;
-    CallbackHolder _on_scan_start {};
-    CallbackHolder _on_scan_stop {};
-    CallbackHolder _on_scan_update {};
-    CallbackHolder _on_scan_find {};
+    std::shared_ptr<CallbackHolder> _on_scan_start;
+    std::shared_ptr<CallbackHolder> _on_scan_stop;
+    std::shared_ptr<CallbackHolder> _on_scan_update;
+    std::shared_ptr<CallbackHolder> _on_scan_find;
 
     explicit AdapterProxy(const std::shared_ptr<Adapter> &adapter);
     void setup_callbacks();
@@ -51,10 +48,10 @@ public:
 
     std::vector<Peripheral> scan_get_results();
 
-    void on_scan_start(const Object& on_scan_start);
-    void on_scan_stop(const Object& on_scan_stop);
-    void on_scan_update(const Object& on_scan_updated);
-    void on_scan_find(const Object& on_scan_found);
+    void on_scan_start(Object on_scan_start);
+    void on_scan_stop(Object on_scan_stop);
+    void on_scan_update(Object on_scan_updated);
+    void on_scan_find(Object on_scan_found);
     std::vector<Peripheral> get_paired_peripherals();
 
 //private:

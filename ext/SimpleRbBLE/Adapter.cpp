@@ -27,14 +27,14 @@ void Init_Adapter() {
             .define_method("scan_is_active", &AdapterProxy::scan_is_active)
             .define_method("scan_get_results", &AdapterProxy::scan_get_results) // returns vector<Peripheral>
             .define_method("get_paired_peripherals", &AdapterProxy::get_paired_peripherals) // returns vector<Peripheral>
-            .define_method("on_scan_start", &AdapterProxy::on_scan_start)
-            .define_method("on_scan_stop", &AdapterProxy::on_scan_stop)
-            .define_method("on_scan_update", &AdapterProxy::on_scan_update)
-            .define_method("on_scan_find", &AdapterProxy::on_scan_find)
+            .define_method("on_scan_start", &AdapterProxy::on_scan_start, Arg("cb").keepAlive())
+            .define_method("on_scan_stop", &AdapterProxy::on_scan_stop, Arg("cb").keepAlive())
+            .define_method("on_scan_update", &AdapterProxy::on_scan_update, Arg("cb").keepAlive())
+            .define_method("on_scan_find", &AdapterProxy::on_scan_find, Arg("cb").keepAlive())
             .define_method("fire_scan_started", &AdapterProxy::fire_on_scan_started)
             .define_method("fire_scan_stopped", &AdapterProxy::fire_on_scan_stopped)
-            .define_method("fire_scan_updated", &AdapterProxy::fire_on_scan_updated)
-            .define_method("fire_scan_found", &AdapterProxy::fire_on_scan_found)
+            .define_method("fire_scan_updated", &AdapterProxy::fire_on_scan_updated, Arg("peripheral").keepAlive())
+            .define_method("fire_scan_found", &AdapterProxy::fire_on_scan_found, Arg("peripheral").keepAlive())
             ;
 
 

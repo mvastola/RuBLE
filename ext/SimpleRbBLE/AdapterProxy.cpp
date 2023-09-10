@@ -1,9 +1,13 @@
 #include "AdapterProxy.h"
 #include "AdapterProxyRegistry.h"
 
-AdapterProxy::AdapterProxy(const std::shared_ptr<Adapter> &adapter) : _adapter(adapter), _addr(_adapter->address()) {
-    setup_callbacks();
-}
+AdapterProxy::AdapterProxy(const std::shared_ptr<Adapter> &adapter) :
+    _adapter(adapter),
+    _addr(_adapter->address()),
+    _on_scan_start(std::make_shared<CallbackHolder>()),
+    _on_scan_stop(std::make_shared<CallbackHolder>()),
+    _on_scan_update(std::make_shared<CallbackHolder>()),
+    _on_scan_find(std::make_shared<CallbackHolder>()) {}
 
 bool AdapterProxy::initialized() const { return _adapter && _adapter->initialized(); }
 
@@ -47,15 +51,19 @@ std::vector<AdapterProxyPtr> AdapterProxy::get_adapters() {
     return result;
 }
 
-void AdapterProxy::on_scan_start(const Object& new_cb) { _on_scan_start.set(new_cb); }
-void AdapterProxy::on_scan_stop(const Object& new_cb) { _on_scan_stop.set(new_cb); }
-void AdapterProxy::on_scan_update(const Object& new_cb) { _on_scan_update.set(new_cb); }
-void AdapterProxy::on_scan_find(const Object& new_cb) { _on_scan_find.set(new_cb); }
+void AdapterProxy::on_scan_start(Object new_cb) { _on_scan_start->set(new_cb); }
+void AdapterProxy::on_scan_stop(Object new_cb) { _on_scan_stop->set(new_cb); }
+void AdapterProxy::on_scan_update(Object new_cb) { _on_scan_update->set(new_cb); }
+void AdapterProxy::on_scan_find(Object new_cb) {
+    std::cout << "Begin setting on_scan_find cb" << std::endl;
+    _on_scan_find->set(new_cb);
+    std::cout << "End setting on_scan_find cb" << std::endl;
+}
 
-void AdapterProxy::fire_on_scan_started() { _on_scan_start.fire(); }
-void AdapterProxy::fire_on_scan_stopped() { _on_scan_stop.fire(); }
-void AdapterProxy::fire_on_scan_updated(const Peripheral& peripheral) { _on_scan_update.fire(peripheral); }
-void AdapterProxy::fire_on_scan_found(const Peripheral& peripheral) { _on_scan_find.fire(peripheral); }
+void AdapterProxy::fire_on_scan_started() { _on_scan_start->fire(); }
+void AdapterProxy::fire_on_scan_stopped() { _on_scan_stop->fire(); }
+void AdapterProxy::fire_on_scan_updated(const Peripheral& peripheral) { _on_scan_update->fire(peripheral); }
+void AdapterProxy::fire_on_scan_found(const Peripheral& peripheral) { _on_scan_find->fire(peripheral); }
 
 void AdapterProxy::setup_callbacks() {
     _adapter->set_callback_on_scan_start([this] () { this->fire_on_scan_started(); });

@@ -5,14 +5,21 @@
 using namespace Rice;
 
 struct CallbackHolder {
-    Rice::Object _cb = Qnil;
+    Rice::Object _cb;
 
-    constexpr CallbackHolder() = default;
+    CallbackHolder();
     void set(Rice::Object);
     void clear();
-//    void fire(Rice::Object);
-    template<typename Ret, class... Types> Ret fire(Types&...);
     operator bool() const; // NOLINT(*-explicit-constructor)
+    template<class... Types> void fire(Types& ...types) {
+        if (!(*this)) {
+            std::cout << "Could not Fire: no cb set" << std::endl << std::flush;
+            return;
+        }
+
+        std::cout << "Fire!!" << std::endl << std::flush;
+        _cb.call("call", types...); // NOLINT(*-unnecessary-value-param)
+    }
+
 };
 
-extern void Init_CallbackHolder();

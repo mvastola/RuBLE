@@ -14,6 +14,8 @@ void Init_CallbackHolder() {
             ;
 }
 
+CallbackHolder::CallbackHolder() : _cb(Qnil) {}
+
 void CallbackHolder::set(Object cb) { _cb = cb; } // NOLINT(*-unnecessary-value-param)
 
 CallbackHolder::operator bool() const {
@@ -24,15 +26,5 @@ void CallbackHolder::clear() {
     _cb = Qnil;
 }
 
-template<typename Ret, class... Types>
-Ret CallbackHolder::fire(Types &...types) {
-    if (!(*this)) {
-        std::cout << "Could not Fire: no cb set" << std::endl << std::flush;
-        return;
-    }
-
-    std::cout << "Fire!!" << std::endl << std::flush;
-    _cb.call("call", types...); // NOLINT(*-unnecessary-value-param)
-}
 
 #pragma clang diagnostic pop

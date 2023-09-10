@@ -20,7 +20,10 @@ AdapterProxyPtr AdapterProxyRegistry::operator[](const SimpleBLE::BluetoothAddre
 AdapterProxyPtr AdapterProxyRegistry::fetch(const Adapter &adapter) {
     std::shared_ptr<Adapter> adapter_ptr = std::make_shared<Adapter>(adapter);
     AdapterProxyPtr proxy_ptr = std::shared_ptr<AdapterProxy>(new AdapterProxy(adapter_ptr));
+    proxy_ptr->_self = proxy_ptr;
 
     auto [it, created] = _registry.try_emplace(proxy_ptr->address(), proxy_ptr);
-    return it->second;
+    if (created) proxy_ptr->setup_callbacks();
+
+    return it->second->_self.lock();
 }
