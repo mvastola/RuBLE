@@ -3,5 +3,9 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/contrib/SimpleBLE" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/contrib/SimpleBLE/build_simpleble/_deps/fmt-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/contrib/SimpleBLE/simpleble/build/_deps/fmt-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/contrib/rice" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/private/libcpuidoverride" vcs="Git" />
   </component>
 </project>

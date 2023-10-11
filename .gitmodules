@@ -1,3 +1,9 @@
 [submodule "contrib/SimpleBLE"]
 	path = contrib/SimpleBLE
 	url = https://github.com/OpenBluetoothToolbox/SimpleBLE.git
+[submodule "contrib/rice"]
+	path = contrib/rice
+	url = https://github.com/jasonroelofs/rice/
+[submodule "contrib/libdemangle"]
+	path = contrib/libdemangle
+	url = https://github.com/radareorg/libdemangle.git

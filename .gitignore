@@ -13,3 +13,5 @@ tmp/
 Makefile
 tmp/
 .gdb_history
+*.patch
+mkmf.log

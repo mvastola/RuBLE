@@ -14,10 +14,38 @@ require 'mkmf-rice'
 # Remove any builtin CXX standards version
 $CXXFLAGS.gsub!(/(\s+|\b)-?-std=c\+\+[A-Za-z0-9-]+(\s+|\b)/, ' ')
 
-$CXXFLAGS << ' -ggdb3 -O0 -std=c++23 -fno-inline'
-#$CPPFLAGS << ' '
-$libs << ' -L/usr/local/lib -lsimpleble-debug'
+# just tooling around here for now
+new_cppflags = %w[
+  -ggdb3
+	-O0
+	-std=c++23
+	-fno-inline
+	-fno-eliminate-unused-debug-symbols
+	-fno-eliminate-unused-debug-types
+	-femit-class-debug-always
+	-fno-indirect-inlining
+	-fno-partial-inlining
+	-fno-omit-frame-pointer
+	-ggnu-pubnames
+	-ginline-points
+	-gstatement-frontiers
+	-gvariable-location-views
+	-DDEBUG
+]
 
+	#-fopt-info
+	#-ffunction-cse
+	#-fipa-reference
+	#-fipa-reference-addressable
+append_cppflags " #{new_cppflags.join(' ')}"
+pkg_config 'simpleble'
+append_ldflags ' -Wl,--no-strip-discarded -Wl,--discard-none -Wl,--ld-generated-unwind-info'
+#--gc-keep-exported --no-gc-sections 
+append_library 'simpleble-debug', 'simpleble'
+
+# Mkmf doesn't natively support subdirs
+#$srcs = Dir[File.join(__dir__, "**/*.{#{SRC_EXT.join(%q{,})}}")].sort
+#$objs = $srcs.map { _1.sub(/\.#{Regexp.union SRC_EXT}\z/, ".#{$OBJEXT}") }
 
 # I think there might be an issue in rice's override of pkg_config.. getting some intermittent issues I need to trace
 #pkg_config('simpleble')

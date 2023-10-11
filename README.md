@@ -4,6 +4,19 @@ Preliminary attempt to implement an interface to the easy-to-use [SimpleBLE](htt
 
 Currently it's just me tooling around, but some basic functionality is working. If this gets to alpha stage, I'll publish on RubyGems.
 
+## Development
+
+I'm currently debugging a few issues and built my own version of ruby-3.2.2 (with better debug info). If you have RVM, it's very easy to reproduce:
+
+1. `cd /usr/local/rvm/src`
+2. `cp -a ruby-3.2.2{,-dbg}`
+3. `cd ruby-3.2.2-dbg`
+4. `./configure -C --prefix=/usr/local/rvm/rubies/ruby-3.2.2-dbg --disable-install-doc --enable-shared --enable-debug-env --with-valgrind --enable-mkmf-verbose --enable-yjit --enable-devel --enable-dtrace STRIP=/bin/true 'CFLAGS=-fno-inline -O0 -ggdb3' 'debugflags=-fno-inline -O0 -ggdb3' # (Customize as desired)`
+5. `make all`
+6. `make install`
+
+Then, if you simply `rvm list`, you'll see a new version listed as ruby-3.2.2-dbg. To use in this project, just `cd` into the source directory and (assuming RVM is loaded) RVM will autodetect the ruby install it needs to use. From there, make sure to clear all temporary/build files for the C++ code and recompile.
+
 ## Installation
 
 TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.

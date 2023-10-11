@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "bundler/setup"
-require "SimpleRbBLE"
-
-# FIXME: Hacky, I know. Haven't written much in the way of native Ruby extensions, so need to figure out how to do this automagically
-require_relative '../tmp/x86_64-linux/SimpleRbBLE/3.1.4/SimpleRbBLE.so'
+# TODO: see if I can bypass needing to prefix commands with `bundle exec` via this:
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
+require "bundler/setup" # Set up gems listed in the Gemfile.
+Bundler.require
 
 require "irb"
 IRB.start(__FILE__)
