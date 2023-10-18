@@ -1,21 +1,21 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "modernize-pass-by-value"
 
-#include "common.h"
-#include "Callback.h"
-#include "Peripheral.h"
-#include "ruby/thread.h"
+#include "common.hpp"
+#include "Callback.hpp"
+#include "Peripheral.hpp"
+#include <ruby/thread.h>
 
 namespace SimpleRbBLE {
 
 //    Callback::Callback()  {
-//#ifdef DEBUG
+//#ifdef SIMPLERBBLE_DEBUG
 //        VALGRIND_PRINTF_BACKTRACE("Instantiating callback at address 0x%lxd", // (ruby object id %lu)",
 //                                  reinterpret_cast<uint64_t>(this));
 //#endif
 //    }
 //    Callback::~Callback() {
-//#ifdef DEBUG
+//#ifdef SIMPLERBBLE_DEBUG
 //        VALGRIND_PRINTF_BACKTRACE("Destructing callback at address 0x%lxd", // (ruby object id %lu)",
 //                                  reinterpret_cast<uint64_t>(this));
 //#endif

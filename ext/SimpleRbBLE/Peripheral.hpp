@@ -2,9 +2,9 @@
 #pragma ide diagnostic ignored "modernize-use-nodiscard"
 #pragma once
 
-#include "common.h"
-#include "Callback.h"
-#include "NamedBitSet.h"
+#include "Callback.hpp"
+#include "NamedBitSet.hpp"
+#include "NamedBitSet.ipp"
 
 namespace SimpleRbBLE {
     enum class PeripheralStatus : std::size_t {
@@ -12,25 +12,28 @@ namespace SimpleRbBLE {
     };
     class Peripheral {
     public:
-        static constexpr std::string_view StatusFlagNames[] = {
+        static constexpr const std::string_view StatusFlagNames[] = {
                 "initialized", "connected", "connectable", "paired"
         };
-        using StatusFlagSet = SimpleRbBLE::NamedBitSet<StatusFlagNames>;
+        using StatusFlagSet = NamedBitSet<StatusFlagNames>;
         using Status = SimpleRbBLE::PeripheralStatus;
 
         using DataObject = Data_Object<Peripheral>;
         using Owner = Adapter;
         using ServiceMap = std::map<BluetoothUUID, std::shared_ptr<Service>>;
+        using PartialResourceIdentifier = std::string_view;
         static bool unpair_all_on_exit;
     protected:
         Owner *_owner;
         std::shared_ptr<SimpleBLE::Peripheral> _peripheral;
         SimpleBLE::BluetoothAddress _addr;
+        SimpleBLE::BluetoothAddressType _addr_type;
         std::shared_ptr<Callback> _on_connected;
         std::shared_ptr<Callback> _on_disconnected;
         std::shared_ptr<ServiceRegistry> _service_registry;
         StatusFlagSet _service_cache_tag;
         VALUE _self = Qnil;
+        std::optional<PartialResourceIdentifier> _resource_identifier;
 
     public:
 //        static std::shared_ptr<Peripheral> create(const SimpleBLE::Peripheral &peripheral);
@@ -51,8 +54,12 @@ namespace SimpleRbBLE {
         const SimpleBLE::Peripheral &get() const;
 
         std::string identifier() const;
-        BluetoothAddress address() const;
-        BluetoothAddressType address_type() const;
+        [[nodiscard]] constexpr const BluetoothAddress &address() const;
+        [[nodiscard]] constexpr const BluetoothAddressType &address_type() const;
+
+        constexpr std::string this_resource_identifier() const;
+        constexpr ResourceUniqueIdentifier<Peripheral> full_resource_identifier() const;
+
         std::map<uint16_t, ConvertableByteArray> manufacturer_data() const;
         int16_t rssi() const;
         int16_t tx_power() const;
@@ -69,8 +76,8 @@ namespace SimpleRbBLE {
         const std::map<BluetoothUUID, std::shared_ptr<Service>> &services() const;
         std::shared_ptr<Service> operator[](const BluetoothUUID &svcUuid) const;
 
-        ConvertableByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic);
-        ConvertableByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic,
+        [[nodiscard]] ConvertableByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic);
+        [[nodiscard]] ConvertableByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic,
              BluetoothUUID const &descriptor);
         void write(BluetoothUUID const &service, BluetoothUUID const &characteristic,
                    BluetoothUUID const &descriptor, ConvertableByteArray data);
@@ -96,9 +103,15 @@ namespace SimpleRbBLE {
         friend void Init_Registries();
     };
 
+    constexpr const BluetoothAddress &Peripheral::address() const { return _addr; /*_peripheral->address();*/ }
+    constexpr const BluetoothAddressType &Peripheral::address_type() const {
+        return _addr_type;
+    }
+
     static Peripheral_DT rb_cPeripheral;
 }
 
 
 
 #pragma clang diagnostic pop
+

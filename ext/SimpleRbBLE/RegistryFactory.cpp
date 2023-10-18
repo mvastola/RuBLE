@@ -1,9 +1,9 @@
-#include "Registry.h"
-#include "RegistryFactory.h"
-#include "Adapter.h"
-#include "Peripheral.h"
-#include "Service.h"
-#include "Characteristic.h"
+#include "Registry.hpp"
+#include "RegistryFactory.hpp"
+#include "Adapter.hpp"
+#include "Peripheral.hpp"
+#include "Service.hpp"
+#include "Characteristic.hpp"
 
 namespace Rice {
     template<>

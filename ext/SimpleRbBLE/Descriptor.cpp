@@ -1,5 +1,5 @@
-#include "Descriptor.h"
-#include "Characteristic.h"
+#include "Descriptor.hpp"
+#include "Characteristic.hpp"
 
 namespace SimpleRbBLE {
     Descriptor_DT rb_cDescriptor;
@@ -12,30 +12,15 @@ namespace SimpleRbBLE {
 
     Object Descriptor::self() const { return _self; }
 
-    constexpr const Descriptor::Owner *Descriptor::owner() const { return _owner; }
-
-    constexpr Descriptor::Owner *Descriptor::owner() { return _owner; }
-
-    constexpr const Characteristic *Descriptor::characteristic() const { return _owner; }
-
-    constexpr Characteristic *Descriptor::characteristic() { return _owner; }
-
-    ConvertableByteArray Descriptor::read() { return characteristic()->read(uuid()); }
+    [[nodiscard]] ConvertableByteArray Descriptor::read() { return characteristic()->read(uuid()); }
 
     void Descriptor::write(ConvertableByteArray data) { characteristic()->write(uuid(), std::move(data)); }
 
-
-    constexpr std::string Descriptor::to_s() const {
-        return "#<SimpleRbBLE::Descriptor @uuid="s + uuid() + ">";
-    }
 
     Rice::String Descriptor::inspect() const {
         return to_s();
     }
 
-    constexpr auto Descriptor::operator<=>(const Descriptor &other) const {
-        return uuid() <=> other.uuid();
-    }
 
 
     void Init_Descriptor() {
@@ -44,7 +29,6 @@ namespace SimpleRbBLE {
                 .define_method("inspect", &Descriptor::inspect)
                 .define_method("read", &Descriptor::read)
                 .define_method("write", &Descriptor::write)
-
                 ;
     }
 

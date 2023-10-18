@@ -1,8 +1,8 @@
 #pragma once
-
-#include "common.h"
+#include "types.hpp"
 
 namespace SimpleRbBLE {
+
     struct Callback {
     protected:
         VALUE _cb = Qnil;
@@ -29,9 +29,5 @@ namespace SimpleRbBLE {
         template<typename T>
         friend void Rice::ruby_mark(T *);
     };
-}
-
-namespace Rice {
-    template<> void ruby_mark<SimpleRbBLE::Callback>(SimpleRbBLE::Callback*);
 }
 

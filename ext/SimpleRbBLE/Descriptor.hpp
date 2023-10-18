@@ -1,10 +1,12 @@
 #pragma once
+
+#include "common.hpp"
 #include <utility>
 #include <compare>
 
-#include "common.h"
 
 namespace SimpleRbBLE {
+    class Characteristic;
     class Descriptor {
     public:
         using DataObject = Descriptor_DO;
@@ -28,22 +30,40 @@ namespace SimpleRbBLE {
         Descriptor(const SimpleBLE::Descriptor &descriptor, Owner *owner);
 
         [[nodiscard]] Object self() const;
-        [[nodiscard]] constexpr const Owner *owner() const;
-        constexpr Owner *owner();
-        [[nodiscard]] constexpr const Characteristic *characteristic() const;
-        constexpr Characteristic *characteristic();
+
+        [[nodiscard]] const Owner *owner() const { return _owner; }
+        constexpr Owner *owner() { return _owner; }
+
+        [[nodiscard]] const Characteristic *characteristic() const { return _owner; }
+
+        constexpr Characteristic *characteristic() { return _owner; }
 
         [[nodiscard]] constexpr const BluetoothUUID &uuid() const { return _uuid; }
+
+        [[nodiscard]] constexpr ResourceUniqueIdentifier<Descriptor> full_resource_identifier() const;
+        [[nodiscard]] constexpr BluetoothUUID this_resource_identifier() const;
+
         ConvertableByteArray read();
         void write(ConvertableByteArray data);
 
-        [[nodiscard]] constexpr std::string to_s() const;
+        [[nodiscard]] constexpr std::string to_s() const {
+            return basic_object_inspect_start(*this) + " " + uuid() + ">";
+        }
         [[nodiscard]] Rice::String inspect() const;
 
-        constexpr auto operator<=>(const Descriptor &other) const;
+        [[nodiscard]] constexpr auto operator<=>(const Descriptor &other) const;
+
     };
+
+
+    constexpr auto Descriptor::operator<=>(const Descriptor &other) const {
+        return uuid() <=> other.uuid();
+    }
+
 } // SimpleRbBLE
 
 
 std::ostream &operator<<(std::ostream &os, const SimpleRbBLE::Descriptor &d);
+
+
 

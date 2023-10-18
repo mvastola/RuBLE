@@ -2,11 +2,18 @@
 #pragma ide diagnostic ignored "modernize-use-nodiscard"
 #pragma once
 
-#include "common.h"
-#include "Callback.h"
-#include "Registry.h"
+#include "types.hpp"
+#include "Callback.hpp"
+#include "Registry.hpp"
+
+#include <unordered_set>
 
 namespace SimpleRbBLE {
+    namespace Rice = ::Rice;
+
+    template<Identifiers::OwnerTypedResource T>
+    class ResourceUniqueIdentifier;
+
     class Adapter {
     public:
         using Owner = nullptr_t;
@@ -68,9 +75,13 @@ namespace SimpleRbBLE {
         std::unordered_set<std::string> status_flags() const;
         std::string to_s() const;
 
-        friend class Registry<SimpleBLE::BluetoothAddress, Adapter, SimpleBLE::Adapter>;
+        constexpr ResourceUniqueIdentifier<Adapter> full_resource_identifier() const;
+        constexpr BluetoothAddress this_resource_identifier() const;
+
+        template<typename Key, class ProxyClass, class Value>
+        friend class Registry;
         template<typename T>
-        friend void Rice::ruby_mark(T *);
+        friend void ::Rice::ruby_mark(T *);
 
         friend void Init_Adapter();
         friend void Init_Registries();
@@ -79,10 +90,5 @@ namespace SimpleRbBLE {
 
     static inline Adapter_DT rb_cAdapter;
 }
-
-namespace Rice {
-    template<> void ruby_mark<SimpleRbBLE::Adapter>(SimpleRbBLE::Adapter *);
-}
-
 
 #pragma clang diagnostic pop

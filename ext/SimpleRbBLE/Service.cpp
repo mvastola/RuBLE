@@ -1,12 +1,12 @@
-#include "Service.h"
+#include "Service.hpp"
 
 #include <utility>
-#include "RubyQueue.h"
-#include "Callback.h"
-#include "Characteristic.h"
-#include "Registry.h"
-#include "RegistryFactory.h"
-#include "Peripheral.h"
+#include "RubyQueue.hpp"
+#include "Callback.hpp"
+#include "Characteristic.hpp"
+#include "Registry.hpp"
+#include "RegistryFactory.hpp"
+#include "Peripheral.hpp"
 
 namespace SimpleRbBLE {
     Service::Service(const SimpleBLE::Service &service, Owner *owner) :
@@ -23,12 +23,6 @@ namespace SimpleRbBLE {
     SimpleBLE::Service &Service::get() { return *_service; }
 
     const SimpleBLE::Service &Service::get() const { return *_service; }
-
-    constexpr const Service::Owner *Service::owner() const { return _owner; }
-    constexpr Service::Owner *Service::owner() { return _owner; }
-    constexpr const Peripheral *Service::peripheral() const { return owner(); }
-    constexpr Peripheral *Service::peripheral() { return owner(); }
-
 
     ConvertableByteArray Service::data() const { return _service->data(); }
 
@@ -94,16 +88,7 @@ namespace SimpleRbBLE {
 
     std::string Service::to_s() const {
         std::ostringstream oss;
-        String superStr(rb_call_super(0, nullptr));
-        if (superStr.test() && superStr.length() > 0) {
-            std::string super(superStr.str());
-            super.pop_back();
-            oss << super;
-        } else {
-            oss << "#<" << human_type_name<decltype(*this)>();
-            oss << ":0x" << std::hex << reinterpret_cast<uint64_t>(this) << std::dec;
-        }
-        oss << " ";
+        oss << basic_object_inspect_start(*this) << " ";
         oss << "@uuid=\"" << uuid() << "\" ";
         oss << "@data=\"" << data() << "\" ";
 //        oss << "#characteristics=" << characteristics().size();
@@ -119,7 +104,9 @@ namespace SimpleRbBLE {
                 .define_method("data", &Service::data) // returns ByteArray
                 .define_method("characteristics", &Service::characteristics) // returns std::vector<Characteristic>
                 .define_method("inspect", &Service::to_s);
+        define_class_under<std::shared_ptr<SimpleRbBLE::Service>>(rb_mSimpleRbBLE, "ServicePtr");
     }
+
 }
 
 namespace Rice {

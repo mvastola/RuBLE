@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CLionExternalBuildManager">
     <target id="51196341-088e-4420-a277-3af3dde1691e" name="debug-wrap" defaultType="MAKE">
-      <configuration id="ec7a95a8-a0e7-417f-a226-e3c019b3f908" name="debug-wrap" />
+      <configuration id="ec7a95a8-a0e7-417f-a226-e3c019b3f908" name="debug-wrap" toolchainName="Default" />
     </target>
     <target id="7d548aa9-11c5-4426-9864-2644857947e1" name="NamedBitSet" defaultType="MAKE">
       <configuration id="f2385e07-e05c-43dd-8598-eaf0f4250e28" name="NamedBitSet" />

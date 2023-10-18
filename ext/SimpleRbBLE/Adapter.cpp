@@ -1,9 +1,9 @@
-#include "common.h"
-#include "Adapter.h"
-#include "Peripheral.h"
-#include "Registry.h"
-#include "RegistryFactory.h"
-#include "RubyQueue.h"
+#include "common.hpp"
+#include "Adapter.hpp"
+#include "Peripheral.hpp"
+#include "Registry.hpp"
+#include "RegistryFactory.hpp"
+#include "RubyQueue.hpp"
 
 namespace SimpleRbBLE {
     Adapter::Adapter(const SimpleBLE::Adapter &adapter) :
@@ -45,6 +45,7 @@ namespace SimpleRbBLE {
     bool Adapter::initialized() const { return get().initialized(); }
 
     std::string Adapter::identifier() { return (_adapter) ? get().identifier() : ""; }
+
 
     BluetoothAddress Adapter::address() const {
         return _addr; /*get().address();*/
@@ -124,7 +125,7 @@ namespace SimpleRbBLE {
             oss << super;
         } else {
             oss << "#<" << human_type_name<decltype(*this)>();
-            oss << ":0x" << std::hex << reinterpret_cast<uint64_t>(this) << std::dec;
+            oss << ":" << to_hex_addr(this);
         }
         oss << " ";
         if (!initialized())  return oss.str() + "uninitialized>";
@@ -154,7 +155,9 @@ namespace SimpleRbBLE {
                 .define_method("on_scan_update", &Adapter::on_scan_update, Arg("cb").keepAlive() = Qnil)
                 .define_method("on_scan_find", &Adapter::on_scan_find, Arg("cb").keepAlive() = Qnil)
                 ;
+        define_class_under<std::shared_ptr<SimpleRbBLE::Adapter>>(rb_mSimpleRbBLE, "AdapterPtr");
     }
+
 }
 
 namespace Rice {

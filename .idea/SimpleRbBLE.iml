@@ -27,6 +27,15 @@
               <RakeTaskImpl description="" fullCommand="compile:x86_64-linux" id="x86_64-linux" />
             </subtasks>
           </RakeTaskImpl>
+          <RakeTaskImpl id="dev">
+            <subtasks>
+              <RakeTaskImpl description="Compiles code for debugging" fullCommand="dev:build" id="build" />
+              <RakeTaskImpl description="Reconfigures only if needed" fullCommand="dev:maybe_reconfigure" id="maybe_reconfigure" />
+              <RakeTaskImpl description="Cleans/Clobbers all generated files" fullCommand="dev:pristine" id="pristine" />
+              <RakeTaskImpl description="Cleans/Clobbers, generates Makefiles/etc before build" fullCommand="dev:reconfigure" id="reconfigure" />
+              <RakeTaskImpl description="" fullCommand="dev:initialize" id="initialize" />
+            </subtasks>
+          </RakeTaskImpl>
           <RakeTaskImpl description="Build and install SimpleRbBLE-0.0.1.gem into system gems" fullCommand="install" id="install" />
           <RakeTaskImpl id="install">
             <subtasks>
@@ -48,7 +57,7 @@
                 <subtasks>
                   <RakeTaskImpl id="x86_64-linux">
                     <subtasks>
-                      <RakeTaskImpl description="" fullCommand="copy:SimpleRbBLE:x86_64-linux:3.1.4" id="3.1.4" />
+                      <RakeTaskImpl description="" fullCommand="copy:SimpleRbBLE:x86_64-linux:3.2.2" id="3.2.2" />
                     </subtasks>
                   </RakeTaskImpl>
                 </subtasks>
@@ -56,6 +65,7 @@
             </subtasks>
           </RakeTaskImpl>
           <RakeTaskImpl description="" fullCommand="default" id="default" />
+          <RakeTaskImpl description="" fullCommand="dev" id="dev" />
           <RakeTaskImpl description="" fullCommand="lib" id="lib" />
           <RakeTaskImpl description="" fullCommand="lib/SimpleRbBLE" id="lib/SimpleRbBLE" />
           <RakeTaskImpl description="" fullCommand="lib/SimpleRbBLE/SimpleRbBLE.so" id="lib/SimpleRbBLE/SimpleRbBLE.so" />
@@ -70,9 +80,9 @@
           <RakeTaskImpl description="" fullCommand="tmp" id="tmp" />
           <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux" id="tmp/x86_64-linux" />
           <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE" id="tmp/x86_64-linux/SimpleRbBLE" />
-          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.1.4" id="tmp/x86_64-linux/SimpleRbBLE/3.1.4" />
-          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.1.4/Makefile" id="tmp/x86_64-linux/SimpleRbBLE/3.1.4/Makefile" />
-          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.1.4/SimpleRbBLE.so" id="tmp/x86_64-linux/SimpleRbBLE/3.1.4/SimpleRbBLE.so" />
+          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.2.2" id="tmp/x86_64-linux/SimpleRbBLE/3.2.2" />
+          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.2.2/Makefile" id="tmp/x86_64-linux/SimpleRbBLE/3.2.2/Makefile" />
+          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.2.2/SimpleRbBLE.so" id="tmp/x86_64-linux/SimpleRbBLE/3.2.2/SimpleRbBLE.so" />
           <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/stage" id="tmp/x86_64-linux/stage" />
           <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/stage/lib" id="tmp/x86_64-linux/stage/lib" />
           <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/stage/lib/SimpleRbBLE" id="tmp/x86_64-linux/stage/lib/SimpleRbBLE" />

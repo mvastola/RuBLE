@@ -25,7 +25,7 @@
             <option value="$PROJECT_DIR$/ext/SimpleRbBLE" />
           </set>
         </option>
-        <option name="switches" value="V=1" />
+        <option name="switches" value="V=1 CXX=g++-13" />
         <option name="version" value="2" />
       </MakefileProjectSettings>
     </option>

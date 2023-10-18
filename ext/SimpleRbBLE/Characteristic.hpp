@@ -1,11 +1,10 @@
 #pragma once
 
-#include "common.h"
-#include "RubyQueue.h"
-#include "NamedBitSet.h"
-#include "Descriptor.h"
-#include "Service.h"
-#include "ConvertableByteArray.h"
+#include "RubyQueue.hpp"
+#include "NamedBitSet.hpp"
+#include "Descriptor.hpp"
+#include "Service.hpp"
+#include "ConvertableByteArray.hpp"
 
 namespace SimpleRbBLE {
     enum class CharacteristicCapabilityType : std::size_t {
@@ -15,6 +14,7 @@ namespace SimpleRbBLE {
         NOTIFY,
         INDICATE
     };
+    class Service;
     class Characteristic {
     public:
         static constexpr std::string_view CAPABILITY_NAMES[] = {
@@ -55,20 +55,23 @@ namespace SimpleRbBLE {
         [[nodiscard]] constexpr const Service *service() const;
         constexpr Service *service();
 
-        [[nodiscard]] constexpr const BluetoothUUID &uuid() const { return _uuid; }
+        [[nodiscard]] constexpr const BluetoothUUID &uuid() const;
+        constexpr ResourceUniqueIdentifier<Characteristic> full_resource_identifier() const;
+        constexpr BluetoothUUID this_resource_identifier() const;
+
         [[nodiscard]] const std::map<BluetoothUUID, std::shared_ptr<Descriptor>> &descriptors() const;
         [[nodiscard]] std::shared_ptr<Descriptor> operator[](const BluetoothUUID &descUuid) const;
         [[nodiscard]] constexpr const CababilityFlags &capabilities() const;
+
         [[nodiscard]] std::vector<std::string> capability_names() const;
-        [[nodiscard]] bool can_read() const;
-        [[nodiscard]] bool can_write_request() const;
-        [[nodiscard]] bool can_write_command() const;
-        [[nodiscard]] bool can_notify() const;
-        [[nodiscard]] bool can_indicate() const;
+        [[nodiscard]] constexpr bool can_read() const;
+        [[nodiscard]] constexpr bool can_write_request() const;
+        [[nodiscard]] constexpr bool can_write_command() const;
+        [[nodiscard]] constexpr bool can_notify() const;
+        [[nodiscard]] constexpr bool can_indicate() const;
 
-
-        ConvertableByteArray read();
-        ConvertableByteArray read(const BluetoothUUID &descriptor);
+        [[nodiscard]] ConvertableByteArray read();
+        [[nodiscard]] ConvertableByteArray read(const BluetoothUUID &descriptor);
         void write(const BluetoothUUID &descriptor, ConvertableByteArray data);
         void write_request(ConvertableByteArray data);
         void write_command(ConvertableByteArray data);
@@ -92,8 +95,39 @@ namespace SimpleRbBLE {
         using ExposedReadFn = ConvertableByteArray(Characteristic::*)();
     };
 
+    constexpr const Characteristic::Owner *Characteristic::owner() const { return _owner; }
+
+    constexpr Characteristic::Owner *Characteristic::owner() { return _owner; }
+
+    constexpr const Service *Characteristic::service() const { return owner(); }
+
+    constexpr Service *Characteristic::service() { return owner(); }
+
+    constexpr const BluetoothUUID &Characteristic::uuid() const { return _uuid; }
+
+
+    constexpr BluetoothUUID Characteristic::this_resource_identifier() const { return _uuid; }
+
+    constexpr const Characteristic::CababilityFlags &Characteristic::capabilities() const {
+        if (_capabilities) return *_capabilities;
+        _capabilities = std::make_optional<CababilityFlags>(_characteristic->capabilities());
+        return *_capabilities;
+    }
+
+    constexpr bool Characteristic::can_read() const { return capabilities()["read"]; }
+
+    constexpr bool Characteristic::can_write_request() const { return capabilities()["write_request"]; }
+
+    constexpr bool Characteristic::can_write_command() const { return capabilities()["write_command"]; }
+
+    constexpr bool Characteristic::can_notify() const { return capabilities()["notify"]; }
+
+    constexpr bool Characteristic::can_indicate() const { return capabilities()["indicate"]; }
+
     using CharacteristicCapabilityType_DT = Data_Type<Characteristic::Capability>;
     using CharacteristicCapabilityType_DO = Data_Object<Characteristic::Capability>;
 
     void Init_Characteristic();
 }
+
+

@@ -1,10 +1,11 @@
-#include "common.h"
-#include "Peripheral.h"
-#include "RubyQueue.h"
-#include "Callback.h"
-#include "Service.h"
-#include "Registry.h"
-#include "RegistryFactory.h"
+#include "common.hpp"
+#include "NamedBitSet.hpp"
+#include "Peripheral.hpp"
+#include "RubyQueue.hpp"
+#include "Callback.hpp"
+#include "Service.hpp"
+#include "Registry.hpp"
+#include "RegistryFactory.hpp"
 
 namespace SimpleRbBLE {
     Peripheral::Peripheral(const SimpleBLE::Peripheral &peripheral,
@@ -12,6 +13,7 @@ namespace SimpleRbBLE {
             _owner(owner),
             _peripheral(std::make_shared<SimpleBLE::Peripheral>(peripheral)),
             _addr(_peripheral->address()),
+            _addr_type(_peripheral->address_type()),
             _on_connected(std::make_shared<Callback>()),
             _on_disconnected(std::make_shared<Callback>()),
             _self(Peripheral_DO(*this)),
@@ -31,11 +33,6 @@ namespace SimpleRbBLE {
 
     std::string Peripheral::identifier() const { return _peripheral->identifier(); }
 
-    BluetoothAddressType Peripheral::address_type() const {
-        return _peripheral->address_type();
-    }
-
-    BluetoothAddress Peripheral::address() const { return _addr; /*_peripheral->address();*/ }
 
     std::map<uint16_t, ConvertableByteArray> Peripheral::manufacturer_data() const {
         auto data = _peripheral->manufacturer_data();
@@ -162,16 +159,7 @@ namespace SimpleRbBLE {
 
     std::string Peripheral::to_s() const {
         std::ostringstream oss;
-        String superStr(rb_call_super(0, nullptr));
-        if (superStr.test() && superStr.length() > 0) {
-            std::string super(superStr.str());
-            super.pop_back();
-            oss << super;
-        } else {
-            oss << "#<" << human_type_name<decltype(*this)>();
-            oss << ":0x" << std::hex << reinterpret_cast<uint64_t>(this) << std::dec;
-        }
-        oss << " ";
+        oss << basic_object_inspect_start(*this) << " ";
         if (!initialized())  return oss.str() + "uninitialized>";
         oss << "@address[" << enum_val_as_string(address_type()) << "]=\"" << address() << "\" ";
         oss << "@identifier=\"" << identifier() << "\" ";
@@ -184,6 +172,8 @@ namespace SimpleRbBLE {
         oss << ">";
         return oss.str();
     }
+
+
 
     void Init_Peripheral() {
         define_class_under<SimpleBLE::Peripheral>(rb_mSimpleRbBLEUnderlying, "Peripheral");
@@ -209,15 +199,8 @@ namespace SimpleRbBLE {
                 .define_method("on_disconnect", &Peripheral::on_disconnect, Arg("cb").keepAlive())
                 .define_singleton_attr("unpair_all_on_exit", &Peripheral::unpair_all_on_exit, Rice::AttrAccess::ReadWrite)
                 ;
-        // TODO:
-        // void notify(BluetoothUUID const &service, BluetoothUUID const &characteristic, std::function<void(ByteArray payload)> callback)
-        // void indicate(BluetoothUUID const &service, BluetoothUUID const &characteristic, std::function<void(ByteArray payload)> callback)
-        // void set_callback_on_connected(std::function<void()> on_connected)
-        // void set_callback_on_disconnected(std::function<void()> on_disconnected) */
-        // virtual ~Peripheral() = default
-        // void *underlying() const (probably unneeded)
+        define_class_under<std::shared_ptr<SimpleRbBLE::Peripheral>>(rb_mSimpleRbBLE, "PeripheralPtr");
     }
-
 }
 
 namespace Rice {

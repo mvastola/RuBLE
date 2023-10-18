@@ -1,6 +1,7 @@
-#include "NamedBitSet.h"
-
-#ifdef DEBUG
+#include "NamedBitSet.hpp"
+#include <functional>
+#include <map>
+#ifdef SIMPLERBBLE_DEBUG
 namespace SimpleRbBLE {
     static constexpr std::string_view characteristic_capabilities[] = {"read", "write_request", "write_command", "notify", "indicate"};
 

@@ -1,12 +1,12 @@
-#include "common.h"
-#include "Peripheral.h"
-#include "Service.h"
-#include "Characteristic.h"
-#include "Descriptor.h"
+#include "common.hpp"
+#include "Peripheral.hpp"
+#include "Service.hpp"
+#include "Characteristic.hpp"
+#include "Descriptor.hpp"
 
 #include <utility>
-#include "RubyQueue.h"
-#include "Callback.h"
+#include "RubyQueue.hpp"
+#include "Callback.hpp"
 
 namespace SimpleRbBLE {
     Characteristic::Characteristic(const SimpleBLE::Characteristic &characteristic,
@@ -22,11 +22,6 @@ namespace SimpleRbBLE {
 
     SimpleBLE::Characteristic &Characteristic::get() { return *_characteristic; }
     const SimpleBLE::Characteristic &Characteristic::get() const { return *_characteristic; }
-    constexpr const Characteristic::Owner *Characteristic::owner() const { return _owner; }
-    constexpr Characteristic::Owner *Characteristic::owner() { return _owner; }
-    constexpr const Service *Characteristic::service() const { return owner(); }
-    constexpr Service *Characteristic::service() { return owner(); }
-
 
     const std::map<BluetoothUUID, std::shared_ptr<Descriptor>> &Characteristic::descriptors() const {
         if (_descriptors) return *_descriptors;
@@ -42,20 +37,8 @@ namespace SimpleRbBLE {
         // TODO(?): catch (std::out_of_range &ex)
     }
 
-    constexpr const Characteristic::CababilityFlags &Characteristic::capabilities() const {
-        if (_capabilities) return *_capabilities;
-        _capabilities = std::make_optional<CababilityFlags>(_characteristic->capabilities());
-        return *_capabilities;
-    }
 
     std::vector<std::string> Characteristic::capability_names() const { return capabilities().flag_name_strs(); }
-
-    bool Characteristic::can_read() const { return capabilities()["read"]; }
-    bool Characteristic::can_write_request() const { return capabilities()["write_request"]; }
-    bool Characteristic::can_write_command() const { return capabilities()["write_command"]; }
-    bool Characteristic::can_notify() const { return capabilities()["notify"]; }
-    bool Characteristic::can_indicate() const { return capabilities()["indicate"]; }
-
 
     ConvertableByteArray Characteristic::read() {
         return service()->read(uuid());
@@ -76,6 +59,7 @@ namespace SimpleRbBLE {
         if (!_on_notify) {
             _on_notify = std::make_shared<Callback>();
             service()->notify(uuid(), [this](const ConvertableByteArray& data) {
+                if (DEBUG) std::cout << "Characteristic::fire_on_notify called with " << data.inspect() << std::endl;
                 RubyQueue::FnType fn = std::bind(&Characteristic::fire_on_notify, std::cref(*this), data);  // NOLINT(*-avoid-bind)
                 rubyQueue->push(fn);
             });
@@ -87,6 +71,7 @@ namespace SimpleRbBLE {
         if (!_on_indicate) {
             _on_indicate = std::make_shared<Callback>();
             service()->indicate(uuid(), [this](const ConvertableByteArray& data) {
+                if (DEBUG) std::cout << "Characteristic::fire_on_indicate called with " << data.inspect() << std::endl;
                 RubyQueue::FnType fn = std::bind(&Characteristic::fire_on_indicate, std::cref(*this), data);  // NOLINT(*-avoid-bind)
                 rubyQueue->push(fn);
             });
@@ -108,16 +93,7 @@ namespace SimpleRbBLE {
 
     std::string Characteristic::to_s() const {
         std::ostringstream oss;
-        String superStr(rb_call_super(0, nullptr));
-        if (superStr.test() && superStr.length() > 0) {
-            std::string super(superStr.str());
-            super.pop_back();
-            oss << super;
-        } else {
-            oss << "#<" << human_type_name<decltype(*this)>();
-            oss << ":0x" << std::hex << reinterpret_cast<uint64_t>(this) << std::dec;
-        }
-        oss << " ";
+        oss << basic_object_inspect_start(*this) << " ";
         oss << "@uuid=" << uuid() << " ";
         oss << "@capabilities=" << capabilities();
 //        oss << "#characteristics=" << characteristics().size();
@@ -153,7 +129,6 @@ namespace SimpleRbBLE {
 
         rb_cCharacteristic
                 .define_method("uuid", &Characteristic::uuid) // returns BluetoothUUID
-                .define_method("descriptors", &Characteristic::descriptors)
                 .define_method("capabilities", &Characteristic::capability_names)
                 .define_method("can_read?", &Characteristic::can_read)
                 .define_method("can_write_request?", &Characteristic::can_write_request)
@@ -167,8 +142,12 @@ namespace SimpleRbBLE {
                 .define_method("set_on_notify", &Characteristic::set_on_notify)
                 .define_method("set_on_indicate", &Characteristic::set_on_indicate)
                 .define_method("unsubscribe", &Characteristic::unsubscribe)
-                .define_method("inspect", &Characteristic::to_s);
+                .define_method("to_s", &Characteristic::to_s)
+                .define_method("inspect", &Characteristic::inspect);
+        define_class_under<std::shared_ptr<SimpleRbBLE::Characteristic>>(rb_mSimpleRbBLE, "CharacteristicPtr");
+
     }
+
 }
 
 namespace Rice {

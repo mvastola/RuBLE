@@ -1,10 +1,10 @@
-#include "common.h"
-#include "Adapter.h"
-#include "Peripheral.h"
-#include "Registry.h"
-#include "RegistryFactory.h"
-#include "Service.h"
-#include "Characteristic.h"
+#include "common.hpp"
+#include "Adapter.hpp"
+#include "Peripheral.hpp"
+#include "Registry.hpp"
+#include "RegistryFactory.hpp"
+#include "Service.hpp"
+#include "Characteristic.hpp"
 
 namespace SimpleRbBLE {
     AdapterRegistry_DT rb_cAdapterRegistry;
@@ -68,6 +68,7 @@ namespace SimpleRbBLE {
                 .define_attr("descriptors", &Characteristic::_descriptors, Rice::AttrAccess::Read);
 
     }
+
 }
 
 namespace Rice {

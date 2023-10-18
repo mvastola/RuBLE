@@ -1,6 +1,14 @@
 #pragma once
 
-#include "common.h"
+#include <cstddef>
+#include <map>
+#include <bitset>
+#include <utility>
+#include <functional>
+#include <variant>
+#include <string_view>
+
+#include "metaprogramming.hpp"
 
 namespace SimpleRbBLE {
     template<const auto &FIELD_NAMES> class NamedBitSet;
@@ -69,7 +77,7 @@ namespace SimpleRbBLE {
     class NamedBitSet {
     public:
         static constexpr auto FIELDS = std::to_array<const std::string_view>(FIELD_NAMES);
-        static constexpr std::size_t N = FIELDS.size();
+        static constexpr const std::size_t N = FIELDS.size();
         using BitSet = std::bitset<N>;
         using BitRef = BitSet::reference;
         using PairType = std::pair<std::string_view, std::size_t>;
@@ -77,66 +85,43 @@ namespace SimpleRbBLE {
             return {std::make_pair(FIELD_NAMES[I], I)...};
         })(std::make_index_sequence<N>{});
 
-        static constexpr std::size_t index_of(const std::string_view &name) {
-            for (const auto &[field, idx]: PAIRS) {
-                if (field == name) return idx;
-            }
-            std::string errmsg = "Invalid field name "s + std::string(name.data()) + " in call to index_of";
-            throw std::invalid_argument(errmsg);
-        }
+        static constexpr std::size_t index_of(const std::string_view &name);
 
     private:
         BitSet _bits = 0;
 
     public:
-        constexpr const BitSet &bits() const { return _bits; }
+        constexpr const BitSet &bits() const;
 
-        constexpr BitRef operator[](const std::string_view &name) {
-            return _bits[index_of(name)];
-        }
+        constexpr BitRef operator[](const std::string_view &name);
 
-        constexpr bool operator[](const std::string_view &name) const {
-            return _bits[index_of(name)];
-        }
+        constexpr bool operator[](const std::string_view &name) const;
 
         // Ensure T is an integral type that can hold all N bits
         template<typename T> requires std::is_integral_v<T> && (std::numeric_limits<T>::max() >= (1 << N) - 1)
                 constexpr explicit operator T() const { return static_cast<T>(_bits.to_ullong()); }
 
-        [[nodiscard]] constexpr std::vector<std::string_view> flag_names() const {
-            std::vector<std::string_view> result;
-            for (const auto &[name, idx]: PAIRS) {
-                if (_bits[idx]) result.push_back(name);
-            }
-            return result;
-        }
+        [[nodiscard]] constexpr std::vector<std::string_view> flag_names() const;
 
-        [[nodiscard]] constexpr std::vector<std::string> flag_name_strs() const {
-            const auto names = flag_names();
-            return { names.begin(), names.end() };
-        }
+        [[nodiscard]] constexpr std::vector<std::string> flag_name_strs() const;
 
         constexpr NamedBitSet(): _bits(0) {}
 
-        constexpr NamedBitSet(const std::initializer_list<const std::string_view> &list) {
-            for (const auto &sv: list) (*this)[sv] = true;
-        }
+        constexpr NamedBitSet(const std::initializer_list<const std::string_view> &list);
 
-        constexpr NamedBitSet(const auto &rangeList) { // NOLINT(*-explicit-constructor)
-            for (const auto &sv: rangeList) (*this)[sv] = true;
-        }
-        constexpr NamedBitSet(const BitSet &bitSet) : _bits(bitSet) {} // NOLINT(*-explicit-constructor)
+        constexpr NamedBitSet(const auto &rangeList);
+        constexpr NamedBitSet(const BitSet &bitSet); // NOLINT(*-explicit-constructor)
 
         // Takes a map (or equivalent) of 'std::string_view's to one of: boolean literal, static fn, const mem fn, mem fn
         template<typename ObjT, FlagCheck::Map<ObjT> R>
-        constexpr NamedBitSet(R &r, ObjT &&obj) {
-            for (const auto &[name, fn] : r) (*this)[name] = FlagCheck::test_flag<ObjT>(fn, obj);
-        }
+        constexpr NamedBitSet(R &r, ObjT &&obj);
 
-        [[nodiscard]] constexpr std::string to_s() const { return join(flag_names(), "|"); }
+        [[nodiscard]] constexpr std::string to_s() const;
     };
 
-#ifdef DEBUG
+
+
+#ifdef SIMPLERBBLE_DEBUG
     void NamedBitSetDemo();
 #endif
 }
@@ -150,3 +135,5 @@ std::size_t std::hash<SimpleRbBLE::NamedBitSet<FIELDS>>::operator()(const Simple
     static auto hasher = std::hash<decltype(SimpleRbBLE::NamedBitSet<FIELDS>::BitSet)>{};
     return h1 ^ (hasher(nbs.bits()) << 1);
 }
+
+#include "NamedBitSet.ipp"

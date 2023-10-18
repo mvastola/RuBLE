@@ -1,20 +1,19 @@
 #pragma once
 
-#include "types.h"
-#include "utils.h"
 #include <map>
 #include <memory>
 #include <functional>
 #include <exception>
 #include <typeinfo>
 #include <mutex>
+#include "metaprogramming.hpp"
+#include "utils.hpp"
 
 namespace SimpleRbBLE {
 
 //template<typename T>
 //concept Unwrappable = requires(T::DataObject tdo) { typename T::DataObject; } &&
 //requires(std::shared_ptr<typename T::DataObject> ptr) { std::static_pointer_cast<T>(ptr); };
-
     template<typename Key, class ProxyClass, class Value>
     class Registry {
         VALUE _self;
@@ -39,7 +38,7 @@ namespace SimpleRbBLE {
 
         ~Registry() {
 //            std::cout << "Destructing " << SimpleRbBLE::human_type_name<ProxyClass>() << " registry at address ";
-//            std::cout << "0x" << std::hex << reinterpret_cast<uint64_t>(this) << std::dec << std::endl;
+//            std::cout << to_hex_addr(this) << std::endl;
         }
     private:
         Owner *_owner;
@@ -51,22 +50,23 @@ namespace SimpleRbBLE {
                      _mtx(std::make_shared<std::mutex>()),
                      _self(Registry_DO(*this)) {
 //            std::cout << "Constructing new " << SimpleRbBLE::human_type_name<ProxyClass>() << " registry at address ";
-//            std::cout << "0x" << std::hex << reinterpret_cast<uint64_t>(this) << std::dec;
+//            std::cout << to_hex_addr(this);
 //            if constexpr (is_owned) std::cout << " owned by " << human_type_name(*_owner); // _owner->to_s();
 //            std::cout << std::endl;
         }
+        // FIXME: why am I getting a warning that _self is uninitialized with the constructor below?
         Registry() requires std::is_same_v<Owner, nullptr_t> : Registry(nullptr) {}
 
         Object self() const { return _self; }
-        const Owner *owner() const { return _owner; }
-        Owner *owner() { return _owner; }
+        constexpr const Owner *owner() const { return _owner; }
+        constexpr Owner *owner() { return _owner; }
 
         void configure_proxy_instance(const ProxyPtr &) const {}
 
         void configure_proxy_instance(ProxyPtr &result) const requires CallbackSetuppable<ProxyClass> {}
 
         Key key_from_value(const Value &) const {
-            std::cerr << "Type of class: " << SimpleRbBLE::human_type_name(*this) << std::endl;
+            std::cerr << "Type of class: " << SimpleRbBLE::Utils::human_type_name(*this) << std::endl;
             throw std::invalid_argument(
                     "key_from_value not implemented without .address() returning a BluetoothAddress");
         }
@@ -94,7 +94,7 @@ namespace SimpleRbBLE {
         const ProxyPtr &operator[](const Key &addr) const { return _registry->at(addr); }
         const ProxyPtr &at(const Key &addr) const { return _registry->at(addr); }
         ProxyPtr &at(const Key &addr) { return _registry->at(addr); }
-        constexpr const Collection &data() const { return *_registry; }
+        constexpr const Collection &data() const;
 
         ProxyPtr fetch(const Value &value) const {
             const std::lock_guard<std::mutex> lock(*_mtx); // needed to avoid race condition
@@ -160,13 +160,16 @@ namespace SimpleRbBLE {
         friend class AdapterRegistrySingleton;
 
         template<typename T, typename...Arg_Ts> friend
-        class Rice::Constructor;
+        class ::Rice::Constructor;
 
         template<typename T>
-        friend void Rice::ruby_mark(T *);
+        friend void ::Rice::ruby_mark(T *);
 
         friend class std::hash<Registry<Key, ProxyClass, Value>>;
     };
+
+    template<typename Key, class ProxyClass, class Value>
+    constexpr const Registry<Key, ProxyClass, Value>::Collection &Registry<Key, ProxyClass, Value>::data() const { return *_registry; }
 
     extern std::shared_ptr<AdapterRegistry> adapterRegistry;
 }
@@ -186,3 +189,4 @@ template<typename Key, class ProxyClass, class Value>
 std::ostream &operator<<(std::ostream &os, const SimpleRbBLE::Registry<Key, ProxyClass, Value> &reg) {
     return os << reg.to_s();
 }
+

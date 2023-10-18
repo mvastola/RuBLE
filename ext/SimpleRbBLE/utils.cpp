@@ -1,5 +1,5 @@
-#include "common.h"
-#include "utils.h"
+#include "common.hpp"
+#include "utils.hpp"
 
 namespace SimpleRbBLE {
     namespace Utils {
@@ -24,13 +24,26 @@ namespace SimpleRbBLE {
         template<>
         std::string human_type_name(const std::any &any) { return human_type_name(any.type()); }
 
-
-        std::string inspect_object(const Object &o) {
-            return o.inspect().str();
+        std::string basic_object_inspect_start(const Object &o) {
+            std::ostringstream oss;
+            oss << "#<" << o.class_name();
+            oss << ":" << to_hex_string(reinterpret_cast<uint64_t>(o.value()));
+            return oss.str();
         }
 
-        std::string inspect_object(VALUE val) {
-            return inspect_object(Object(val));
+        void thread_sleep() {
+            rb_thread_schedule();
+            // TODO: maybe multiply sleep time by getloadavg() on linux (from cstdlib)
+            std::this_thread::sleep_for(250ms);
+            std::this_thread::yield();
         }
+
+    }
+
+    Module rb_mUtils;
+    void Init_Utils() {
+        rb_mUtils = define_module_under(rb_mSimpleRbBLE, "Utils");
+        if (!DEBUG) return;
+        rb_mUtils.define_singleton_function("maybe_swap_endianness", &Utils::maybe_swap_endianness<uint64_t>);
     }
 }
