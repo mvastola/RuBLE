@@ -1,6 +1,6 @@
 #pragma once
 
-#include "identifiers.hpp"
+#include "helpers/identifiers.hpp"
 namespace SimpleRbBLE {
 
     template<Identifiers::OwnerTypedResource T>
@@ -34,17 +34,17 @@ namespace SimpleRbBLE {
         [[nodiscard]] constexpr BluetoothUUID this_resource_identifier() const { return uuid(); }
 
 
-        [[nodiscard]] ConvertableByteArray data() const;
+        [[nodiscard]] ByteArray data() const;
         [[nodiscard]] const std::map<BluetoothUUID, std::shared_ptr<Characteristic>> &characteristics() const;
         [[nodiscard]] std::shared_ptr<Characteristic> operator[](const BluetoothUUID &charUuid) const;
 
-        [[nodiscard]] ConvertableByteArray read(const BluetoothUUID &characteristic);
-        [[nodiscard]] ConvertableByteArray read(const BluetoothUUID &characteristic, const BluetoothUUID &descriptor);
-        void write(const BluetoothUUID &characteristic, const BluetoothUUID &descriptor, ConvertableByteArray data);
-        void write_request(const BluetoothUUID &characteristic, ConvertableByteArray data);
-        void write_command(const BluetoothUUID &characteristic, ConvertableByteArray data);
-        void notify(const BluetoothUUID &characteristic, std::function<void(ConvertableByteArray payload)> callback);
-        void indicate(const BluetoothUUID &characteristic, std::function<void(ConvertableByteArray payload)> callback);
+        [[nodiscard]] ByteArray read(const BluetoothUUID &characteristic);
+        [[nodiscard]] ByteArray read(const BluetoothUUID &characteristic, const BluetoothUUID &descriptor);
+        void write(const BluetoothUUID &characteristic, const BluetoothUUID &descriptor, ByteArray data);
+        void write_request(const BluetoothUUID &characteristic, ByteArray data);
+        void write_command(const BluetoothUUID &characteristic, ByteArray data);
+        void notify(const BluetoothUUID &characteristic, std::function<void(ByteArray payload)> callback);
+        void indicate(const BluetoothUUID &characteristic, std::function<void(ByteArray payload)> callback);
         void unsubscribe(const BluetoothUUID &characteristic);
 
 

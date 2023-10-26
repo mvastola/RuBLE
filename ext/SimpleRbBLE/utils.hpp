@@ -1,151 +1,34 @@
 #pragma once
 
 #include "types.hpp"
-#include "metaprogramming.hpp"
+#include "helpers/metaprogramming.hpp"
+#include "helpers/InRuby.hpp"
 #include <ruby/ruby.h>
 #include <ruby/thread.h>
-#include <ruby/thread_native.h>
-#include <any>
-#include <version>
-#include <string>
-#include <iostream>
-#include <memory>
-#include <typeinfo>
-#include <cxxabi.h>
+//#include <ruby/thread_native.h>
+//#include <any>
+//#include <version>
 #include <ranges>
-#include <endian.h>
-#include <chrono>
-#include <variant>
-#include <future>
-#include <charconv>
+//#include <endian.h>
+//#include <chrono>
+//#include <variant>
+//#include <future>
+//#include <charconv>
 #include <ranges>
+//#include <format>
 
 namespace ranges = std::ranges;
 namespace views = std::views;
 namespace chrono = std::chrono;
-using namespace std::string_view_literals;
 using namespace std::chrono_literals;
 using namespace std::placeholders;
 
 namespace SimpleRbBLE {
     namespace Rice = ::Rice;
     namespace Utils {
+        template <typename T, typename Fn>
+        T ensure_ruby(const Fn &fn);
 
-        template <bool prefix = true, std::integral T = void>
-        std::string to_hex_string(const T &num) {
-            return std::format(prefix ? "{:#0x}" : "{:0x}", num);
-        }
-
-        template <bool prefix = true, typename T = void> requires std::is_pointer_v<T>
-        std::string to_hex_addr(const T &ptr) {
-            return to_hex_string<prefix>(reinterpret_cast<uintptr_t>(std::to_address(ptr)));
-        }
-        template <bool prefix = true, typename T = void>
-        std::string to_hex_addr(const std::shared_ptr<T> &ptr) {
-            return to_hex_addr<prefix>(ptr.get());
-        }
-        template <bool prefix = true, typename T = void> requires std::is_base_of_v<Rice::Object, T>
-        std::string to_hex_addr(const T &obj) {
-            return to_hex_string<prefix>(obj.value());
-        }
-        template <bool prefix = true, typename T = void>
-        std::string to_hex_addr(const T &obj) {
-            return to_hex_addr<prefix>(&obj);
-        }
-        template<bool prefix = true, typename T = void> requires std::same_as<T, std::span<typename T::element_type, T::extent>>
-        std::string to_hex_data(const T &t) {
-            constexpr const auto is_zero = [](const std::string::value_type &chr) -> bool { return chr == '0'; };
-            constexpr const auto byte_to_hex = [] (const std::byte &b) -> std::string {
-                return to_hex_string<false>(std::to_integer<uint8_t>(b));
-            };
-
-            auto in = std::as_bytes(t);
-            auto out = in | views::transform(byte_to_hex) | views::join | views::drop_while(is_zero);
-
-            std::string result = prefix ? "0x" : "";
-            if (out.begin() != out.end()) {
-                // TODO: maybe try "move"?
-                ranges::copy(out, std::back_inserter(result));
-            } else {
-                result.append("0");
-            }
-            return result;
-        }
-
-        template<bool prefix = true, class T>
-        std::string to_hex_data(const T &t) {
-            auto span = std::span(&t, 1);
-            return span_to_hex_data<decltype(span), prefix>(span);
-        }
-
-        // need to predeclare, since the templated fns call the fully specified version
-        template<typename T>
-        std::string human_type_name();
-
-        template<typename T>
-        std::string human_type_name(const T &);
-
-        template<>
-        std::string human_type_name(const std::type_info &type);
-
-        template<>
-        std::string human_type_name(const std::any &any);
-
-        template<typename T>
-        std::string human_type_name() { return human_type_name(typeid(T)); }
-
-        template<typename T>
-        std::string human_type_name(const T &) { return human_type_name<T>(); }
-
-        template<typename Enum_T>
-        requires std::is_enum_v<Enum_T>
-        std::string enum_type_name(const Enum_T &enumVal) {
-            Object rbEnumItem = Rice::detail::To_Ruby<Enum_T>().convert(enumVal);
-            return rbEnumItem.class_name().str();
-        }
-
-        template<typename Enum_T>
-        requires std::is_enum_v<Enum_T>
-        std::string enum_val_as_string(const Enum_T &enumVal) {
-            Object rbEnumItem = Rice::detail::To_Ruby<Enum_T>().convert(enumVal);
-            return Object(rbEnumItem).to_s().str();
-        }
-
-        template<typename Enum_T>
-        requires std::is_enum_v<Enum_T>
-        std::string enum_val_inspect(const Enum_T &enumVal) {
-            return enum_type_name(enumVal) + "::" + enum_val_as_string(enumVal);
-        }
-
-        std::string join(const ranges::viewable_range auto &range, const std::string_view &sep) {
-            if (ranges::empty(range)) return "";
-            if (ranges::size(range) == 1) return std::string(*ranges::cbegin(range));
-            const auto fold = [&sep](const std::string_view &a, const std::string_view &b) {
-                return std::string(a) + std::string(sep) + std::string(b);
-            };
-            return std::accumulate(std::next(ranges::cbegin(range)), ranges::cend(range),
-                                   std::string(*ranges::cbegin(range)), fold);
-        }
-
-        // split out the closing '>' into its own function to make enhancing this method easier
-        std::string basic_object_inspect_start(const Object &o);
-
-//        template <HasRubyObject T>
-//        std::string basic_object_inspect_start(T &t) {
-//            Object obj = t.self();
-//            return basic_object_inspect_start(obj);
-//        }
-
-        template <class T> // requires (!HasRubyObject<T>)
-        constexpr std::string basic_object_inspect_start(T &t) {
-            std::ostringstream oss;
-            oss << "#<" << human_type_name<T>() << ":" << to_hex_addr<true, T>(t);
-            return oss.str();
-        }
-
-        constexpr std::string basic_object_inspect(auto &o) {
-            return basic_object_inspect_start(o) + ">";
-        }
 
         template<class KeyT, class ValueT,
                 class FnT = std::function<std::remove_reference_t<KeyT>(const std::remove_cvref_t<ValueT> &)>,
@@ -232,14 +115,20 @@ namespace SimpleRbBLE {
 //            return rb_thread_create(wrapper, arg);
 //        }
 //
-//        template <typename T = void, typename Ret = void>
-//        Ret *ruby_thread_call_with_gvl(RbThreadCallFn<Ret, T> fn, T *arg = nullptr) {
-//            RbThreadCallFn<void> wrapper = [&fn](void *ptr) -> void * {
-//                return fn(reinterpret_cast<T*>(ptr));
-//            };
-//            void *ret = rb_thread_call_with_gvl(wrapper, arg);
-//            return reinterpret_cast<Ret*>(ret);
-//        }
+        template <typename T, typename Fn = std::function<T()>>
+        T ensure_ruby(const Fn &fn) {
+            if (in_ruby) return fn();
+            void *(*invoke)(void*) = [](void *fnPtr) -> void * {
+                auto in_ruby_guard = in_ruby.assert_guard();
+                auto &fnRef = *reinterpret_cast<Fn *>(fnPtr);
+                return new T(std::move(fnRef()));
+            };
+            void *resultPtrVoid = rb_thread_call_with_gvl(invoke, const_cast<std::remove_const_t<Fn>*>(&fn));
+            T *resultPtr = reinterpret_cast<T*>(resultPtrVoid);
+            T &&result = std::move(*resultPtr);
+            delete resultPtr;
+            return std::move(result);
+        }
 //
 //        template <typename T = void, typename Ret = void, typename UbfArgT = void>
 //        Ret *ruby_thread_call_without_gvl(RbThreadCallFn<Ret, T> fn,
@@ -288,6 +177,7 @@ namespace SimpleRbBLE {
     }
 
     using namespace Utils;
+
 
     void Init_Utils();
 }

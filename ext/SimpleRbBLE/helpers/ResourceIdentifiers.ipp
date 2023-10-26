@@ -40,5 +40,5 @@ namespace SimpleRbBLE {
 #endif
 };
 
-#include "ResourceUniqueIdentifier.hpp"
-#include "ResourceUniqueIdentifier.ipp"
+//#include "ResourceUniqueIdentifier.hpp"
+//#include "ResourceUniqueIdentifier.ipp"

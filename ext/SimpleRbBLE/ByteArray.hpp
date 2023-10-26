@@ -2,6 +2,8 @@
 
 #include "types.hpp"
 #include "utils.hpp"
+#include "DebugUtils.hpp"
+#include "StringUtils.hpp"
 #include <utility>
 #include <span>
 #include <array>
@@ -10,18 +12,19 @@
 
 namespace SimpleRbBLE {
     using Utils::maybe_swap_endianness;
+    using namespace Utils::Strings;
 
     template<typename T>
     concept UnsignedIntegral = std::is_integral_v<T> && std::is_unsigned_v<T>;
 
 
     // TODO: Need to test this out
-    class ConvertableByteArray {
-        ByteArray _data;
+    class ByteArray {
+        SimpleBLE::ByteArray _data;
 
     public:
-        using char_type = ByteArray::value_type;
-        using iterator_diff_type = typename std::iterator_traits<ByteArray::const_iterator>::difference_type;
+        using char_type = SimpleBLE::ByteArray::value_type;
+        using iterator_diff_type = typename std::iterator_traits<SimpleBLE::ByteArray::const_iterator>::difference_type;
 
         static constexpr const std::size_t char_size = sizeof(char_type);
 
@@ -30,32 +33,32 @@ namespace SimpleRbBLE {
 
         using default_integral_type = uint64_t;
 
-        [[nodiscard]] constexpr ConvertableByteArray() : _data() {}
+        [[nodiscard]] constexpr ByteArray() : _data() {}
 
-        constexpr ConvertableByteArray(ByteArray byteArray) : _data(std::move(byteArray)) {} // NOLINT(*-explicit-constructor)
-        ConvertableByteArray(Object obj); // NOLINT(*-explicit-constructor)
+        constexpr ByteArray(SimpleBLE::ByteArray byteArray) : _data(std::move(byteArray)) {} // NOLINT(*-explicit-constructor)
+        ByteArray(Object obj); // NOLINT(*-explicit-constructor)
 
         template<UnsignedIntegral T>
-        ConvertableByteArray(const T &data) { // NOLINT(*-explicit-constructor)
+        ByteArray(const T &data) { // NOLINT(*-explicit-constructor)
             // TODO: modernize by using std::span
             _data.assign(chars_per_val<T>, '\0');
             UnsignedIntegral auto &dstVal = *reinterpret_cast<T *>(_data.data());
             dstVal = maybe_swap_endianness(data);
         }
 
-        constexpr ConvertableByteArray(const char_type &chr) { // NOLINT(*-explicit-constructor)
+        constexpr ByteArray(const char_type &chr) { // NOLINT(*-explicit-constructor)
             // TODO: modernize by using std::span
             _data.assign(1, '\0');
             _data[0] = chr;
         }
 
-        constexpr ConvertableByteArray(const bool &val) { // NOLINT(*-explicit-constructor)
+        constexpr ByteArray(const bool &val) { // NOLINT(*-explicit-constructor)
             // TODO: modernize by using std::span
             _data.assign(1, '\0');
             _data[0] = val ? 1 : 0;
         }
 
-        static ConvertableByteArray from_ruby(Object obj);
+        static ByteArray from_ruby(Object obj);
 
         [[nodiscard]] constexpr std::size_t length() const { return _data.size(); }
         [[nodiscard]] constexpr std::size_t byte_count() const { return length() * char_size; }
@@ -99,7 +102,7 @@ namespace SimpleRbBLE {
         [[nodiscard]] std::string to_s() const;
         [[nodiscard]] std::string inspect() const;
 
-        [[nodiscard]] constexpr const ByteArray &data() const { return _data; }
+        [[nodiscard]] constexpr const SimpleBLE::ByteArray &data() const { return _data; }
 
 
         [[nodiscard]] constexpr const std::byte &operator[](iterator_diff_type pos) const {
@@ -107,7 +110,7 @@ namespace SimpleRbBLE {
             return *std::next(span.cbegin(), pos);
         }
 
-        constexpr operator const ByteArray &() const { return _data; } // NOLINT(*-explicit-constructor)
+        constexpr operator const SimpleBLE::ByteArray &() const { return _data; } // NOLINT(*-explicit-constructor)
 
         // TODO: test me!
         template<UnsignedIntegral T = default_integral_type>
@@ -124,6 +127,7 @@ namespace SimpleRbBLE {
             auto out = std::as_writable_bytes(std::span(&result, 1));
             iterator_diff_type byte_size = std::min(byte_count(), sizeof(T));
             if constexpr (endianness_byteswap_needed) {
+                // TODO: make sure this works right
                 std::copy(in.rbegin(), std::next(in.rbegin(), byte_size), out.begin());
             } else {
                 std::copy(in.begin(), std::next(in.begin(), byte_size), out.begin());
@@ -133,22 +137,22 @@ namespace SimpleRbBLE {
         }
     };
 
-    void Init_ConvertableByteArray();
+    void Init_ByteArray();
 }
 
 namespace Rice::detail {
     template<>
-    class From_Ruby<SimpleRbBLE::ConvertableByteArray> {
+    class From_Ruby<SimpleRbBLE::ByteArray> {
     public:
         static bool can_convert_from_ruby(VALUE obj);
         bool is_convertible(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
             return can_convert_from_ruby(value);
         }
-        SimpleRbBLE::ConvertableByteArray convert(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
-            return SimpleRbBLE::ConvertableByteArray::from_ruby(value);
+        SimpleRbBLE::ByteArray convert(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
+            return SimpleRbBLE::ByteArray::from_ruby(value);
         }
     };
 }
 
-std::ostream &operator<<(std::ostream &os, const SimpleRbBLE::ConvertableByteArray &cba);
+std::ostream &operator<<(std::ostream &os, const SimpleRbBLE::ByteArray &cba);
 

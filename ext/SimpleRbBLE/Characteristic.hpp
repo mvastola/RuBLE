@@ -1,10 +1,10 @@
 #pragma once
 
 #include "RubyQueue.hpp"
-#include "NamedBitSet.hpp"
+#include "helpers/NamedBitSet.hpp"
 #include "Descriptor.hpp"
 #include "Service.hpp"
-#include "ConvertableByteArray.hpp"
+#include "ByteArray.hpp"
 
 namespace SimpleRbBLE {
     enum class CharacteristicCapabilityType : std::size_t {
@@ -28,7 +28,7 @@ namespace SimpleRbBLE {
         using CababilityFlags = SimpleRbBLE::NamedBitSet<CAPABILITY_NAMES>;
         using DataObject = Data_Object<Characteristic>;
         using Owner = Service;
-        using CallbackFnType = std::function<void(ConvertableByteArray payload)>;
+        using CallbackFnType = std::function<void(ByteArray payload)>;
         using DescriptorMap = std::map<BluetoothUUID, std::shared_ptr<Descriptor>>;
     protected:
         Owner *_owner;
@@ -70,16 +70,16 @@ namespace SimpleRbBLE {
         [[nodiscard]] constexpr bool can_notify() const;
         [[nodiscard]] constexpr bool can_indicate() const;
 
-        [[nodiscard]] ConvertableByteArray read();
-        [[nodiscard]] ConvertableByteArray read(const BluetoothUUID &descriptor);
-        void write(const BluetoothUUID &descriptor, ConvertableByteArray data);
-        void write_request(ConvertableByteArray data);
-        void write_command(ConvertableByteArray data);
+        [[nodiscard]] ByteArray read();
+        [[nodiscard]] ByteArray read(const BluetoothUUID &descriptor);
+        void write(const BluetoothUUID &descriptor, ByteArray data);
+        void write_request(ByteArray data);
+        void write_command(ByteArray data);
 
         void set_on_notify(Object cb);
         void set_on_indicate(Object cb);
-        void fire_on_notify(const ConvertableByteArray &data) const;
-        void fire_on_indicate(const ConvertableByteArray &data) const;
+        void fire_on_notify(const ByteArray &data) const;
+        void fire_on_indicate(const ByteArray &data) const;
         void unsubscribe();
 
         [[nodiscard]] std::string to_s() const;
@@ -92,7 +92,7 @@ namespace SimpleRbBLE {
         template<typename, class, class> friend class Registry;
         template<typename T> friend void Rice::ruby_mark(T*);
 
-        using ExposedReadFn = ConvertableByteArray(Characteristic::*)();
+        using ExposedReadFn = ByteArray(Characteristic::*)();
     };
 
     constexpr const Characteristic::Owner *Characteristic::owner() const { return _owner; }

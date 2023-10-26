@@ -6,8 +6,9 @@
 #include <exception>
 #include <typeinfo>
 #include <mutex>
-#include "metaprogramming.hpp"
+#include "helpers/metaprogramming.hpp"
 #include "utils.hpp"
+#include "DebugUtils.hpp"
 
 namespace SimpleRbBLE {
 

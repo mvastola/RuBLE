@@ -2,9 +2,9 @@
 #pragma ide diagnostic ignored "modernize-use-nodiscard"
 #pragma once
 
-#include "Callback.hpp"
-#include "NamedBitSet.hpp"
-#include "NamedBitSet.ipp"
+#include "helpers/Callback.hpp"
+#include "helpers/NamedBitSet.hpp"
+#include "helpers/NamedBitSet.ipp"
 
 namespace SimpleRbBLE {
     enum class PeripheralStatus : std::size_t {
@@ -60,7 +60,7 @@ namespace SimpleRbBLE {
         constexpr std::string this_resource_identifier() const;
         constexpr ResourceUniqueIdentifier<Peripheral> full_resource_identifier() const;
 
-        std::map<uint16_t, ConvertableByteArray> manufacturer_data() const;
+        std::map<uint16_t, ByteArray> manufacturer_data() const;
         int16_t rssi() const;
         int16_t tx_power() const;
         uint16_t mtu() const;
@@ -76,19 +76,19 @@ namespace SimpleRbBLE {
         const std::map<BluetoothUUID, std::shared_ptr<Service>> &services() const;
         std::shared_ptr<Service> operator[](const BluetoothUUID &svcUuid) const;
 
-        [[nodiscard]] ConvertableByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic);
-        [[nodiscard]] ConvertableByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic,
-             BluetoothUUID const &descriptor);
+        [[nodiscard]] ByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic);
+        [[nodiscard]] ByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic,
+                                     BluetoothUUID const &descriptor);
         void write(BluetoothUUID const &service, BluetoothUUID const &characteristic,
-                   BluetoothUUID const &descriptor, ConvertableByteArray data);
+                   BluetoothUUID const &descriptor, ByteArray data);
         void write_request(BluetoothUUID const &service, BluetoothUUID const &characteristic,
-                           ConvertableByteArray data);
+                           ByteArray data);
         void write_command(BluetoothUUID const &service, BluetoothUUID const &characteristic,
-                           ConvertableByteArray data);
+                           ByteArray data);
         void notify(BluetoothUUID const &service, BluetoothUUID const &characteristic,
-                    std::function<void(ConvertableByteArray payload)> callback);
+                    std::function<void(ByteArray payload)> callback);
         void indicate(BluetoothUUID const &service, BluetoothUUID const &characteristic,
-                      std::function<void(ConvertableByteArray payload)> callback);
+                      std::function<void(ByteArray payload)> callback);
         void unsubscribe(BluetoothUUID const &service, BluetoothUUID const &characteristic);
 
         std::string to_s() const;

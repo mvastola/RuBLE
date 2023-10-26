@@ -11,13 +11,23 @@ DEBUG_MODE = with_config("debug") || ENV["#{EXTENSION_NAME.upcase}_DEBUG_ON"]
 #
 # Remove any builtin CXX standards version
 $CXXFLAGS.gsub!(/(\s+|\b)-?-std=c\+\+[A-Za-z0-9-]+(\s+|\b)/, ' ')
+#$CXXFLAGS += ' -fPIC '
+append_cppflags	' -std=c++23 '
 
-append_cppflags	' -std=c++23'
+# TODO: preferably link statically
 pkg_config 'simpleble'
-append_library (DEBUG_MODE ? 'simpleble-debug' : 'simpleble'), 'simpleble'
+lib_name = DEBUG_MODE ? 'simpleble-debug' : 'simpleble'
+$LOCAL_LIBS += " -l#{lib_name} "
+$libs.sub!(/(\b|\s+)-l#{Regexp.escape lib_name}(\b|\s+)/, ' ')
+#have_library('dbus-1')
+
+require_relative 'includes/boost_stacktrace'
+BoostStacktrace.configure!(required: DEBUG_MODE)
 
 if DEBUG_MODE
-  append_ldflags ' -Wl,--no-strip-discarded -Wl,--discard-none -Wl,--ld-generated-unwind-info'
+  have_header 'valgrind/valgrind.h'
+  # FIXME: getting error that this isn't supported
+  append_ldflags ' -Wl,--no-strip-discarded -Wl,--discard-none -Wl,--ld-generated-unwind-info '
   #--gc-keep-exported --no-gc-sections 
 
   $defs.push("-DSIMPLERBBLE_DEBUG") unless $defs.include? "-DSIMPLERBBLE_DEBUG"
@@ -47,4 +57,8 @@ if DEBUG_MODE
 end
 
 MakeMakefile::HDR_EXT << 'ipp'
+$LOCAL_LIBS = "-Wl,-Bstatic #{$LOCAL_LIBS} -Wl,-Bdynamic " unless DEBUG_MODE
+$preload ||= []
+#$preload << "\nLDSHAREDXX += -Wl,-fPIC\n" 
+create_header
 create_makefile(EXTENSION_NAME)

@@ -1,5 +1,5 @@
 #include "Registry.hpp"
-#include "RegistryFactory.hpp"
+#include "helpers/RegistryFactory.hpp"
 #include "Adapter.hpp"
 #include "Peripheral.hpp"
 #include "Service.hpp"

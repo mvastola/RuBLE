@@ -31,18 +31,20 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
-    irb (1.8.2)
+    irb (1.8.3)
       rdoc
       reline (>= 0.3.8)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
+    memery (1.5.0)
+      ruby2_keywords (~> 0.0.2)
     minitest (5.20.0)
     mutex_m (0.1.2)
     parallel (1.23.0)
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
-    psych (5.1.1)
+    psych (5.1.1.1)
       stringio
     racc (1.7.1)
     rainbow (3.1.1)
@@ -87,6 +89,7 @@ DEPENDENCIES
   concurrent-ruby
   concurrent-ruby-ext
   debug
+  memery
   minitest
   rainbow
   rake (~> 13.0)

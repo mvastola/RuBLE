@@ -11,7 +11,7 @@ namespace SimpleRbBLE {
     static_assert(ServiceRegistry::is_owned);
     static_assert(CharacteristicRegistry::is_owned);
 
-    thread_local bool in_ruby = false;
+    InRuby::Guard main_thread_in_ruby;
     std::shared_ptr<RubyQueue> rubyQueue;
     Module rb_mSimpleRbBLE;
     Module rb_mSimpleRbBLEUnderlying;
@@ -43,7 +43,7 @@ namespace SimpleRbBLE {
             adapterRegistry->for_each([](std::shared_ptr<Adapter> &adapter) {
                 if (adapter->scan_is_active()) adapter->scan_stop();
                 adapter->_peripheral_registry->for_each([](auto &peripheral) {
-//                    if (peripheral->is_paired()) peripheral->unpair();
+                    if (peripheral->is_paired()) peripheral->unpair();
                     if (peripheral->is_connected()) {
                         std::cout << "Peripheral " << peripheral << " is connected. Disconnecting on shutdown." << std::endl;
                         peripheral->disconnect();
@@ -65,22 +65,54 @@ namespace SimpleRbBLE {
         std::cerr << "Insert gbb breakpoint here" << std::endl;
 #endif
     }
+
+    template <class Exception> requires std::derived_from<Exception, std::exception>
+    constexpr void handle_exception(const Exception& ex) {
+        try {
+            std::cerr << "Ruby Backtrace: " << std::endl;
+            rb_backtrace();
+            std::cerr << std::endl << std::endl;
+        } catch (const std::exception &ex2) {}
+        try {
+            std::cerr << "C++ Backtrace: " << std::endl;
+            Exceptions::throw_with_trace(ex);
+        } catch (const std::exception &ex2) {
+          throw Exception(ex);
+        }
+    }
+    void Init_ExceptionHandling() {
+//        register_handler<Rice::Exception>(SimpleRbBLE::handle_exception<Rice::Exception>);
+        static std::terminate_handler old_terminate_handler = std::get_terminate();
+        std::set_terminate([] {
+            try {
+                std::cerr << boost::stacktrace::stacktrace();
+            } catch (...) {}
+            try {
+                rb_backtrace();
+//                ensure_ruby<void*>([]() { rb_backtrace(); return nullptr; });
+            } catch (...) {}
+            if (old_terminate_handler != nullptr) old_terminate_handler();
+//            std::abort();
+        });
+    }
 }
 
 using namespace SimpleRbBLE;
+using namespace SimpleRbBLE::Exceptions;
 
 static_assert(Identifiers::PartiallyIdentifiableResource<Adapter>);
 static_assert(std::same_as<SimpleRbBLE::Identifiers::IDTypes::Full<SimpleRbBLE::Adapter, true>::tuple, std::tuple<std::string>>);
 
 // See https://jasonroelofs.com/rice/4.x
 extern "C" [[maybe_unused]] void Init_SimpleRbBLE() {
-    SimpleRbBLE::in_ruby = true;
+    SimpleRbBLE::main_thread_in_ruby = SimpleRbBLE::in_ruby.assert_guard();
+    Init_ExceptionHandling();
+
 #ifdef SIMPLERBBLE_DEBUG
     VALGRIND_PRINTF_BACKTRACE("Enabling leak checking now.\n");
     VALGRIND_CLO_CHANGE("--leak-check=full");
 #endif
     Rice::detail::Registries::instance.instances.isEnabled = true;
-
     rb_mSimpleRbBLE = define_module("SimpleRbBLE");
     rubyQueue = RubyQueue::instance();
 
@@ -91,7 +123,7 @@ extern "C" [[maybe_unused]] void Init_SimpleRbBLE() {
     rb_mSimpleRbBLEUnderlying = define_module_under(rb_mSimpleRbBLE, "Underlying");
     Init_Utils();
     Init_BluetoothAddressType();
-    Init_ConvertableByteArray();
+    Init_ByteArray();
     Init_Descriptor();
     Init_Characteristic();
     Init_Service();

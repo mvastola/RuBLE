@@ -43,8 +43,8 @@ namespace SimpleRbBLE {
         [[nodiscard]] constexpr ResourceUniqueIdentifier<Descriptor> full_resource_identifier() const;
         [[nodiscard]] constexpr BluetoothUUID this_resource_identifier() const;
 
-        ConvertableByteArray read();
-        void write(ConvertableByteArray data);
+        ByteArray read();
+        void write(ByteArray data);
 
         [[nodiscard]] constexpr std::string to_s() const {
             return basic_object_inspect_start(*this) + " " + uuid() + ">";

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Callback.hpp"
+#include "helpers/Callback.hpp"
 #include <deque>
 #include <mutex>
 #include <ruby/thread.h>

@@ -1,0 +1,8 @@
+#cmakedefine Ruby_VERSION_MAJOR "@Ruby_VERSION_MAJOR@"
+#cmakedefine Ruby_VERSION_MINOR "@Ruby_VERSION_MINOR@"
+#cmakedefine Ruby_VERSION_PATCH "@Ruby_VERSION_PATCH@"
+#cmakedefine Ruby_VERSION "@Ruby_VERSION@"
+
+#cmakedefine boost_exception_FOUND
+#cmakedefine BOOST_STACKTRACE_LIBRARY "@BOOST_STACKTRACE_LIBRARY@"
+#cmakedefine CMAKE_BUILD_TYPE "@CMAKE_BUILD_TYPE@"

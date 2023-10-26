@@ -1,7 +1,7 @@
 #include "utils.hpp"
 #include "RubyQueue.hpp"
+#include "helpers/InRuby.hpp"
 #include <ruby/thread.h>
-#include <ruby/thread_native.h>
 
 using namespace std::chrono_literals;
 
@@ -83,6 +83,7 @@ namespace SimpleRbBLE {
             }
 
             rb_thread_call_with_gvl([](void *queueItem) -> void * {
+                auto in_ruby_guard = in_ruby.assert_guard();
                 (*reinterpret_cast<QueueItemType*>(queueItem))();
                 return nullptr;
             }, &item);
@@ -137,15 +138,12 @@ namespace SimpleRbBLE {
         std::shared_ptr<RubyQueue> rq = instance();
 
         rq->stop();
-//        std::cerr << "Waiting for SimpleRbBLE::RubyQueue to stop..." << std::endl;
-        if (rq->stopped()) {
-//            std::cerr << "SimpleRbBLE::RubyQueue exited already." << std::endl;
-        } else if (wait_until([&]{ return !rq->running(); }, 1s)) {
-//            std::cerr << "SimpleRbBLE::RubyQueue has stopped." << std::endl;
-        } else {
-            std::cerr << "SimpleRbBLE::RubyQueue won't exit. Forcing it.." << std::endl;
-            rq->kill();
-        }
+        if (rq->stopped()) return;
+
+        if (wait_until([&]{ return !rq->running(); }, 1s)) return;
+
+        std::cerr << "SimpleRbBLE::RubyQueue won't exit. Forcing it.." << std::endl;
+        rq->kill();
     }
 
     void RubyQueue::kill() {

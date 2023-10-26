@@ -2,32 +2,34 @@
 
 #include "types.hpp"
 
-#include "NamedBitSet.hpp"
-#include "ConvertableByteArray.hpp"
-#include "metaprogramming.hpp"
+#include "helpers/InRuby.hpp"
+#include "helpers/NamedBitSet.hpp"
+#include "ByteArray.hpp"
+#include "helpers/metaprogramming.hpp"
 #include "utils.hpp"
+#include "helpers/exceptions.hpp"
 
 namespace SimpleRbBLE {
     template<Identifiers::OwnerTypedResource T>
     class ResourceUniqueIdentifier;
 }
 
-#include "Callback.hpp"
+#include "helpers/Callback.hpp"
 #include "RubyQueue.hpp"
 
 #include "Adapter.hpp"
-#include "NamedBitSet.hpp"
-#include "NamedBitSet.ipp"
+#include "helpers/NamedBitSet.hpp"
+#include "helpers/NamedBitSet.ipp"
 
 #include "Peripheral.hpp"
 #include "Service.hpp"
 #include "Characteristic.hpp"
 #include "Descriptor.hpp"
 
-#include "RegistryFactory.hpp"
+#include "helpers/RegistryFactory.hpp"
 #include "Registry.hpp"
 
-#include "ResourceUniqueIdentifier.hpp"
+//#include "helpers/ResourceUniqueIdentifier.hpp"
 
 namespace SimpleRbBLE {
 
@@ -41,18 +43,18 @@ namespace SimpleRbBLE {
     extern BluetoothAddressType_DT rb_cBluetoothAddressType;
     extern Characteristic_DT rb_cCharacteristic;
     extern CharacteristicCapabilityType_DT rb_cCharacteristicCapabilityType;
-    extern Descriptor_DT rb_cDescriptor;
+    [[maybe_unused]] extern Descriptor_DT rb_cDescriptor;
     extern Service_DT rb_cService;
     extern ServiceRegistry_DT rb_cServiceRegistry;
     extern AdapterRegistry_DT rb_cAdapterRegistry;
     extern PeripheralRegistry_DT rb_cPeripheralRegistry;
     extern CharacteristicRegistry_DT rb_cCharacteristicRegistry;
-    extern ConvertableByteArray_DT rb_cConvertableByteArray;
+    extern ByteArray_DT rb_cByteArray;
 
     extern void Init_Adapter();
     extern void Init_BluetoothAddressType();
     extern void Init_Characteristic();
-    extern void Init_ConvertableByteArray();
+    extern void Init_ByteArray();
     extern void Init_Descriptor();
     extern void Init_Peripheral();
     extern void Init_Registries();
@@ -105,7 +107,6 @@ namespace Rice {
     template<> void ruby_mark<SimpleRbBLE::Adapter>(SimpleRbBLE::Adapter *);
     template<> void ruby_mark<SimpleRbBLE::AdapterRegistry>(SimpleRbBLE::AdapterRegistry*);
     template<> void ruby_mark<SimpleRbBLE::AdapterRegistryFactory>(SimpleRbBLE::AdapterRegistryFactory*);
-    template<> void ruby_mark<SimpleRbBLE::Callback>(SimpleRbBLE::Callback*);
     template<> void ruby_mark<SimpleRbBLE::Peripheral>(SimpleRbBLE::Peripheral*);
     template<> void ruby_mark<SimpleRbBLE::PeripheralRegistry>(SimpleRbBLE::PeripheralRegistry*);
     template<> void ruby_mark<SimpleRbBLE::PeripheralRegistryFactory>(SimpleRbBLE::PeripheralRegistryFactory*);
@@ -117,6 +118,3 @@ namespace Rice {
     template<> void ruby_mark<SimpleRbBLE::CharacteristicRegistryFactory>(SimpleRbBLE::CharacteristicRegistryFactory*);
 
 }
-
-#include "NamedBitSet.ipp"
-#include "ResourceUniqueIdentifier.hpp"

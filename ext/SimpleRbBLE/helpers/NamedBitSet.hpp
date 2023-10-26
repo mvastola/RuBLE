@@ -7,8 +7,10 @@
 #include <functional>
 #include <variant>
 #include <string_view>
+#include <ranges>
+#include "../StringUtils.hpp"
 
-#include "metaprogramming.hpp"
+#include "helpers/metaprogramming.hpp"
 
 namespace SimpleRbBLE {
     template<const auto &FIELD_NAMES> class NamedBitSet;

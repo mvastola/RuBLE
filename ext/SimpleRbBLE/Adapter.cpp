@@ -1,34 +1,38 @@
+#include <ranges>
+
 #include "common.hpp"
 #include "Adapter.hpp"
 #include "Peripheral.hpp"
 #include "Registry.hpp"
-#include "RegistryFactory.hpp"
+#include "helpers/RegistryFactory.hpp"
 #include "RubyQueue.hpp"
+#include "StringUtils.hpp"
 
 namespace SimpleRbBLE {
+    using Rice::String;
     Adapter::Adapter(const SimpleBLE::Adapter &adapter) :
             _adapter(std::make_shared<SimpleBLE::Adapter>(adapter)),
             _addr(_adapter->address()),
             _peripheral_registry(peripheralRegistryFactory->registry(this)),
-            _on_scan_start(std::make_shared<Callback>()),
-            _on_scan_stop(std::make_shared<Callback>()),
-            _on_scan_update(std::make_shared<Callback>()),
-            _on_scan_find(std::make_shared<Callback>()),
+            _on_scan_start(std::make_shared<Callback>(1)),
+            _on_scan_stop(std::make_shared<Callback>(1)),
+            _on_scan_update(std::make_shared<Callback>(2)),
+            _on_scan_find(std::make_shared<Callback>(2)),
             _self(Adapter_DO(*this)) {
         get().set_callback_on_scan_start([this]() {
-            RubyQueue::FnType fn = [this]() -> void { _on_scan_start->fire(); };
+            RubyQueue::FnType fn = [this]() -> void { _on_scan_start->fire(self()); };
             if (_on_scan_start) rubyQueue->push(fn);
         });
 
         get().set_callback_on_scan_stop([this]() {
-            RubyQueue::FnType fn = [this]() -> void { _on_scan_stop->fire(); };
+            RubyQueue::FnType fn = [this]() -> void { _on_scan_stop->fire(self()); };
             if (_on_scan_stop) rubyQueue->push(fn);
         });
 
         get().set_callback_on_scan_updated([this](const SimpleBLE::Peripheral &peripheral) {
             RubyQueue::FnType fn = [this, peripheral]() -> void {
                 const std::shared_ptr<Peripheral> &wrapped = _peripheral_registry->fetch(peripheral);
-                _on_scan_update->fire(wrapped->self());
+                _on_scan_update->fire(wrapped->self(), self());
             };
             if (_on_scan_update) rubyQueue->push(fn);
         });
@@ -36,7 +40,7 @@ namespace SimpleRbBLE {
         get().set_callback_on_scan_found([this](const SimpleBLE::Peripheral &peripheral) {
             RubyQueue::FnType fn = [this, peripheral]() -> void {
                 const std::shared_ptr<Peripheral> &wrapped = _peripheral_registry->fetch(peripheral);
-                _on_scan_find->fire(wrapped->self());
+                _on_scan_find->fire(wrapped->self(), self());
             };
             if (_on_scan_find) rubyQueue->push(fn);
         });

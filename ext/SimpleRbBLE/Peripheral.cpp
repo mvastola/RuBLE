@@ -1,11 +1,11 @@
 #include "common.hpp"
-#include "NamedBitSet.hpp"
+#include "helpers/NamedBitSet.hpp"
 #include "Peripheral.hpp"
 #include "RubyQueue.hpp"
-#include "Callback.hpp"
+#include "helpers/Callback.hpp"
 #include "Service.hpp"
 #include "Registry.hpp"
-#include "RegistryFactory.hpp"
+#include "helpers/RegistryFactory.hpp"
 
 namespace SimpleRbBLE {
     Peripheral::Peripheral(const SimpleBLE::Peripheral &peripheral,
@@ -14,16 +14,16 @@ namespace SimpleRbBLE {
             _peripheral(std::make_shared<SimpleBLE::Peripheral>(peripheral)),
             _addr(_peripheral->address()),
             _addr_type(_peripheral->address_type()),
-            _on_connected(std::make_shared<Callback>()),
-            _on_disconnected(std::make_shared<Callback>()),
+            _on_connected(std::make_shared<Callback>(1)),
+            _on_disconnected(std::make_shared<Callback>(1)),
             _self(Peripheral_DO(*this)),
             _service_registry(serviceRegistryFactory->registry(this)) {
         _peripheral->set_callback_on_connected([this]() {
-            RubyQueue::FnType fn = [this]() -> void { _on_connected->fire(); };
+            RubyQueue::FnType fn = [this]() -> void { _on_connected->fire(self()); };
             if (_on_connected) rubyQueue->push(fn);
         });
         _peripheral->set_callback_on_disconnected([this]() {
-            RubyQueue::FnType fn = [this]() -> void { _on_disconnected->fire(); };
+            RubyQueue::FnType fn = [this]() -> void { _on_disconnected->fire(self()); };
             if (_on_disconnected) rubyQueue->push(fn);
         });
     }
@@ -34,7 +34,7 @@ namespace SimpleRbBLE {
     std::string Peripheral::identifier() const { return _peripheral->identifier(); }
 
 
-    std::map<uint16_t, ConvertableByteArray> Peripheral::manufacturer_data() const {
+    std::map<uint16_t, ByteArray> Peripheral::manufacturer_data() const {
         auto data = _peripheral->manufacturer_data();
         return { data.begin(), data.end() };
     }
@@ -46,7 +46,6 @@ namespace SimpleRbBLE {
     const Peripheral::Owner *Peripheral::owner() const { return _owner; }
     Peripheral::Owner *Peripheral::owner() { return _owner; }
     SimpleBLE::Peripheral &Peripheral::get() { return *_peripheral; }
-
     const SimpleBLE::Peripheral &Peripheral::get() const { return *_peripheral; }
 
     bool Peripheral::is_connected() const { return _peripheral->is_connected(); }
@@ -103,28 +102,28 @@ namespace SimpleRbBLE {
         // TODO(?): catch (std::out_of_range &ex)
     }
 
-    ConvertableByteArray Peripheral::read(const BluetoothUUID &service, const BluetoothUUID &characteristic) {
+    ByteArray Peripheral::read(const BluetoothUUID &service, const BluetoothUUID &characteristic) {
         return _peripheral->read(service, characteristic);
     }
 
     void Peripheral::write_request(const BluetoothUUID &service, const BluetoothUUID &characteristic,
-                                   ConvertableByteArray data) {
+                                   ByteArray data) {
         return _peripheral->write_request(service, characteristic, std::move(data));
     }
 
     void Peripheral::write_command(const BluetoothUUID &service, const BluetoothUUID &characteristic,
-                                   ConvertableByteArray data) {
+                                   ByteArray data) {
         return _peripheral->write_command(service, characteristic, std::move(data));
     }
 
     void Peripheral::notify(const BluetoothUUID &service, const BluetoothUUID &characteristic,
-                            std::function<void(ConvertableByteArray)> callback) {
+                            std::function<void(ByteArray)> callback) {
         // FIXME: make sure we don't have a GC problem with this callback
         return _peripheral->notify(service, characteristic, callback);
     }
 
     void Peripheral::indicate(const BluetoothUUID &service, const BluetoothUUID &characteristic,
-                              std::function<void(ConvertableByteArray)> callback) {
+                              std::function<void(ByteArray)> callback) {
         // FIXME: make sure we don't have a GC problem with this callback
         return _peripheral->indicate(service, characteristic, callback);
     }
@@ -133,13 +132,13 @@ namespace SimpleRbBLE {
         return _peripheral->unsubscribe(service, characteristic);
     }
 
-    ConvertableByteArray Peripheral::read(const BluetoothUUID &service, const BluetoothUUID &characteristic,
+    ByteArray Peripheral::read(const BluetoothUUID &service, const BluetoothUUID &characteristic,
                                const BluetoothUUID &descriptor) {
         return _peripheral->read(service, characteristic, descriptor);
     }
 
     void Peripheral::write(const BluetoothUUID &service, const BluetoothUUID &characteristic,
-                           const BluetoothUUID &descriptor, ConvertableByteArray data) {
+                           const BluetoothUUID &descriptor, ByteArray data) {
         return _peripheral->write(service, characteristic, descriptor, std::move(data));
     }
 
@@ -168,7 +167,7 @@ namespace SimpleRbBLE {
         oss << "@mtu=" << mtu() << " ";
         oss << "svc_count=" << _peripheral->services().size() << " ";
         oss << join(statuses(), "|");
-//        std::map<uint16_t, ByteArray> manufacturer_data() const;
+//        std::map<uint16_t, SimpleBLE::ByteArray> manufacturer_data() const;
         oss << ">";
         return oss.str();
     }

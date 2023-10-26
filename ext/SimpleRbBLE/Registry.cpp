@@ -2,7 +2,7 @@
 #include "Adapter.hpp"
 #include "Peripheral.hpp"
 #include "Registry.hpp"
-#include "RegistryFactory.hpp"
+#include "helpers/RegistryFactory.hpp"
 #include "Service.hpp"
 #include "Characteristic.hpp"
 

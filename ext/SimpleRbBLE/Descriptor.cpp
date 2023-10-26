@@ -2,7 +2,7 @@
 #include "Characteristic.hpp"
 
 namespace SimpleRbBLE {
-    Descriptor_DT rb_cDescriptor;
+    [[maybe_unused]] Descriptor_DT rb_cDescriptor;
 
     Descriptor::Descriptor(BluetoothUUID uuid, Descriptor::Owner *owner) :
         _owner(owner), _uuid(std::move(uuid)),  _self(DataObject(*this))  {}
@@ -12,9 +12,9 @@ namespace SimpleRbBLE {
 
     Object Descriptor::self() const { return _self; }
 
-    [[nodiscard]] ConvertableByteArray Descriptor::read() { return characteristic()->read(uuid()); }
+    [[nodiscard]] ByteArray Descriptor::read() { return characteristic()->read(uuid()); }
 
-    void Descriptor::write(ConvertableByteArray data) { characteristic()->write(uuid(), std::move(data)); }
+    void Descriptor::write(ByteArray data) { characteristic()->write(uuid(), std::move(data)); }
 
 
     Rice::String Descriptor::inspect() const {

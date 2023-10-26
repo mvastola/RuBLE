@@ -6,7 +6,7 @@
 
 #include <utility>
 #include "RubyQueue.hpp"
-#include "Callback.hpp"
+#include "helpers/Callback.hpp"
 
 namespace SimpleRbBLE {
     Characteristic::Characteristic(const SimpleBLE::Characteristic &characteristic,
@@ -40,26 +40,25 @@ namespace SimpleRbBLE {
 
     std::vector<std::string> Characteristic::capability_names() const { return capabilities().flag_name_strs(); }
 
-    ConvertableByteArray Characteristic::read() {
+    ByteArray Characteristic::read() {
         return service()->read(uuid());
     }
-    ConvertableByteArray Characteristic::read(const BluetoothUUID &descriptor) {
+    ByteArray Characteristic::read(const BluetoothUUID &descriptor) {
         return service()->read(uuid(), descriptor);
     }
-    void Characteristic::write(const BluetoothUUID &descriptor, ConvertableByteArray data) {
+    void Characteristic::write(const BluetoothUUID &descriptor, ByteArray data) {
         service()->write(uuid(), descriptor, std::move(data));
     }
-    void Characteristic::write_request(ConvertableByteArray data) {
+    void Characteristic::write_request(ByteArray data) {
         service()->write_request(uuid(), std::move(data));
     }
-    void Characteristic::write_command(ConvertableByteArray data) {
+    void Characteristic::write_command(ByteArray data) {
         service()->write_command(uuid(), std::move(data));
     }
     void Characteristic::set_on_notify(Object cb) {
         if (!_on_notify) {
-            _on_notify = std::make_shared<Callback>();
-            service()->notify(uuid(), [this](const ConvertableByteArray& data) {
-                if (DEBUG) std::cout << "Characteristic::fire_on_notify called with " << data.inspect() << std::endl;
+            _on_notify = std::make_shared<Callback>(2);
+            service()->notify(uuid(), [this](const ByteArray& data) {
                 RubyQueue::FnType fn = std::bind(&Characteristic::fire_on_notify, std::cref(*this), data);  // NOLINT(*-avoid-bind)
                 rubyQueue->push(fn);
             });
@@ -69,9 +68,8 @@ namespace SimpleRbBLE {
 
     void Characteristic::set_on_indicate(Object cb) {
         if (!_on_indicate) {
-            _on_indicate = std::make_shared<Callback>();
-            service()->indicate(uuid(), [this](const ConvertableByteArray& data) {
-                if (DEBUG) std::cout << "Characteristic::fire_on_indicate called with " << data.inspect() << std::endl;
+            _on_indicate = std::make_shared<Callback>(2);
+            service()->indicate(uuid(), [this](const ByteArray& data) {
                 RubyQueue::FnType fn = std::bind(&Characteristic::fire_on_indicate, std::cref(*this), data);  // NOLINT(*-avoid-bind)
                 rubyQueue->push(fn);
             });
@@ -79,12 +77,14 @@ namespace SimpleRbBLE {
         _on_indicate->set(std::move(cb));
     }
 
-    void Characteristic::fire_on_notify(const ConvertableByteArray &data) const {
-        if (_on_notify) _on_notify->fire(Rice::detail::To_Ruby<ByteArray>().convert(data));
+    void Characteristic::fire_on_notify(const ByteArray &data) const {
+        if (DEBUG) std::cout << "Characteristic::fire_on_notify called with " << data.inspect() << std::endl;
+        if (_on_notify) _on_notify->fire(Rice::detail::To_Ruby<SimpleBLE::ByteArray>().convert(data), self());
     }
 
-    void Characteristic::fire_on_indicate(const ConvertableByteArray &data) const {
-        if (_on_indicate) _on_indicate->fire(Rice::detail::To_Ruby<ByteArray>().convert(data));
+    void Characteristic::fire_on_indicate(const ByteArray &data) const {
+        if (DEBUG) std::cout << "Characteristic::fire_on_indicate called with " << data.inspect() << std::endl;
+        if (_on_indicate) _on_indicate->fire(Rice::detail::To_Ruby<SimpleBLE::ByteArray>().convert(data), self());
     }
 
     void Characteristic::unsubscribe() {

@@ -17,6 +17,10 @@ namespace :dev do
   task(maybe_reconfigure: %i[initialize]) { @devTasks.maybe_reconfigure! }
 
   desc 'Compiles code for debugging'
-  task(build: %i[initialize]) { @devTasks.build! }
+  task :build, %i[flags] do |task, args|
+    flags = args.fetch(flags, '').split(/,\s*/).uniq.each(&:strip!).reject(&:empty?).to_set
+    @devTasks.build!(flags)
+  end
+  task build: %i[initialize]
 end
-task dev: %w[dev:build]
+task(:dev, %i[flags]) { |task, args| Rake::Task['dev:build'].invoke(args[:flags]) }

@@ -3,7 +3,8 @@
 #pragma once
 
 #include "types.hpp"
-#include "Callback.hpp"
+#include "DebugUtils.hpp"
+#include "helpers/Callback.hpp"
 #include "Registry.hpp"
 
 #include <unordered_set>

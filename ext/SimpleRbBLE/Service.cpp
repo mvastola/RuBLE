@@ -2,10 +2,10 @@
 
 #include <utility>
 #include "RubyQueue.hpp"
-#include "Callback.hpp"
+#include "helpers/Callback.hpp"
 #include "Characteristic.hpp"
 #include "Registry.hpp"
-#include "RegistryFactory.hpp"
+#include "helpers/RegistryFactory.hpp"
 #include "Peripheral.hpp"
 
 namespace SimpleRbBLE {
@@ -24,7 +24,7 @@ namespace SimpleRbBLE {
 
     const SimpleBLE::Service &Service::get() const { return *_service; }
 
-    ConvertableByteArray Service::data() const { return _service->data(); }
+    ByteArray Service::data() const { return _service->data(); }
 
     const std::map<BluetoothUUID, std::shared_ptr<Characteristic>> &Service::characteristics() const {
         if (!rb_during_gc()) {
@@ -47,38 +47,38 @@ namespace SimpleRbBLE {
     }
 
 
-    ConvertableByteArray Service::read(const BluetoothUUID &characteristic) {
+    ByteArray Service::read(const BluetoothUUID &characteristic) {
         return peripheral()->read(uuid(), characteristic);
     }
 
-    ConvertableByteArray
+    ByteArray
     Service::read(const BluetoothUUID &characteristic, const BluetoothUUID &descriptor) {
         return peripheral()->read(uuid(), characteristic, descriptor);
     }
 
     void
     Service::write(const BluetoothUUID &characteristic, const BluetoothUUID &descriptor,
-                   ConvertableByteArray data) {
+                   ByteArray data) {
         peripheral()->write(uuid(), characteristic, descriptor, std::move(data));
     }
 
     void
-    Service::write_request(const BluetoothUUID &characteristic, ConvertableByteArray data) {
+    Service::write_request(const BluetoothUUID &characteristic, ByteArray data) {
         peripheral()->write_request(uuid(), characteristic, std::move(data));
     }
 
     void
-    Service::write_command(const BluetoothUUID &characteristic, ConvertableByteArray data) {
+    Service::write_command(const BluetoothUUID &characteristic, ByteArray data) {
         peripheral()->write_command(uuid(), characteristic, std::move(data));
     }
 
     void Service::notify(const BluetoothUUID &characteristic,
-                         std::function<void(ConvertableByteArray)> callback) {
+                         std::function<void(ByteArray)> callback) {
         peripheral()->notify(uuid(), characteristic, std::move(callback));
     }
 
     void Service::indicate(const BluetoothUUID &characteristic,
-                           std::function<void(ConvertableByteArray)> callback) {
+                           std::function<void(ByteArray)> callback) {
         peripheral()->indicate(uuid(), characteristic, std::move(callback));
     }
 
@@ -101,7 +101,7 @@ namespace SimpleRbBLE {
     void Init_Service() {
         rb_cService = define_class_under<Service>(rb_mSimpleRbBLE, "Service")
                 .define_method("uuid", &Service::uuid) // returns BluetoothUUID
-                .define_method("data", &Service::data) // returns ByteArray
+                .define_method("data", &Service::data) // returns SimpleBLE::ByteArray
                 .define_method("characteristics", &Service::characteristics) // returns std::vector<Characteristic>
                 .define_method("inspect", &Service::to_s);
         define_class_under<std::shared_ptr<SimpleRbBLE::Service>>(rb_mSimpleRbBLE, "ServicePtr");

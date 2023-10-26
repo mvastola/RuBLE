@@ -15,3 +15,5 @@ tmp/
 .gdb_history
 *.patch
 mkmf.log
+cmake-build-debug
+build

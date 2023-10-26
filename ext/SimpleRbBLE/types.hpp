@@ -1,11 +1,14 @@
 #pragma once
 
-#ifdef SIMPLERBBLE_DEBUG
+#include RUBY_EXTCONF_H
+#ifdef HAVE_VALGRIND_VALGRIND_H
 #include <valgrind/valgrind.h>
 #endif
 #include <iostream>
 #include <memory>
 #include <concepts>
+#include <span>
+#include <cstddef>
 
 #include <rice/rice.hpp>
 #include <rice/stl.hpp>
@@ -17,22 +20,22 @@
 // from https://stackoverflow.com/a/6713727
 #define STRINGIFICATOR(X) #X
 
-namespace Rice { ; }
+namespace Rice {}
 namespace SimpleRbBLE {
-
 #ifdef SIMPLERBBLE_DEBUG
         static constexpr const bool DEBUG = true;
 #else
         static constexpr const bool DEBUG = false;
 #endif
+    class InRuby;
+    extern thread_local InRuby in_ruby;
+
     namespace Rice = ::Rice;
     using namespace ::Rice;
 
-    using SimpleBLE::BluetoothAddress,
-            SimpleBLE::BluetoothAddressType,
-            SimpleBLE::BluetoothUUID,
-            SimpleBLE::ByteArray;
-//    class RubyQueue;
+    using BluetoothAddress = SimpleBLE::BluetoothAddress;
+    using BluetoothAddressType = SimpleBLE::BluetoothAddressType;
+    using BluetoothUUID = SimpleBLE::BluetoothUUID;
 
     template <typename T = void>
     using RbThreadCreateFn = VALUE(*)(T*);
@@ -43,11 +46,9 @@ namespace SimpleRbBLE {
     template <typename T = void>
     using RbUbfFn = void (*)(T*);
 
-
     template<const auto &FIELD_NAMES> class NamedBitSet;
 
     class Callback;
-
     template<typename Key, class ProxyClass, class Value>
     class Registry;
 
@@ -56,9 +57,9 @@ namespace SimpleRbBLE {
 
     using BluetoothAddressType_DT = Enum<SimpleBLE::BluetoothAddressType>;
 
-    class ConvertableByteArray;
-    using ConvertableByteArray_DT = Data_Type<ConvertableByteArray>;
-    using ConvertableByteArray_DO = Data_Object<ConvertableByteArray>;
+    class ByteArray;
+    using ByteArray_DT = Data_Type<ByteArray>;
+    using ByteArray_DO = Data_Object<ByteArray>;
 
     class Adapter;
     using Adapter_DT = Data_Type<Adapter>;
@@ -100,6 +101,8 @@ namespace SimpleRbBLE {
     using Descriptor_DT = Data_Type<Descriptor>;
     using Descriptor_DO = Data_Object<Descriptor>;
 
+    using str_char_type = std::string::value_type;
+
     template<typename T>
     concept BluetoothAddressable = requires(T t) {
         { t.address() } -> std::same_as<SimpleBLE::BluetoothAddress>;
@@ -115,7 +118,18 @@ namespace SimpleRbBLE {
         { t.self() } -> std::constructible_from<Object>;
     };
 
-        // because exact, constexpr division with round up
+
+    template<typename T>
+    concept CanSpanBytes = requires (const T &t) { std::as_bytes(t); };
+
+    template<typename T>
+    concept Span = std::same_as<std::remove_cvref_t<T>, std::span<typename T::element_type, T::extent>>;
+
+    template<typename T>
+    concept Byte = std::same_as<std::remove_cvref_t<T>, std::byte> ||
+            std::same_as<std::remove_cvref_t<T>, std::underlying_type_t<std::byte>>;
+
+    // because exact, constexpr division with round up
     template <std::integral auto A, std::integral auto B,
             std::integral Res = std::common_type_t<decltype(A), decltype(B)>>
     constexpr const Res divmod_ceil = (static_cast<Res>(A) / static_cast<Res>(B)) +

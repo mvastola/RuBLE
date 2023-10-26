@@ -17,6 +17,7 @@ class DevTasks
   TMP_MAKEFILE_PATH = TMP_BUILD_DIR / 'Makefile'
   REL_TMP_MAKEFILE_PATH = TMP_MAKEFILE_PATH.relative_path_from(ROOT_DIR)
   HASH_FILE = EXT_DIR / '.state_hash'
+  SRC_GLOB = "{**/,}*.{{h,c}{,pp},ipp}"
 
   class << self
     def hash_file(path)
@@ -33,16 +34,18 @@ class DevTasks
 
     def state_hash
       fields = []
-      fields << EXT_DIR.glob("*.{{h,c}{,pp},ipp}").sort
+      fields << EXT_DIR.glob("**/*.{{h,c}{,pp},ipp}").sort - %w[extconf.h]
       fields << [
         EXT_DIR / 'extconf.rb',
         EXT_DIR / 'Makefile',
+        *EXT_DIR.glob("**/*.rb"),
         ROOT_DIR / 'Gemfile',
         ROOT_DIR / 'Gemfile.lock',
         ROOT_DIR / 'Rakefile',
         ROOT_DIR / '.ruby-version',
         TEST_DIR / 'Makefile',
         *ROOT_DIR.glob("*.gemspec"),
+        *(EXT_DIR / 'helpers').glob(SRC_GLOB)
       ].select(&:file?).map(&method(:hash_file))
 
       fields << LIB_FILE.symlink? ? LIB_FILE.readlink : LIB_FILE.exist?
@@ -87,10 +90,12 @@ class DevTasks
   def needs_reconfigure? = !HASH_FILE.exist? || HASH_FILE.read.strip != self.class.state_hash
   def maybe_reconfigure! = needs_reconfigure? && reconfigure!
 
-  def build!
+  def build!(*flags)
+    verbose = flags.include?(:silent) ? 0 : 1
+    num_jobs = flags.include?(:single) ? 1 : Etc.nprocessors
     maybe_reconfigure!
     [ TMP_BUILD_DIR, TEST_DIR ].each do |dir|
-      pager.exec_paginated!(%W[make -j#{Etc.nprocessors} V=1 CXX=g++-13], chdir: dir)
+      pager.exec_paginated!(%W[make -j#{num_jobs} V=#{verbose} CXX=g++-13], chdir: dir)
     end
   end
 end
