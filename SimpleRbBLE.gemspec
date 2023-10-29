@@ -41,6 +41,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rake-compiler"
   spec.add_development_dependency "minitest"
-  spec.add_development_dependency "memery"
+  spec.add_development_dependency "faraday"
+  spec.add_development_dependency "mini_portile2"
+  spec.add_development_dependency "os"
+  spec.add_development_dependency "rubyzip"
 
 end

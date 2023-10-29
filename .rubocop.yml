@@ -1,16 +1,83 @@
 AllCops:
-  TargetRubyVersion: 3.1
-
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: double_quotes
-
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
-
+  AllowSymlinksInCacheRootDirectory: true
+  TargetRubyVersion: 3.2
+  Exclude:
+    - "**/bin/**/*"
+    - "**/node_modules/**/*"
+    - "**/.git/**/*"
+  AutoCorrect: true
+  NewCops: enable
+  StyleGuideBaseURL: https://rubystyle.guide
+#Rails:
+#  StyleGuideBaseURL: https://rails.rubystyle.guide
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: space
+Layout/HashAlignment:
+  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: table
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: start_of_line
+Layout/ExtraSpacing:
+  Enabled: false  # Disabled pending resoulution of #5657
+Layout/SpaceAroundOperators:
+  Enabled: false # Disabled pending resoulution of #5657
+Metrics/AbcSize:
+  Enabled: false
+Metrics/BlockLength:
+  IgnoredMethods:
+    - aasm
+    - included
+    - class_methods
+    - namespace
+    - task
 Layout/LineLength:
-  Max: 120
-
-Lint/AmbiguousOperator:
+  Enabled: false
+Metrics/MethodLength:
+  Max: 25
+Naming/MethodParameterName:
+  AllowedNames:
+    - as
+    - to
+    - io
+    - id
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+Style/Lambda:
+  EnforcedStyle: literal
+Style/DoubleNegation:
+  Enabled: false
+Style/MultilineIfModifier:
+  Enabled: false
+Style/SymbolArray:
+  MinSize: 1
+Style/SpecialGlobalVars:
+  EnforcedStyle: use_perl_names
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always_true
+  SafeAutoCorrect: true
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+Metrics/ParameterLists:
+  Enabled: false
+Layout/EmptyLinesAroundAccessModifier:
+  EnforcedStyle: only_before
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: false
+Style/AccessorGrouping:
+  Enabled: false
+Style/CommentedKeyword:
+  Enabled: false
+Style/MultilineBlockChain:
   Enabled: false

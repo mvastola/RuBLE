@@ -22,5 +22,12 @@ namespace :dev do
     @devTasks.build!(flags)
   end
   task build: %i[initialize]
+
+  desc 'Audit missing symbols in built object files'
+  task audit_objfile_symbols: %i[initialize] do |task, args|
+    @devTasks.audit_objfile_symbols!
+  end
 end
 task(:dev, %i[flags]) { |task, args| Rake::Task['dev:build'].invoke(args[:flags]) }
+
+task audit_objfile_symbols: %i[dev:audit_objfile_symbols]

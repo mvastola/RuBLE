@@ -3,11 +3,12 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.9" />
   </component>
-  <component name="CMakeWorkspace">
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/ext/SimpleRbBLE">
     <contentRoot DIR="$PROJECT_DIR$" />
   </component>
   <component name="CidrRootsConfiguration">
     <excludeRoots>
+      <file path="$PROJECT_DIR$/ext/SimpleRbBLE/build" />
       <file path="$PROJECT_DIR$/tmp" />
       <file path="$PROJECT_DIR$/tmp/x86_64-linux" />
       <file path="$PROJECT_DIR$/tmp/x86_64-linux/SimpleRbBLE" />
@@ -15,23 +16,5 @@
     </excludeRoots>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="MakefileSettings">
-    <option name="linkedExternalProjectsSettings">
-      <MakefileProjectSettings>
-        <option name="buildTarget" value="SimpleRbBLE.so" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/ext/SimpleRbBLE" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/ext/SimpleRbBLE" />
-          </set>
-        </option>
-        <option name="switches" value="V=1 CXX=g++-13" />
-        <option name="version" value="2" />
-      </MakefileProjectSettings>
-    </option>
-  </component>
-  <component name="MakefileWorkspace" PROJECT_DIR="$PROJECT_DIR$/ext/SimpleRbBLE">
-    <contentRoot DIR="$PROJECT_DIR$" />
-  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="RVM: ruby-2.6.3 [global]" project-jdk-type="RUBY_SDK" />
 </project>

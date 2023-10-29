@@ -127,13 +127,55 @@ class Pager
     end
   end
 
-  def exec_paginated!(*args, chdir: ROOT_PATH, **kwargs)
+  #noinspection RbsMissingTypeSignature
+  def exec_unpaginated!(cmdargs, *args, chdir: ROOT_PATH, allow_fail: false, env: {}, **kwargs)
+    status = nil
+    out = String.new
+    err = String.new
+    rout, wout = IO.pipe
+    rerr, werr = IO.pipe
+    Bundler.with_unbundled_env do
+      cmd = cmdargs.is_a?(Array) ? cmdargs.shelljoin : cmdargs
+      puts "Running: #{cmd} in directory #{chdir}"
+      pid = Process.spawn(env, cmd, *args, **kwargs, chdir: chdir.to_s, in: File.open(OS.dev_null, 'wt'), out: wout, err: werr)
+      [wout, werr].each(&:close)
+      result = nil
+      open_ios = [rout, rerr]
+      close_io = ->(io) { io.close unless io.closed?; open_ios.delete(io) }
+      until (result ||= Process.wait2(pid, Process::WNOHANG)) || open_ios.empty?
+        rd_io, _, err_io = IO.select(open_ios, [], open_ios, 5)
+        err_io&.each { |io| close_io[io] }
+        rd_io&.each do |io|
+          next close_io[io] if io.eof? || io.closed?
+          buf = io == rout ? out : err
+          buf << io.read_nonblock(8192)
+        end
+      end
+      open_ios.each do |io|
+        buf = io == rout ? out : err
+        until io.closed? || io.eof?
+          buf << io.read_nonblock(8192)
+        end
+        io.close unless io.closed?
+      end
+      result ||= Process.wait2(pid)
+      _, status = result
+      unless status.success? && !allow_fail
+        raise "Execution of #{cmdargs.inspect} failed with code #{status.inspect}.\n"\
+                "Output:\n#{out}\nError:\n#{err}"
+      end
+    end
+    [status, out, err]
+  end
+
+  #noinspection RbsMissingTypeSignature
+  def exec_paginated!(cmdargs, *args, chdir: ROOT_PATH, env: {}, **kwargs)
     status = nil
     use do
       Bundler.with_unbundled_env do
-        args[-1] = args[-1].shelljoin if args[-1].is_a?(Array)
-        puts "Running: #{args.inspect} in directory #{chdir}"
-        pid = Process.spawn(*args, **kwargs, chdir: chdir.to_s) #, out: io, err: io)
+        cmd = cmdargs.is_a?(Array) ? cmdargs.shelljoin : cmdargs
+        puts "Running: #{cmd} in directory #{chdir}"
+        pid = Process.spawn(env, cmd, *args, **kwargs, chdir: chdir.to_s)
         _, status = Process.wait2(pid)
         unless status.success?
           raise "Execution of #{args.inspect} failed with code #{status.inspect}"

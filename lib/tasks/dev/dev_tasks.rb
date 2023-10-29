@@ -12,12 +12,15 @@ class DevTasks
   EXT_DIR = ROOT_DIR / 'ext' / EXTENSION_NAME
   TEST_DIR = ROOT_DIR / 'test'
   LIB_FILE = ROOT_DIR / 'lib' / EXTENSION_NAME / "#{EXTENSION_NAME}.so"
-  TMP_BUILD_DIR = TMP_DIR / RbConfig::MAKEFILE_CONFIG['arch'] /
+  BUILD_DIR = TMP_DIR / RbConfig::MAKEFILE_CONFIG['arch'] /
     EXTENSION_NAME / RbConfig::CONFIG['RUBY_PROGRAM_VERSION']
-  TMP_MAKEFILE_PATH = TMP_BUILD_DIR / 'Makefile'
-  REL_TMP_MAKEFILE_PATH = TMP_MAKEFILE_PATH.relative_path_from(ROOT_DIR)
-  HASH_FILE = EXT_DIR / '.state_hash'
-  SRC_GLOB = "{**/,}*.{{h,c}{,pp},ipp}"
+  EXT_DIR_FROM_BUILD_DIR = EXT_DIR.relative_path_from(BUILD_DIR)
+  BUILD_INFO_FILE = BUILD_DIR / 'build-config.json'
+  NINJA_FILE = BUILD_DIR / 'build.ninja'
+  HASH_FILE = BUILD_DIR / '.state_hash'
+  SRC_GLOB = '{**/,}*.{{h,c}{,pp},ipp}'
+  OBJFILES_DIR = BUILD_DIR / 'CMakeFiles' / "#{EXTENSION_NAME}.dir"
+  CMAKE_CXX_COMPILER = '/usr/bin/g++-13'
 
   class << self
     def hash_file(path)
@@ -25,30 +28,31 @@ class DevTasks
         HASHER << f.readpartial(8192) until f.eof?
       end
       HASHER.hexdigest
-    rescue => e
-      # TODO: catch file not found errors
-      raise e
+    rescue RefError # TODO: catch file not found errors (this is placeholder)
+      nil
     ensure
       HASHER.reset
     end
 
     def state_hash
       fields = []
-      fields << EXT_DIR.glob("**/*.{{h,c}{,pp},ipp}").sort - %w[extconf.h]
       fields << [
+        NINJA_FILE,
+        BUILD_DIR / 'CMakeCache.txt',
+        BUILD_DIR / 'config.h',
+        EXT_DIR / 'CMakeLists.txt',
+        *EXT_DIR.glob('*.cmake'),
+        BUILD_INFO_FILE,
         EXT_DIR / 'extconf.rb',
-        EXT_DIR / 'Makefile',
-        *EXT_DIR.glob("**/*.rb"),
+        *ROOT_DIR.glob('*.gemspec'),
         ROOT_DIR / 'Gemfile',
         ROOT_DIR / 'Gemfile.lock',
         ROOT_DIR / 'Rakefile',
+        # TODO(?): Include lib/tasks/dev/*.rb
         ROOT_DIR / '.ruby-version',
         TEST_DIR / 'Makefile',
-        *ROOT_DIR.glob("*.gemspec"),
-        *(EXT_DIR / 'helpers').glob(SRC_GLOB)
-      ].select(&:file?).map(&method(:hash_file))
+      ].select(&:file?).to_h { [_1, hash_file(_1)] }
 
-      fields << LIB_FILE.symlink? ? LIB_FILE.readlink : LIB_FILE.exist?
       JSON.pretty_generate(fields)
       # HASHER.tap { _1 << fields.to_json }.digest
     ensure
@@ -64,26 +68,42 @@ class DevTasks
 
   def write_hash_file! = HASH_FILE.write(self.class.state_hash)
 
+  def ninja_cmd(target: nil, flags: [])
+    verbose = flags.include?(:silent) ? 0 : 1
+    num_jobs = flags.include?(:single) ? 1 : Etc.nprocessors
+    [ 'ninja', "-j#{num_jobs}", verbose.positive? && '-v', target].compact.reject(&:empty?)
+  end
+
+  def make_cmd(target: nil, flags: [])
+    verbose = flags.include?(:silent) ? 0 : 1
+    num_jobs = flags.include?(:single) ? 1 : Etc.nprocessors
+    ['make', "-j#{num_jobs}", "V=#{verbose}", 'CXX=g++-13', target].compact
+  end
+
+
   def pristine!
     HASH_FILE.unlink if HASH_FILE.exist?
+    pager.exec_paginated!(ninja_cmd(target: 'clean'), chdir: BUILD_DIR) if NINJA_FILE.exist?
+    pager.exec_paginated!(make_cmd(target: 'clean'), chdir: TEST_DIR) if (TEST_DIR / 'Makefile').exist?
     LIB_FILE.unlink if LIB_FILE.exist?
-    TMP_DIR.rmtree if TMP_DIR.exist?
-    [ EXT_DIR, TEST_DIR ].each do |dir|
-      pager.exec_paginated!('make clean', chdir: dir) if (dir / 'Makefile').exist?
-    end
-    Rake::Task['clobber'].tap(&:reenable).invoke
-    Rake::Task['clean'].tap(&:reenable).invoke
+    BUILD_INFO_FILE.unlink if BUILD_INFO_FILE.exist?
+    BUILD_DIR.rmtree if BUILD_DIR.exist?
   end
 
   def reconfigure!
     pristine!
-    pager.exec_paginated!(%W[bundle exec rake #{REL_TMP_MAKEFILE_PATH}].shelljoin, chdir: ROOT_DIR)
-    # CLion needs a makefile in EXT_DIR to be happy :-\
     pager.exec_paginated!(%W[bundle exec ruby extconf.rb -- --with-debug].shelljoin, chdir: EXT_DIR)
 
-    # from LIB_FILE.parent directory, to make proper symlink
-    relative_library_path = (TMP_BUILD_DIR / LIB_FILE.basename).relative_path_from(LIB_FILE.parent)
-    LIB_FILE.make_symlink(relative_library_path)
+
+    BUILD_DIR.mkpath
+    cmd = %W[
+      cmake -G Ninja
+      -DCMAKE_CXX_COMPILER=#{CMAKE_CXX_COMPILER}
+      -DCMAKE_BUILD_TYPE=Debug
+      -DCMAKE_INSTALL_CONFIG_NAME=Debug
+      #{EXT_DIR_FROM_BUILD_DIR}
+    ]
+    pager.exec_paginated!(cmd, chdir: BUILD_DIR)
     write_hash_file!
   end
 
@@ -91,12 +111,66 @@ class DevTasks
   def maybe_reconfigure! = needs_reconfigure? && reconfigure!
 
   def build!(*flags)
-    verbose = flags.include?(:silent) ? 0 : 1
-    num_jobs = flags.include?(:single) ? 1 : Etc.nprocessors
     maybe_reconfigure!
-    [ TMP_BUILD_DIR, TEST_DIR ].each do |dir|
-      pager.exec_paginated!(%W[make -j#{num_jobs} V=#{verbose} CXX=g++-13], chdir: dir)
+    pager.exec_paginated!(make_cmd(flags:), chdir: TEST_DIR)
+
+    pager.exec_paginated!(ninja_cmd(flags:), chdir: BUILD_DIR)
+    pager.exec_paginated!(ninja_cmd(target: 'install', flags:), chdir: BUILD_DIR)
+  end
+
+  Symbol = Struct.new(:Symbol, *%i[address name file flag defined], keyword_init: true) do
+    include Comparable
+
+    def defined? = self.defined
+
+    def ignore?
+      return true if name =~ /\A(typeinfo|vtable|TLS init function) for /
+
+      false
     end
+
+    def err_if_undefined?
+      name =~ /Simple(Rb)?BLE/
+    end
+
+    def <=>(other) = name <=> other.name
+  end
+
+  def audit_objfile_symbols!
+    defined_symbols = Set.new
+    undefined_symbols = Hash.new
+    objfiles = OBJFILES_DIR.glob('{**/,}*.o')
+    filenames = objfiles.map(&:to_s)
+    cmd = %W[nm -A -C --defined-only] + filenames
+    _result, out, _err = pager.exec_unpaginated!(cmd, chdir: BUILD_DIR)
+    out.strip.split(/[\n\r]+/).each do |line|
+      file, _, line = line.partition(/:\s*/)
+      addr_str, flag, name = line.strip.split(/\s+/, 3)
+      address = addr_str.to_i(16)
+      sym = Symbol.new(address:, name:, flag:, file:, defined: true)
+      defined_symbols << sym
+    end
+
+    cmd = %W[nm -A -C --undefined-only] + filenames
+    _result, out, _err = pager.exec_unpaginated!(cmd, chdir: BUILD_DIR)
+    out.strip.split(/[\n\r]+/).each do |line|
+      file, line = line.split(/:\s*/,2)
+      flag, name = line.strip.split(/\s+/, 2)
+      sym = Symbol.new(name:, flag:, file:, defined: false)
+      next if sym.ignore?
+
+      undefined_symbols[name] ||= []
+      undefined_symbols[name] << sym
+    end
+
+    defined_symbol_names = defined_symbols.map(&:name).to_set
+    undefined_symbol_names = undefined_symbols.keys.to_set
+    missing_symbol_names = undefined_symbol_names - defined_symbol_names
+    missing_symbols = undefined_symbols.values_at(*missing_symbol_names).flatten
+    puts 'The following symbols are not defined in the object files, but should be:'
+    missing_symbols.select!(&:err_if_undefined?)
+
+    missing_symbols.map(&:name).uniq.each { puts _1 }
   end
 end
 

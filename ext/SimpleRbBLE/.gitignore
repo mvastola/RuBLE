@@ -1,3 +1,5 @@
 .state_hash
 /extconf.h
 /build
+/build-config.json
+/config.h
