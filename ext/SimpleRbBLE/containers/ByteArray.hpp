@@ -19,6 +19,10 @@ namespace SimpleRbBLE {
 
     // TODO: Need to test this out
     class ByteArray {
+    public:
+        using DataObject = ByteArray_DO;
+    private:
+        VALUE _self = Qnil;
         SimpleBLE::ByteArray _data;
 
     public:
@@ -32,32 +36,25 @@ namespace SimpleRbBLE {
 
         using default_integral_type = uint64_t;
 
-        [[nodiscard]] constexpr ByteArray() : _data() {}
-
-        constexpr ByteArray(SimpleBLE::ByteArray byteArray) : _data(std::move(byteArray)) {} // NOLINT(*-explicit-constructor)
+        [[nodiscard]] ByteArray();
+        ByteArray(SimpleBLE::ByteArray byteArray); // NOLINT(*-explicit-constructor)
         ByteArray(Rice::Object obj); // NOLINT(*-explicit-constructor)
 
         template<UnsignedIntegral T>
-        ByteArray(const T &data) { // NOLINT(*-explicit-constructor)
+        ByteArray(const T &data) : ByteArray() { // NOLINT(*-explicit-constructor)
             // TODO: modernize by using std::span
             _data.assign(chars_per_val<T>, '\0');
             UnsignedIntegral auto &dstVal = *reinterpret_cast<T *>(_data.data());
             dstVal = Utils::maybe_swap_endianness(data);
         }
 
-        constexpr ByteArray(const char_type &chr) { // NOLINT(*-explicit-constructor)
-            // TODO: modernize by using std::span
-            _data.assign(1, '\0');
-            _data[0] = chr;
-        }
+        ByteArray(const char_type &chr);
 
-        constexpr ByteArray(const bool &val) { // NOLINT(*-explicit-constructor)
-            // TODO: modernize by using std::span
-            _data.assign(1, '\0');
-            _data[0] = val ? 1 : 0;
-        }
+        ByteArray(const bool &val);
 
         static ByteArray from_ruby(Rice::Object obj);
+
+        Object self() const;
 
         [[nodiscard]] constexpr std::size_t length() const { return _data.size(); }
         [[nodiscard]] constexpr std::size_t byte_count() const { return length() * char_size; }
@@ -88,6 +85,16 @@ namespace SimpleRbBLE {
             if (result == std::strong_ordering::greater) return 1;
             return 0;
         }
+
+        constexpr std::strong_ordering operator<=>(const ByteArray &other) const {
+            return _data <=> other._data;
+        }
+        constexpr bool operator==(const ByteArray &other) const {
+            auto comparison = *this <=> other;
+            return comparison == std::strong_ordering::equivalent || comparison == std::strong_ordering::equal;
+        }
+
+        constexpr bool operator!=(const ByteArray &other) const { return !(*this == other); }
 
         [[nodiscard]] constexpr auto as_bytes() const {
             return std::as_bytes(std::span(_data.data(), length()));
@@ -134,6 +141,8 @@ namespace SimpleRbBLE {
 
             return result;
         }
+
+        void ruby_mark() const;
     };
 
     void Init_ByteArray();

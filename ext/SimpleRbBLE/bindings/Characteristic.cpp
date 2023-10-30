@@ -14,7 +14,22 @@ namespace SimpleRbBLE {
             _owner(owner),
             _characteristic(std::make_shared<SimpleBLE::Characteristic>(characteristic)),
             _uuid(_characteristic->uuid()),
-            _self(DataObject(*this)) {}
+            _self(DataObject(*this)) {
+
+        if (capabilities()["notify"]) {
+            service()->notify(uuid(), [this](const ByteArray& data) {
+                RubyQueue::FnType fn = std::bind(&Characteristic::fire_on_notify, std::cref(*this), data);  // NOLINT(*-avoid-bind)
+                rubyQueue->push(fn);
+            });
+        }
+
+        if (capabilities()["indicate"]) {
+            service()->indicate(uuid(), [this](const ByteArray &data) {
+                RubyQueue::FnType fn = std::bind(&Characteristic::fire_on_indicate, std::cref(*this), data);  // NOLINT(*-avoid-bind)
+                rubyQueue->push(fn);
+            });
+        }
+    }
 
     Object Characteristic::self() const {
         return _self;
@@ -37,12 +52,17 @@ namespace SimpleRbBLE {
         // TODO(?): catch (std::out_of_range &ex)
     }
 
-
     std::vector<std::string> Characteristic::capability_names() const { return capabilities().flag_name_strs(); }
 
-    ByteArray Characteristic::read() {
-        return service()->read(uuid());
+    ByteArray Characteristic::read(bool force) {
+        // if tracking is enabled, assume we'll get the value via callback
+        if (!force && value_tracking() && last_value().has_value()) return last_value().value();
+
+        ByteArray value = service()->read(uuid());
+        record_new_value(value);
+        return std::move(value);
     }
+
     ByteArray Characteristic::read(const BluetoothUUID &descriptor) {
         return service()->read(uuid(), descriptor);
     }
@@ -55,30 +75,20 @@ namespace SimpleRbBLE {
     void Characteristic::write_command(const ByteArray &data) {
         service()->write_command(uuid(), data);
     }
+
     void Characteristic::set_on_notify(Object cb) {
-        if (!_on_notify) {
-            _on_notify = std::make_shared<Callback>(2);
-            service()->notify(uuid(), [this](const ByteArray& data) {
-                RubyQueue::FnType fn = std::bind(&Characteristic::fire_on_notify, std::cref(*this), data);  // NOLINT(*-avoid-bind)
-                rubyQueue->push(fn);
-            });
-        }
+        if (!_on_notify) _on_notify = std::make_shared<Callback>(2);
         _on_notify->set(std::move(cb));
     }
 
     void Characteristic::set_on_indicate(Object cb) {
-        if (!_on_indicate) {
-            _on_indicate = std::make_shared<Callback>(2);
-            service()->indicate(uuid(), [this](const ByteArray& data) {
-                RubyQueue::FnType fn = std::bind(&Characteristic::fire_on_indicate, std::cref(*this), data);  // NOLINT(*-avoid-bind)
-                rubyQueue->push(fn);
-            });
-        }
+        if (!_on_indicate) _on_indicate = std::make_shared<Callback>(2);
         _on_indicate->set(std::move(cb));
     }
 
     void Characteristic::fire_on_notify(const ByteArray &data) const {
         if (DEBUG) std::cout << "Characteristic::fire_on_notify called with " << data.inspect() << std::endl;
+        if (!record_new_value(data)) return; // if value tracking is enabled, skip callback unless value changed
         if (_on_notify) _on_notify->fire(Rice::detail::To_Ruby<SimpleBLE::ByteArray>().convert(data), self());
     }
 
@@ -108,6 +118,7 @@ namespace SimpleRbBLE {
 
     void Characteristic::ruby_mark() const {
         rb_gc_mark(self());
+        CharacteristicValueTracker::ruby_mark();
         if (_on_indicate) Rice::ruby_mark(_on_indicate.get());
         if (_on_notify) Rice::ruby_mark(_on_notify.get());
         if (_descriptors) {
@@ -116,7 +127,6 @@ namespace SimpleRbBLE {
     }
 
     void Init_Characteristic() {
-
         // FIXME: A bunch of these classes inherit from abstract base classes (e.g. BaseAdapter),
         // and are also subclassed in different implementations (I think).
         // Do we need the constructor and methods to return/receive pointers to work well
@@ -143,15 +153,19 @@ namespace SimpleRbBLE {
                 .define_method("can_write_command?", &Characteristic::can_write_command)
                 .define_method("can_notify?", &Characteristic::can_notify)
                 .define_method("can_indicate?", &Characteristic::can_indicate)
-                .define_method<Characteristic::ExposedReadFn>("read", &Characteristic::read)
+                .define_method<Characteristic::ExposedReadFn>("read", &Characteristic::read, Arg("force") = false)
                 .define_method("write", &Characteristic::write)
                 .define_method("write_request", &Characteristic::write_request)
                 .define_method("write_command", &Characteristic::write_command)
                 .define_method("set_on_notify", &Characteristic::set_on_notify)
                 .define_method("set_on_indicate", &Characteristic::set_on_indicate)
-                .define_method("unsubscribe", &Characteristic::unsubscribe)
+//                .define_method("unsubscribe", &Characteristic::unsubscribe)
                 .define_method("to_s", &Characteristic::to_s)
-                .define_method("inspect", &Characteristic::inspect);
+                .define_method("inspect", &Characteristic::inspect)
+                .define_method("value_tracking", &Characteristic::value_tracking)
+                .define_method("value_tracking=", &Characteristic::set_value_tracking)
+                .define_method("last_value", &Characteristic::last_value)
+                ;
         define_class_under<std::shared_ptr<SimpleRbBLE::Characteristic>>(rb_mSimpleRbBLE, "CharacteristicPtr");
 
     }

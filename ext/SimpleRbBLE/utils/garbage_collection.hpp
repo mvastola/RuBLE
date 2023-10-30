@@ -8,6 +8,7 @@ namespace Rice {
     template<> void ruby_mark<SimpleRbBLE::Adapter>(SimpleRbBLE::Adapter *);
     template<> void ruby_mark<SimpleRbBLE::AdapterRegistry>(SimpleRbBLE::AdapterRegistry*);
     template<> void ruby_mark<SimpleRbBLE::AdapterRegistryFactory>(SimpleRbBLE::AdapterRegistryFactory*);
+    template<> void ruby_mark<SimpleRbBLE::ByteArray>(SimpleRbBLE::ByteArray*);
     template<> void ruby_mark<SimpleRbBLE::Peripheral>(SimpleRbBLE::Peripheral*);
     template<> void ruby_mark<SimpleRbBLE::PeripheralRegistry>(SimpleRbBLE::PeripheralRegistry*);
     template<> void ruby_mark<SimpleRbBLE::PeripheralRegistryFactory>(SimpleRbBLE::PeripheralRegistryFactory*);

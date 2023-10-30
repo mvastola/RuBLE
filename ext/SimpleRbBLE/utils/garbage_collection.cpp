@@ -6,11 +6,17 @@
 #include "bindings/Peripheral.hpp"
 #include "bindings/Service.hpp"
 #include "bindings/Characteristic.hpp"
+#include "containers/ByteArray.hpp"
 
 namespace Rice {
     template<>
     void ruby_mark<SimpleRbBLE::AdapterRegistryFactory>(SimpleRbBLE::AdapterRegistryFactory *registryFactory) {
         registryFactory->ruby_mark();
+    }
+
+    template<>
+    void ruby_mark<SimpleRbBLE::ByteArray>(SimpleRbBLE::ByteArray *byteArray) {
+        byteArray->ruby_mark();
     }
 
     template<>

@@ -48,7 +48,9 @@ include_directories(.)
 # For config.h
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-add_library(SimpleRbBLE SHARED)
+add_library(SimpleRbBLE SHARED
+        containers/CharacteristicValueTracker.hpp
+        containers/CharacteristicValueTracker.cpp)
 
 add_compile_options(-fthreadsafe-statics)
 #add_compile_options(-fPIC -Wl,-fPIC)

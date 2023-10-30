@@ -87,7 +87,7 @@ namespace SimpleRbBLE {
 
     enum class CharacteristicCapabilityType : std::size_t;
     using CharacteristicCapabilityType_DT = Rice::Data_Type<CharacteristicCapabilityType>;
-    using CharacteristicCapabilityType_DO [[maybe_unused]] = Rice::Data_Object<CharacteristicCapabilityType>;
+    using CharacteristicCapabilityType_DO [[maybe_unused]]  [[maybe_unused]] = Rice::Data_Object<CharacteristicCapabilityType>;
 
     class Descriptor;
     using Descriptor_DT = Rice::Data_Type<Descriptor>;

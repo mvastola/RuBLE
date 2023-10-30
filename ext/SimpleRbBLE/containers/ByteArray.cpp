@@ -4,7 +4,23 @@
 #include "utils/containers.hpp"
 
 namespace SimpleRbBLE {
-    ByteArray::ByteArray(Object obj) { // NOLINT(*-unnecessary-value-param)
+    ByteArray::ByteArray() : _data(), _self(DataObject(*this)) {}
+
+    ByteArray::ByteArray(SimpleBLE::ByteArray byteArray) : _data(std::move(byteArray)), _self(DataObject(*this)) {}
+
+    ByteArray::ByteArray(const ByteArray::char_type &chr) : ByteArray() { // NOLINT(*-explicit-constructor)
+        // TODO: modernize by using std::span
+        _data.assign(1, '\0');
+        _data[0] = chr;
+    }
+
+    ByteArray::ByteArray(const bool &val) : ByteArray() { // NOLINT(*-explicit-constructor)
+        // TODO: modernize by using std::span
+        _data.assign(1, '\0');
+        _data[0] = val ? 1 : 0;
+    }
+
+    ByteArray::ByteArray(Object obj) : ByteArray() { // NOLINT(*-unnecessary-value-param)
         if (obj.is_a(rb_cByteArray)) {
             *this = { *ByteArray_DO(obj).get() };
         } else if(obj.is_a(rb_cNumeric)) {
@@ -22,6 +38,8 @@ namespace SimpleRbBLE {
         return { std::move(obj) };
     }
 
+    Object ByteArray::self() const { return _self; }
+
     std::string ByteArray::to_s() const {
         std::ostringstream oss;
         oss << Utils::basic_object_inspect_start(*this);
@@ -32,6 +50,10 @@ namespace SimpleRbBLE {
     }
 
     std::string ByteArray::inspect() const { return to_s(); }
+
+    void ByteArray::ruby_mark() const {
+        rb_gc_mark(_self);
+    }
 
     void Init_ByteArray() {
         rb_cByteArray = define_class_under<ByteArray>(rb_mSimpleRbBLE, "ByteArray")

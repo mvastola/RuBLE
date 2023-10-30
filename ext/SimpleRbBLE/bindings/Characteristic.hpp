@@ -6,6 +6,7 @@
 #include "bindings/Service.hpp"
 #include "containers/ByteArray.hpp"
 #include "utils/hash.hpp"
+#include "containers/CharacteristicValueTracker.hpp"
 
 namespace SimpleRbBLE {
     enum class CharacteristicCapabilityType : std::size_t {
@@ -16,7 +17,7 @@ namespace SimpleRbBLE {
         INDICATE
     };
     class Service;
-    class Characteristic {
+    class Characteristic : public CharacteristicValueTracker {
     public:
         static constexpr std::string_view CAPABILITY_NAMES[] = {
                 "read",
@@ -44,6 +45,9 @@ namespace SimpleRbBLE {
         mutable std::optional<DescriptorMap> _descriptors;
 
         VALUE _self = Qnil;
+
+        void fire_on_notify(const ByteArray &data) const;
+        void fire_on_indicate(const ByteArray &data) const;
     public:
         [[nodiscard]] Object self() const;
         Characteristic() = delete;
@@ -68,10 +72,10 @@ namespace SimpleRbBLE {
         [[nodiscard]] constexpr bool can_read() const;
         [[nodiscard]] constexpr bool can_write_request() const;
         [[nodiscard]] constexpr bool can_write_command() const;
-        [[nodiscard]] constexpr bool can_notify() const;
+        [[nodiscard]] constexpr bool can_notify() const override;
         [[nodiscard]] constexpr bool can_indicate() const;
 
-        [[nodiscard]] ByteArray read();
+        [[nodiscard]] ByteArray read(bool force = false);
         [[nodiscard]] ByteArray read(const BluetoothUUID &descriptor);
         void write(const BluetoothUUID &descriptor, const ByteArray &data);
         void write_request(const ByteArray &data);
@@ -79,8 +83,6 @@ namespace SimpleRbBLE {
 
         void set_on_notify(Object cb);
         void set_on_indicate(Object cb);
-        void fire_on_notify(const ByteArray &data) const;
-        void fire_on_indicate(const ByteArray &data) const;
         void unsubscribe();
 
         [[nodiscard]] std::string to_s() const;
@@ -92,7 +94,7 @@ namespace SimpleRbBLE {
         friend void Init_Characteristic();
         friend void Init_Registries();
         template<typename, class, class> friend class Registry;
-        using ExposedReadFn = ByteArray(Characteristic::*)();
+        using ExposedReadFn = ByteArray(Characteristic::*)(bool);
     };
 
     constexpr const Characteristic::Owner *Characteristic::owner() const { return _owner; }
@@ -125,7 +127,7 @@ namespace SimpleRbBLE {
     constexpr bool Characteristic::can_indicate() const { return capabilities()["indicate"]; }
 
     using CharacteristicCapabilityType_DT = Data_Type<Characteristic::Capability>;
-    using CharacteristicCapabilityType_DO = Data_Object<Characteristic::Capability>;
+    using CharacteristicCapabilityType_DO [[maybe_unused]] = Data_Object<Characteristic::Capability>;
 
 }
 
