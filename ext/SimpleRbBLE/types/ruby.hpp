@@ -16,8 +16,10 @@ namespace SimpleRbBLE {
     using RbUbfFn [[maybe_unused]] = void (*)(T*);
 
     template<typename T>
-    concept HasRubyObject = requires(T &t) {
-        { t.self() } -> std::constructible_from<Rice::Object>;
+    concept HasRubyObject = requires(const T &t) {
+        { t.self() } -> std::derived_from<Rice::Object>;
+    } || requires(const T &t) {
+        { t.self() } -> std::same_as<const VALUE>;
     };
 }
 

@@ -15,6 +15,7 @@
 namespace SimpleRbBLE {
     template<const auto &FIELD_NAMES> class NamedBitSet;
 }
+
 template<const auto &FIELDS> struct std::hash<SimpleRbBLE::NamedBitSet<FIELDS>> {
     constexpr std::size_t operator()(const SimpleRbBLE::NamedBitSet<FIELDS> &nbs) const noexcept;
 };

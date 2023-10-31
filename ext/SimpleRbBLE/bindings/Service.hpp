@@ -2,7 +2,6 @@
 
 #include "types/declarations.hpp"
 #include "types/ruby.hpp"
-//#include "utils/identifiers.hpp"
 #include "utils/hash.hpp"
 
 namespace SimpleRbBLE {

@@ -98,6 +98,11 @@ namespace SimpleRbBLE {
         return adapterRegistry->map_to_objects(unwrappedAdapters);
     }
 
+    Rice::Array Adapter::get_ruby_adapters() {
+        std::vector<SimpleBLE::Adapter> unwrappedAdapters = SimpleBLE::Adapter::get_adapters();
+        return adapterRegistry->map_to_ruby_objects(unwrappedAdapters);
+    }
+
     void Adapter::on_scan_start(Object new_cb) { _on_scan_start->set(new_cb); }
 
     void Adapter::on_scan_stop(Object new_cb) { _on_scan_stop->set(new_cb); }

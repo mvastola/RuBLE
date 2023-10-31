@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "modernize-use-nodiscard"
 #pragma once
 
 #include "containers/Callback.hpp"
@@ -39,42 +37,42 @@ namespace SimpleRbBLE {
     public:
 //        static std::shared_ptr<Peripheral> create(const SimpleBLE::Peripheral &peripheral);
 
-        Object self() const;
+        [[nodiscard]] Object self() const;
         Peripheral() = delete;
         Peripheral(const SimpleBLE::Peripheral&, Owner*);
         ~Peripheral() = default;
 
 //    Peripheral(const Peripheral&) = delete;
 //    Peripheral(Peripheral&&) = delete;
-        bool initialized() const;
+        [[nodiscard]] bool initialized() const;
 
-        const Owner *owner() const;
+        [[nodiscard]] const Owner *owner() const;
         Owner *owner();
 
         SimpleBLE::Peripheral &get();
-        const SimpleBLE::Peripheral &get() const;
+        [[nodiscard]] const SimpleBLE::Peripheral &get() const;
 
-        std::string identifier() const;
+        [[nodiscard]] std::string identifier() const;
         [[nodiscard]] constexpr const BluetoothAddress &address() const;
         [[nodiscard]] constexpr const BluetoothAddressType &address_type() const;
 
 //        constexpr std::string this_resource_identifier() const;
 //        constexpr ResourceUniqueIdentifier<Peripheral> full_resource_identifier() const;
 
-        std::map<uint16_t, ByteArray> manufacturer_data() const;
-        int16_t rssi() const;
-        int16_t tx_power() const;
-        uint16_t mtu() const;
-        bool is_connected() const;
-        bool is_connectable() const;
-        bool is_paired() const;
-        StatusFlagSet status_flags() const;
-        std::vector<std::string_view> statuses() const;
+        [[nodiscard]] std::map<uint16_t, ByteArray> manufacturer_data() const;
+        [[nodiscard]] int16_t rssi() const;
+        [[nodiscard]] int16_t tx_power() const;
+        [[nodiscard]] uint16_t mtu() const;
+        [[nodiscard]] bool is_connected() const;
+        [[nodiscard]] bool is_connectable() const;
+        [[nodiscard]] bool is_paired() const;
+        [[nodiscard]] StatusFlagSet status_flags() const;
+        [[nodiscard]] std::vector<std::string_view> statuses() const;
         void connect();
         void disconnect();
         void unpair();
 
-        const std::map<BluetoothUUID, std::shared_ptr<Service>> &services() const;
+        [[nodiscard]] const std::map<BluetoothUUID, std::shared_ptr<Service>> &services() const;
         std::shared_ptr<Service> operator[](const BluetoothUUID &svcUuid) const;
 
         [[nodiscard]] ByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic);
@@ -92,8 +90,7 @@ namespace SimpleRbBLE {
                       std::function<void(ByteArray payload)> callback);
         void unsubscribe(BluetoothUUID const &service, BluetoothUUID const &characteristic);
 
-        std::string to_s() const;
-        // bool operator==(const Peripheral &ap) const;
+        [[nodiscard]] std::string to_s() const;
         // bool operator==(const Peripheral &ap) const;
 
         void on_connect(Object on_connect);
@@ -109,6 +106,3 @@ namespace SimpleRbBLE {
         return _addr_type;
     }
 }
-
-#pragma clang diagnostic pop
-

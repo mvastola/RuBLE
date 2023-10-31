@@ -42,6 +42,7 @@ namespace SimpleRbBLE {
 
         static bool bluetooth_enabled();
         static std::vector<std::shared_ptr<Adapter>> get_adapters();
+        static Rice::Array get_ruby_adapters();
         virtual bool initialized() const;
         std::string identifier();
         SimpleBLE::BluetoothAddress address() const;
