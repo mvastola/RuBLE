@@ -4,21 +4,6 @@
 #include "utils/containers.hpp"
 
 namespace SimpleRbBLE {
-    ByteArray::ByteArray() : _data(), Rubyable<ByteArray>() {}
-
-    ByteArray::ByteArray(SimpleBLE::ByteArray byteArray) : _data(std::move(byteArray)), Rubyable<ByteArray>() {}
-
-    ByteArray::ByteArray(const ByteArray::char_type &chr) : ByteArray() {
-        // TODO: modernize by using std::span
-        _data.assign(1, '\0');
-        _data[0] = chr;
-    }
-
-    ByteArray::ByteArray(const bool &val) : ByteArray() {
-        // TODO: modernize by using std::span
-        _data.assign(1, '\0');
-        _data[0] = val ? 1 : 0;
-    }
 
     ByteArray::ByteArray(Object obj) : ByteArray() {
         if (obj.is_a(rb_cByteArray)) {

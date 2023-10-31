@@ -59,7 +59,8 @@ namespace SimpleRbBLE {
 
         std::vector<std::shared_ptr<Peripheral>> scan_get_results();
         std::vector<std::shared_ptr<Peripheral>> get_paired_peripherals();
-
+        Rice::Array scan_get_ruby_results();
+        Rice::Array get_ruby_paired_peripherals();
         bool operator==(const SimpleBLE::BluetoothAddress &addr) const;
         bool operator==(const Adapter &ap) const;
 

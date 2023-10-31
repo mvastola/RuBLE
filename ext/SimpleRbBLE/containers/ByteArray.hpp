@@ -36,8 +36,9 @@ namespace SimpleRbBLE {
 
         using default_integral_type = uint64_t;
 
-        [[nodiscard]] ByteArray();
-        ByteArray(SimpleBLE::ByteArray byteArray);
+        [[nodiscard]] constexpr ByteArray();
+        constexpr ByteArray(SimpleBLE::ByteArray byteArray);
+
         ByteArray(Rice::Object obj);
         template<UnsignedIntegral T>
         ByteArray(const T &data) : ByteArray() {
@@ -47,9 +48,8 @@ namespace SimpleRbBLE {
             dstVal = Utils::maybe_swap_endianness(data);
         }
 
-        ByteArray(const char_type &chr);
-
-        ByteArray(const bool &val);
+        constexpr ByteArray(const char_type &chr);
+        constexpr ByteArray(const bool &b);
 
         static ByteArray from_ruby(Rice::Object obj);
 
@@ -140,6 +140,16 @@ namespace SimpleRbBLE {
 
         void ruby_mark() const;
     };
+
+    constexpr ByteArray::ByteArray() : _data(), Rubyable<ByteArray>() {}
+
+    constexpr ByteArray::ByteArray(SimpleBLE::ByteArray byteArray) :
+            _data(std::move(byteArray)), Rubyable<ByteArray>() {}
+
+    constexpr ByteArray::ByteArray(const ByteArray::char_type &chr) : ByteArray(std::string(chr, 1)) {}
+
+    constexpr ByteArray::ByteArray(const bool &b) : ByteArray(b ? '1' : '0') {}
+
 
     void Init_ByteArray();
 }

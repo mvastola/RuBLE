@@ -74,9 +74,20 @@ namespace SimpleRbBLE {
         return _peripheral_registry->map_to_objects(unwrappedPeripherals);
     }
 
+    Rice::Array Adapter::scan_get_ruby_results() {
+        auto unwrappedPeripherals = get().scan_get_results();
+        return _peripheral_registry->map_to_ruby_objects(unwrappedPeripherals);
+    }
+
     std::vector<std::shared_ptr<Peripheral>> Adapter::get_paired_peripherals() {
         auto unwrappedPeripherals = get().get_paired_peripherals();
         return _peripheral_registry->map_to_objects(unwrappedPeripherals);
+    }
+
+
+    Rice::Array Adapter::get_ruby_paired_peripherals() {
+        auto unwrappedPeripherals = get().get_paired_peripherals();
+        return _peripheral_registry->map_to_ruby_objects(unwrappedPeripherals);
     }
 
     SimpleBLE::Adapter &Adapter::get() {
@@ -159,7 +170,7 @@ namespace SimpleRbBLE {
         define_class_under<SimpleBLE::Adapter>(rb_mSimpleRbBLEUnderlying, "SimpleBLEAdapter");
         rb_cAdapter = define_class_under<Adapter>(rb_mSimpleRbBLE, "Adapter")
                 .define_singleton_function("bluetooth_enabled?", &Adapter::bluetooth_enabled) // returns bool
-                .define_singleton_function("get_adapters", &Adapter::get_adapters) // returns vector<Adapter>
+                .define_singleton_function("get_adapters", &Adapter::get_ruby_adapters) // returns vector<Adapter>
                 .define_method("initialized?", &Adapter::initialized)
                 .define_method("identifier", &Adapter::identifier)
                 .define_method("address", &Adapter::address) // returns BluetoothAddress (alias of std::string)
@@ -167,15 +178,15 @@ namespace SimpleRbBLE {
                 .define_method("scan_stop", &Adapter::scan_stop)
                 .define_method("scan_for", &Adapter::scan_for) // takes (int timeout_ms)
                 .define_method("scanning?", &Adapter::scan_is_active)
-                .define_method("scan_get_results", &Adapter::scan_get_results) // returns vector<Peripheral>
+                .define_method("scan_get_results", &Adapter::scan_get_ruby_results) // returns vector<Peripheral>
                 .define_method("get_paired_peripherals",
-                               &Adapter::get_paired_peripherals) // returns vector<Peripheral>
+                               &Adapter::get_ruby_paired_peripherals) // returns vector<Peripheral>
                 .define_method("on_scan_start", &Adapter::on_scan_start, Arg("cb").keepAlive() = Qnil)
                 .define_method("on_scan_stop", &Adapter::on_scan_stop, Arg("cb").keepAlive() = Qnil)
                 .define_method("on_scan_update", &Adapter::on_scan_update, Arg("cb").keepAlive() = Qnil)
                 .define_method("on_scan_find", &Adapter::on_scan_find, Arg("cb").keepAlive() = Qnil)
                 ;
-        define_class_under<std::shared_ptr<SimpleRbBLE::Adapter>>(rb_mSimpleRbBLE, "AdapterPtr");
+//        define_class_under<std::shared_ptr<SimpleRbBLE::Adapter>>(rb_mSimpleRbBLE, "AdapterPtr");
     }
 }
 

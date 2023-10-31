@@ -7,8 +7,11 @@
 #include "types/declarations.hpp"
 #include "types/helpers.hpp"
 #include "types/ruby.hpp"
+#include "utils/ruby.hpp"
 #include "utils/human_type_names.hpp"
 #include "utils/garbage_collection.hpp"
+
+namespace views = ranges::views;
 
 namespace SimpleRbBLE {
     template<typename Key, class ProxyClass, class Value>
@@ -21,7 +24,7 @@ namespace SimpleRbBLE {
         using Factory = RegistryFactory<Self>;
         using KeyType = Key;
         using ProxyClassType = ProxyClass;
-        using ProxyRubyObjType = std::invoke_result_t<decltype(&ProxyClass::self), ProxyClass&>;
+        using ProxyRubyObjType = ToRubyObjectResult<ProxyClass>;
         using ValueType = Value;
         using DataObject = Data_Object<ProxyClass>;
         using Registry_DO = Data_Object<Self>;
@@ -122,10 +125,11 @@ namespace SimpleRbBLE {
         }
 
         Rice::Array map_to_ruby_objects(const auto &arg) requires HasRubyObject<ProxyClass> {
-            ProxyPtrVector objs = map_to_objects(arg);
-            auto xform_fn = [](const ProxyPtr &ptr) -> ProxyRubyObjType { return ptr->self(); };
-            auto arr_items = objs | ranges::views::transform(xform_fn);
-            Rice::Array result(arr_items.begin(), arr_items.end());
+            std::vector<ProxyPtr> proxyVec = map_to_objects(arg);
+//            ToRubyObjectResult<ProxyClass> (*fn)(const ProxyClass&) = Ruby::to_ruby_object<Rice::Object>;
+            auto xform = [](const ProxyPtr &obj) -> Rice::Object { return obj->self(); };
+            auto objs = proxyVec | views::transform(xform);
+            Rice::Array result(objs.begin(), objs.end());
             return result;
         }
 

@@ -83,7 +83,23 @@ namespace SimpleRbBLE {
             delete resultPtr;
             return std::move(result);
         }
+        template <typename T, typename... Args>
+        [[maybe_unused]] T ensuring_ruby(std::function<T(Args...)> &&fn, Args &&...args) {
+            auto wrapper = [&fn, &args...]() -> T { return std::invoke(fn, args...); };
+            return ensure_ruby<T>(wrapper);
+        }
 
+        constexpr VALUE to_ruby_value(const VALUE &val) { return val; }
+        constexpr VALUE to_ruby_value(const RiceObject auto &obj) { return obj.value(); }
+        constexpr VALUE to_ruby_value(const HasRubyObject auto &obj) { return obj.self(); }
+        constexpr VALUE to_ruby_value(const HasRubyObject auto *obj) { return to_ruby_value(*obj); }
+
+        template <class T> requires HasRubyObject<typename T::element_type> &&
+                std::same_as<std::shared_ptr<typename T::element_type>, T>
+        constexpr VALUE to_ruby_value(const T &obj) { return to_ruby_value(*obj); }
+
+        template <RiceObject T = Rice::Object>
+        constexpr T to_ruby_object(const auto &val) { return T { to_ruby_value(val) }; }
 
 //        TODO: See if we can figure out how to get this to work (see https://stackoverflow.com/q/28746744)
 //        template <typename T = void>
@@ -111,6 +127,6 @@ namespace SimpleRbBLE {
 //        }
 
     }
-    // we shouldn't have to worry about atomicity here since things are thread_local
+    namespace Ruby = Utils::Ruby;
     using Utils::Ruby::ensure_ruby;
 }
