@@ -32,7 +32,7 @@ namespace SimpleRbBLE {
             return cb.vcall("call", argArray);
         }
 
-        constexpr operator bool() const { // NOLINT(*-explicit-constructor)
+        constexpr operator bool() const {
             return _cb != Qnil && _cb != Qfalse;
         }
 

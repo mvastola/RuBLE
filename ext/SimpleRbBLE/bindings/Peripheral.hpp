@@ -41,7 +41,7 @@ namespace SimpleRbBLE {
 
         Object self() const;
         Peripheral() = delete;
-        Peripheral(const SimpleBLE::Peripheral&, Owner*); // NOLINT(*-explicit-constructor)
+        Peripheral(const SimpleBLE::Peripheral&, Owner*);
         ~Peripheral() = default;
 
 //    Peripheral(const Peripheral&) = delete;

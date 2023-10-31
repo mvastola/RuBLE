@@ -163,6 +163,7 @@ namespace SimpleRbBLE {
                 .define_method("to_s", &Characteristic::to_s)
                 .define_method("inspect", &Characteristic::inspect)
                 .define_method("value_tracking", &Characteristic::value_tracking)
+                .define_method("value_tracking?", &Characteristic::value_tracking)
                 .define_method("value_tracking=", &Characteristic::set_value_tracking)
                 .define_method("last_value", &Characteristic::last_value)
                 ;

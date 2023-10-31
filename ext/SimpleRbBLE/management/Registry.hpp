@@ -10,10 +10,6 @@
 #include "utils/garbage_collection.hpp"
 
 namespace SimpleRbBLE {
-
-//template<typename T>
-//concept Unwrappable = requires(T::DataObject tdo) { typename T::DataObject; } &&
-//requires(std::shared_ptr<typename T::DataObject> ptr) { std::static_pointer_cast<T>(ptr); };
     template<typename Key, class ProxyClass, class Value>
     class Registry {
         VALUE _self = Qnil;
@@ -139,7 +135,7 @@ namespace SimpleRbBLE {
 
         [[nodiscard]] std::string to_s() const {
             std::ostringstream os;
-            os << "Registry for " << typeid(ProxyClass).name() << " (";
+            os << "Registry for " << Utils::human_type_name<ProxyClass>() << " (";
             os << Utils::human_type_name(*this) << "): "; // << getSelf().inspect();
             if constexpr (is_owned) os << " owned by " << _owner->to_s();
             return os.str();

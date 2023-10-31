@@ -114,8 +114,7 @@ namespace SimpleRbBLE {
         constexpr NamedBitSet(const std::initializer_list<const std::string_view> &list);
 
         constexpr NamedBitSet(const auto &rangeList);
-        constexpr NamedBitSet(const BitSet &bitSet); // NOLINT(*-explicit-constructor)
-
+        constexpr NamedBitSet(const BitSet &bitSet);
         // Takes a map (or equivalent) of 'std::string_view's to one of: boolean literal, static fn, const mem fn, mem fn
         template<typename ObjT, FlagCheck::Map<ObjT> R>
         constexpr NamedBitSet(R &r, ObjT &&obj);

@@ -5,19 +5,13 @@
 
 using namespace std::chrono_literals;
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "ConstantFunctionResult"
-
 using namespace std::chrono_literals;
 namespace SimpleRbBLE {
-    // TODO: is doing it this way helping at all?
-    std::shared_future<std::shared_ptr<RubyQueue>> RubyQueue::_instance = std::async(std::launch::deferred, []() {
-        return std::shared_ptr<RubyQueue>(new RubyQueue());
-    }).share();
+    constinit std::shared_ptr<RubyQueue> RubyQueue::_instance {};
 
-    std::shared_ptr<RubyQueue> RubyQueue::instance() {
-        _instance.wait();
-        return _instance.get();
+    const std::shared_ptr<RubyQueue> &RubyQueue::instance() {
+        if (!_instance) _instance = std::shared_ptr<RubyQueue>(new RubyQueue());
+        return _instance;
     }
 
     Object RubyQueue::rb_thread() const {
@@ -154,4 +148,3 @@ namespace SimpleRbBLE {
         //  don't seem to be exported (I guess we can use Rice::Object#call)
     }
 }
-#pragma clang diagnostic pop

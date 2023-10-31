@@ -30,10 +30,9 @@ namespace SimpleRbBLE {
         std::shared_ptr<Callback> _on_scan_find;
         std::shared_ptr<PeripheralRegistry> _peripheral_registry;
 
-        Adapter() = delete;
     public:
+        Adapter() = delete;
         Adapter(const SimpleBLE::Adapter &adapter);
-
         ~Adapter() = default;
 
         Object self() const;

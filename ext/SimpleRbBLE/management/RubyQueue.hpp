@@ -3,17 +3,15 @@
 #include "containers/Callback.hpp"
 #include <deque>
 #include <mutex>
-#include <ruby/thread.h>
-#include <future>
 #include <semaphore>
 #include <chrono>
+#include <thread>
 #include <shared_mutex>
 
 namespace chrono = std::chrono;
 
 namespace SimpleRbBLE {
-
-    const constexpr static auto semaphore_max = std::numeric_limits<uint16_t>::max();
+    const constexpr auto semaphore_max = std::numeric_limits<uint16_t>::max();
     // All ruby calls must take place in thread known to ruby
     // Since SimpleBLE creates its own thread from which callbacks are invoked,
     // we have that (non-ruby) thread add a function to RubyQueue,
@@ -28,8 +26,8 @@ namespace SimpleRbBLE {
         using CppThreadId [[maybe_unused]] = std::thread::id;
         using Semaphore [[maybe_unused]] = std::counting_semaphore<semaphore_max>;
     private:
-        static std::shared_future<std::shared_ptr<RubyQueue>> _instance;
-        std::shared_ptr<QueueType> _q = std::shared_ptr<QueueType>(new QueueType()); // NOLINT(*-make-shared);
+        static std::shared_ptr<RubyQueue> _instance;
+        std::shared_ptr<QueueType> _q = std::shared_ptr<QueueType>(new QueueType());
 
         std::mutex _mtx;
         Semaphore _sem { 0 };
@@ -42,9 +40,7 @@ namespace SimpleRbBLE {
         std::atomic<RubyThreadId> _rb_thread;
         std::atomic_flag _starting, _stopping;
 
-        RubyQueue() = default;
-
-
+        constexpr RubyQueue() = default;
         VALUE run();
         void loop();
     public:
@@ -55,7 +51,7 @@ namespace SimpleRbBLE {
         RubyQueue &operator=(const RubyQueue&) = delete;
         // TODO: add a function that waits for queue to be settled
 
-        static std::shared_ptr<RubyQueue> instance();
+        static const std::shared_ptr<RubyQueue> &instance();
         [[nodiscard]] Object rb_thread() const;
 
         void push(QueueItemType fn);

@@ -51,8 +51,7 @@ namespace SimpleRbBLE {
     public:
         [[nodiscard]] Object self() const;
         Characteristic() = delete;
-        Characteristic(const SimpleBLE::Characteristic&, Owner*); // NOLINT(*-explicit-constructor)
-
+        Characteristic(const SimpleBLE::Characteristic&, Owner*);
         SimpleBLE::Characteristic &get();
         [[nodiscard]] const SimpleBLE::Characteristic &get() const;
         [[nodiscard]] constexpr const Owner *owner() const;
@@ -89,7 +88,7 @@ namespace SimpleRbBLE {
         [[nodiscard]] Rice::String inspect() const;
         // bool operator==(const Characteristic &ap) const;
         // bool operator==(const Characteristic &ap) const;
-        void ruby_mark() const;
+        void ruby_mark() const override;
 
         friend void Init_Characteristic();
         friend void Init_Registries();

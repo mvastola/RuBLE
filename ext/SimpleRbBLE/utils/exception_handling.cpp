@@ -33,14 +33,16 @@ namespace SimpleRbBLE::ExceptionHandling {
         std::cerr << "Termination handler replaced" << std::endl;
     }
 
-#ifdef HAVE_BOOST_STACKTRACE
     [[maybe_unused]] void abort_with_stack() {
+#ifdef HAVE_BOOST_STACKTRACE
         try {
             std::cerr << boost::stacktrace::stacktrace();
-        } catch (...) {}
+        } catch (const std::exception &ex2) {
+            std::cerr << "Could not generate C++ stacktrace. Skipping." << std::endl;
+        }
+#endif
         std::abort();
     }
-#endif
 }
 
 #ifdef HAVE_BOOST_STACKTRACE

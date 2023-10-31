@@ -37,11 +37,10 @@ namespace SimpleRbBLE {
         using default_integral_type = uint64_t;
 
         [[nodiscard]] ByteArray();
-        ByteArray(SimpleBLE::ByteArray byteArray); // NOLINT(*-explicit-constructor)
-        ByteArray(Rice::Object obj); // NOLINT(*-explicit-constructor)
-
+        ByteArray(SimpleBLE::ByteArray byteArray);
+        ByteArray(Rice::Object obj);
         template<UnsignedIntegral T>
-        ByteArray(const T &data) : ByteArray() { // NOLINT(*-explicit-constructor)
+        ByteArray(const T &data) : ByteArray() {
             // TODO: modernize by using std::span
             _data.assign(chars_per_val<T>, '\0');
             UnsignedIntegral auto &dstVal = *reinterpret_cast<T *>(_data.data());
@@ -116,8 +115,7 @@ namespace SimpleRbBLE {
             return *std::next(span.cbegin(), pos);
         }
 
-        constexpr operator const SimpleBLE::ByteArray &() const { return _data; } // NOLINT(*-explicit-constructor)
-
+        constexpr operator const SimpleBLE::ByteArray &() const { return _data; }
         // TODO: test me!
         template<UnsignedIntegral T = default_integral_type>
         [[nodiscard]] T to_i() const {
@@ -152,6 +150,8 @@ namespace Rice::detail {
     template<>
     class From_Ruby<SimpleRbBLE::ByteArray> {
     public:
+        static constexpr const auto supported_ruby_types =
+                std::to_array({T_BIGNUM, T_FIXNUM, T_SYMBOL, T_STRING, T_NIL, T_TRUE, T_FALSE});
         static bool can_convert_from_ruby(VALUE obj);
         bool is_convertible(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
             return can_convert_from_ruby(value);

@@ -24,7 +24,7 @@ namespace SimpleRbBLE {
 
             [[nodiscard]] bool state() const;
 
-            operator bool() const; // NOLINT(*-explicit-constructor)
+            operator bool() const;
         };
     }
 

@@ -24,8 +24,7 @@ namespace SimpleRbBLE {
     public:
         [[nodiscard]] Object self() const;
         Service() = delete;
-        Service(const SimpleBLE::Service&, Owner*); // NOLINT(*-explicit-constructor)
-
+        Service(const SimpleBLE::Service&, Owner*);
         SimpleBLE::Service &get();
         [[nodiscard]] const SimpleBLE::Service &get() const;
         [[nodiscard]] constexpr const Owner *owner() const { return _owner; }

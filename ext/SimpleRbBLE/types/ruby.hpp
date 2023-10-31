@@ -10,8 +10,6 @@ namespace SimpleRbBLE {
 
     template <typename T = void>
     using RbThreadCreateFn = VALUE(*)(T*);
-    template <typename T = void>
-    using UnboundRbThreadCreateFn [[maybe_unused]] = VALUE(*)(RbThreadCreateFn<T>, void*);
     template <typename Ret = void, typename T = void>
     using RbThreadCallFn [[maybe_unused]] = Ret *(*)(T*);
     template <typename T = void>

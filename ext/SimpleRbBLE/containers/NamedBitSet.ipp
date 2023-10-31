@@ -22,7 +22,7 @@ namespace SimpleRbBLE {
     constexpr NamedBitSet<FIELD_NAMES>::NamedBitSet(const NamedBitSet::BitSet &bitSet) : _bits(bitSet) {}
 
     template<const auto &FIELD_NAMES>
-    constexpr NamedBitSet<FIELD_NAMES>::NamedBitSet(const auto &rangeList) { // NOLINT(*-explicit-constructor)
+    constexpr NamedBitSet<FIELD_NAMES>::NamedBitSet(const auto &rangeList) {
         for (const auto &sv: rangeList) (*this)[sv] = true;
     }
 
