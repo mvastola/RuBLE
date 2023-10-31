@@ -7,7 +7,7 @@ namespace SimpleRbBLE {
     class CharacteristicValueTracker {
     protected:
         std::optional<bool> _track_values;
-        mutable std::optional<ByteArray> _value;
+        mutable std::shared_ptr<ByteArray> _value;
 
         constexpr CharacteristicValueTracker(std::optional<bool> enabled = std::nullopt) :
             _track_values(enabled) {}
@@ -21,7 +21,7 @@ namespace SimpleRbBLE {
             if (new_value && !can_notify()) {
                 throw std::runtime_error("Characteristic does not have 'notify' capability.");
             } else if (!new_value) {
-                _value = std::nullopt;
+                _value = nullptr;
             }
             _track_values = new_value;
         }
@@ -30,7 +30,7 @@ namespace SimpleRbBLE {
             return _track_values.value_or(can_notify());
         }
 
-        [[nodiscard]] constexpr const std::optional<ByteArray> &last_value() const {
+        [[nodiscard]] constexpr const std::shared_ptr<ByteArray> &last_value() const {
             return _value;
         }
 

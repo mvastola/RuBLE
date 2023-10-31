@@ -4,8 +4,6 @@
 #include <ruby/thread.h>
 
 using namespace std::chrono_literals;
-
-using namespace std::chrono_literals;
 namespace SimpleRbBLE {
     constinit std::shared_ptr<RubyQueue> RubyQueue::_instance {};
 
@@ -89,8 +87,8 @@ namespace SimpleRbBLE {
 
     void RubyQueue::push(QueueItemType fn) {
         if (_stopping.test()) {
-//            if (DEBUG) std::cerr << "Warning: attempted to push to SimpleRbBLE callback queue, ";
-//            if (DEBUG) std::cerr << "but queue has been stopped. Refusing to push." << std::endl;
+            if (DEBUG) std::cerr << "Warning: attempted to push to SimpleRbBLE callback queue, ";
+            if (DEBUG) std::cerr << "but queue has been stopped. Refusing to push." << std::endl;
             return;
         }
 

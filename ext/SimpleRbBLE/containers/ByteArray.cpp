@@ -40,7 +40,7 @@ namespace SimpleRbBLE {
 
     std::string ByteArray::to_s() const {
         std::ostringstream oss;
-        oss << Utils::basic_object_inspect_start(*this);
+        oss << Utils::basic_object_inspect_start(*this) << " ";
         oss << Utils::to_hex_data(_data);
         oss << " (" << Utils::ruby_quote_string(_data) << ")>";
         return oss.str();

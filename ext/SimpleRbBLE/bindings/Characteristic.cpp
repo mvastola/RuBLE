@@ -56,7 +56,7 @@ namespace SimpleRbBLE {
 
     ByteArray Characteristic::read(bool force) {
         // if tracking is enabled, assume we'll get the value via callback
-        if (!force && value_tracking() && last_value().has_value()) return last_value().value();
+        if (!force && value_tracking() && last_value()) return *last_value();
 
         ByteArray value = service()->read(uuid());
         record_new_value(value);

@@ -177,11 +177,9 @@ namespace SimpleRbBLE {
 
     void Peripheral::ruby_mark() const {
         rb_gc_mark(self());
-        if (_on_connected) Rice::ruby_mark<SimpleRbBLE::Callback>(_on_connected.get());
-        if (_on_disconnected) Rice::ruby_mark<SimpleRbBLE::Callback>(_on_disconnected.get());
+        if (_on_connected) _on_connected->ruby_mark();
+        if (_on_disconnected) _on_disconnected->ruby_mark();
         Rice::ruby_mark(_service_registry.get());
-//        if (peripheral->_on_connected) rb_gc_mark(peripheral->_on_connected->self());
-//        if (peripheral->_on_disconnected) rb_gc_mark(peripheral->_on_disconnected->self());
     }
 
 
