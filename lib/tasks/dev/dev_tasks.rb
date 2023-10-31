@@ -61,23 +61,28 @@ class DevTasks
   end
 
   attr_reader :pager
-  def initialize
+  def initialize(*flags)
+    @flags = flags.map(&:to_sym).to_set
     @pager = Pager.instance
     @pager.start
   end
 
+  def flag?(name) = @flags.include?(name.to_sym)
+  def quiet? = flag?(:quiet)
+  def verbose? = !quiet?
+  def single? = flag?(:single)
+  def nproc = single? ? 1 : Etc.nprocessors
+
   def write_hash_file! = HASH_FILE.write(self.class.state_hash)
 
-  def ninja_cmd(target: nil, flags: [])
-    verbose = flags.include?(:silent) ? 0 : 1
-    num_jobs = flags.include?(:single) ? 1 : Etc.nprocessors
-    [ 'ninja', "-j#{num_jobs}", verbose.positive? && '-v', target].compact.reject(&:empty?)
+  def ninja_cmd(target: nil)
+    verbose_flag = verbose? ? '-v' : nil
+    [ 'ninja', "-j#{nproc}", verbose_flag, target].compact
   end
 
-  def make_cmd(target: nil, flags: [])
-    verbose = flags.include?(:silent) ? 0 : 1
-    num_jobs = flags.include?(:single) ? 1 : Etc.nprocessors
-    ['make', "-j#{num_jobs}", "V=#{verbose}", 'CXX=g++-13', target].compact
+  def make_cmd(target: nil)
+    verbose_val = verbose? ? 1 : 0
+    ['make', "-j#{nproc}", "V=#{verbose_val}", 'CXX=g++-13', target].compact
   end
 
 
@@ -110,12 +115,12 @@ class DevTasks
   def needs_reconfigure? = !HASH_FILE.exist? || HASH_FILE.read.strip != self.class.state_hash
   def maybe_reconfigure! = needs_reconfigure? && reconfigure!
 
-  def build!(*flags)
+  def build!
     maybe_reconfigure!
-    pager.exec_paginated!(make_cmd(flags:), chdir: TEST_DIR)
+    pager.exec_paginated!(make_cmd, chdir: TEST_DIR)
 
-    pager.exec_paginated!(ninja_cmd(flags:), chdir: BUILD_DIR)
-    pager.exec_paginated!(ninja_cmd(target: 'install', flags:), chdir: BUILD_DIR)
+    pager.exec_paginated!(ninja_cmd, chdir: BUILD_DIR)
+    pager.exec_paginated!(ninja_cmd(target: 'install'), chdir: BUILD_DIR)
   end
 
   Symbol = Struct.new(:Symbol, *%i[address name file flag defined], keyword_init: true) do

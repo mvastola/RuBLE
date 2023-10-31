@@ -22,6 +22,8 @@ OS_FIELDS = %i[dev_null cpu_count host posix? linux? host_os iron_ruby? bits hos
 @os_data = OS_FIELDS.to_h { |name| [ name.to_s.delete_suffix('?'), OS.send(name) ] }
 @os_data['os_release'] = OS.parse_os_release rescue nil
 
+# TODO: Add library metadata (such as version/commit hash, etc) to be passed to ld --package-metadata (https://systemd.io/ELF_PACKAGE_METADATA/)
+ 
 config_data = {
   extension: {
     name: EXTENSION_NAME,

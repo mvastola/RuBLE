@@ -37,26 +37,18 @@ namespace SimpleRbBLE {
 
         Object self() const;
 
-        static bool bluetooth_enabled();
-
-        static std::vector<std::shared_ptr<Adapter>> get_adapters();
-
-        virtual bool initialized() const;
-
         SimpleBLE::Adapter &get();
-
         const SimpleBLE::Adapter &get() const;
 
+        static bool bluetooth_enabled();
+        static std::vector<std::shared_ptr<Adapter>> get_adapters();
+        virtual bool initialized() const;
         std::string identifier();
-
         SimpleBLE::BluetoothAddress address() const;
 
         void scan_start();
-
         void scan_stop();
-
         void scan_for(int timeout_ms);
-
         bool scan_is_active() const;
 
         void on_scan_start(Object on_scan_start);
@@ -65,11 +57,9 @@ namespace SimpleRbBLE {
         void on_scan_find(Object on_scan_found);
 
         std::vector<std::shared_ptr<Peripheral>> scan_get_results();
-
         std::vector<std::shared_ptr<Peripheral>> get_paired_peripherals();
 
         bool operator==(const SimpleBLE::BluetoothAddress &addr) const;
-
         bool operator==(const Adapter &ap) const;
 
         std::unordered_set<std::string> status_flags() const;

@@ -1,7 +1,13 @@
 #cmakedefine EXTENSION_NAME "@EXTENSION_NAME@"
 #cmakedefine EXTENSION_VERSION "@EXTENSION_VERSION@"
-#cmakedefine Ruby_VERSION "@Ruby_VERSION@"
+#cmakedefine RUBY_VERSION "@Ruby_VERSION@"
+#cmakedefine RUBY_VERSION_MAJOR "@RUBY_VERSION_MAJOR@"
+#cmakedefine RUBY_VERSION_MINOR "@RUBY_VERSION_MINOR@"
+#cmakedefine RUBY_VERSION_PATCH "@RUBY_VERSION_PATCH@"
 #cmakedefine RICE_VERSION "@RICE_VERSION@"
+
+// TODO: defer to single point of truth re: min ruby version elsewhere.
+//   e.g. minimum version already in `.gemspec` and CMakeLists
 
 #cmakedefine SIMPLERBBLE_DEBUG 1
 #cmakedefine HAVE_BOOST_EXCEPTION 1

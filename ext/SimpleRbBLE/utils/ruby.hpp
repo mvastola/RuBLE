@@ -1,31 +1,68 @@
 #pragma once
 
+#include "types/ruby.hpp"
+#include <ruby/thread.h>
 #include <memory>
 #include <functional>
 
 namespace SimpleRbBLE {
     namespace Utils::Ruby {
+        class InRuby;
+        class InRubyGuard {
+            InRuby *_inRuby = nullptr;
+            constexpr InRubyGuard(InRuby &inRuby);
+        public:
+            constexpr InRubyGuard() = default;
+            constexpr InRubyGuard(const InRubyGuard&) = delete;
+            constexpr InRubyGuard &operator=(const InRubyGuard&) = delete;
+            constexpr InRubyGuard(InRubyGuard&&);
+            constexpr InRubyGuard &operator=(InRubyGuard&&);
+            constexpr ~InRubyGuard();
+            constexpr operator bool() const { return _inRuby != nullptr; }
+
+            friend class InRuby;
+        };
+
         class InRuby {
-        public:
-            using Guard = std::shared_ptr<bool>;
-            using WeakGuard = Guard::weak_type;
         private:
-            WeakGuard _state;
+            uint64_t _use_count = 0;
         public:
-            InRuby() = default;
+            using Guard = InRubyGuard;
+            constexpr InRuby() = default;
             InRuby(const InRuby &) = delete;
             InRuby(InRuby &&) = delete;
             InRuby &operator=(InRuby &&) = delete;
             InRuby &operator=(const InRuby &) = delete;
 
             // similar to lock_guard: this->state() will return true
-            // as long as at least one result of the assert_guard fn is maintained
-            Guard assert_guard();
-
-            [[nodiscard]] bool state() const;
-
-            operator bool() const;
+            // as long as at least one result of the assert_in_ruby_guard fn is maintained
+            constexpr Guard assert_in_ruby_guard() {
+                return InRubyGuard(*this);
+            }
+            constexpr const auto &use_count() const { return _use_count; }
+            constexpr bool state() const { return use_count() > 0; }
+            constexpr operator bool() const { return state(); }
+            friend class InRubyGuard;
         };
+
+        constexpr InRubyGuard::InRubyGuard(InRuby &inRuby) : _inRuby(&inRuby) {
+            if (_inRuby != nullptr) ++_inRuby->_use_count;
+        }
+        constexpr InRubyGuard::~InRubyGuard() {
+            if (_inRuby != nullptr) --_inRuby->_use_count;
+        }
+
+        constexpr InRubyGuard::InRubyGuard(InRubyGuard &&other) {
+            *this = std::move(other);
+        }
+
+        constexpr InRubyGuard &InRubyGuard::operator=(InRubyGuard &&other) {
+            InRuby *old = std::exchange(_inRuby, other._inRuby);
+            if (_inRuby != nullptr) ++_inRuby->_use_count;
+            if (old != nullptr) --old->_use_count;
+            other._inRuby = nullptr;
+            return *this;
+        }
     }
 
     using Utils::Ruby::InRuby;
@@ -36,7 +73,7 @@ namespace SimpleRbBLE {
         T ensure_ruby(const Fn &fn) {
             if (in_ruby) return fn();
             void *(*invoke)(void*) = [](void *fnPtr) -> void * {
-                auto in_ruby_guard = in_ruby.assert_guard();
+                volatile auto in_ruby_guard = in_ruby.assert_in_ruby_guard();
                 auto &fnRef = *reinterpret_cast<Fn *>(fnPtr);
                 return new T(std::move(fnRef()));
             };

@@ -7,6 +7,7 @@
 #include "utils/hexadecimal.hpp"
 #include "utils/human_type_names.hpp"
 #include "utils/endianness.hpp"
+#include "concerns/Rubyable.hpp"
 #include <utility>
 #include <span>
 #include <array>
@@ -18,11 +19,10 @@ namespace SimpleRbBLE {
     concept UnsignedIntegral = std::is_integral_v<T> && std::is_unsigned_v<T>;
 
     // TODO: Need to test this out
-    class ByteArray {
+    class ByteArray : public Rubyable<ByteArray> {
     public:
         using DataObject = ByteArray_DO;
     private:
-        VALUE _self = Qnil;
         SimpleBLE::ByteArray _data;
 
     public:
@@ -52,8 +52,6 @@ namespace SimpleRbBLE {
         ByteArray(const bool &val);
 
         static ByteArray from_ruby(Rice::Object obj);
-
-        Object self() const;
 
         [[nodiscard]] constexpr std::size_t length() const { return _data.size(); }
         [[nodiscard]] constexpr std::size_t byte_count() const { return length() * char_size; }
@@ -146,21 +144,21 @@ namespace SimpleRbBLE {
     void Init_ByteArray();
 }
 
-namespace Rice::detail {
-    template<>
-    class From_Ruby<SimpleRbBLE::ByteArray> {
-    public:
-        static constexpr const auto supported_ruby_types =
-                std::to_array({T_BIGNUM, T_FIXNUM, T_SYMBOL, T_STRING, T_NIL, T_TRUE, T_FALSE});
-        static bool can_convert_from_ruby(VALUE obj);
-        bool is_convertible(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
-            return can_convert_from_ruby(value);
-        }
-        SimpleRbBLE::ByteArray convert(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
-            return SimpleRbBLE::ByteArray::from_ruby(value);
-        }
-    };
-}
+//namespace Rice::detail {
+//    template<>
+//    class From_Ruby<SimpleRbBLE::ByteArray> {
+//    public:
+//        static constexpr const auto supported_ruby_types =
+//                std::to_array({T_BIGNUM, T_FIXNUM, T_SYMBOL, T_STRING, T_NIL, T_TRUE, T_FALSE});
+//        static bool can_convert_from_ruby(VALUE obj);
+//        bool is_convertible(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
+//            return can_convert_from_ruby(value);
+//        }
+//        SimpleRbBLE::ByteArray convert(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
+//            return SimpleRbBLE::ByteArray::from_ruby(value);
+//        }
+//    };
+//}
 
 constexpr std::ostream &operator<<(std::ostream &os, const SimpleRbBLE::ByteArray &cba) {
     return os << cba.data();

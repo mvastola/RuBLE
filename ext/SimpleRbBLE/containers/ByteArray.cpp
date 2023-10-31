@@ -4,9 +4,9 @@
 #include "utils/containers.hpp"
 
 namespace SimpleRbBLE {
-    ByteArray::ByteArray() : _data(), _self(DataObject(*this)) {}
+    ByteArray::ByteArray() : _data(), Rubyable<ByteArray>() {}
 
-    ByteArray::ByteArray(SimpleBLE::ByteArray byteArray) : _data(std::move(byteArray)), _self(DataObject(*this)) {}
+    ByteArray::ByteArray(SimpleBLE::ByteArray byteArray) : _data(std::move(byteArray)), Rubyable<ByteArray>() {}
 
     ByteArray::ByteArray(const ByteArray::char_type &chr) : ByteArray() {
         // TODO: modernize by using std::span
@@ -38,8 +38,6 @@ namespace SimpleRbBLE {
         return { std::move(obj) };
     }
 
-    Object ByteArray::self() const { return _self; }
-
     std::string ByteArray::to_s() const {
         std::ostringstream oss;
         oss << Utils::basic_object_inspect_start(*this);
@@ -51,7 +49,7 @@ namespace SimpleRbBLE {
     std::string ByteArray::inspect() const { return to_s(); }
 
     void ByteArray::ruby_mark() const {
-        rb_gc_mark(_self);
+        Rubyable::ruby_mark();
     }
 
     void Init_ByteArray() {
@@ -72,10 +70,10 @@ namespace SimpleRbBLE {
     }
 }
 
-namespace Rice::detail {
-    bool From_Ruby<SimpleRbBLE::ByteArray>::can_convert_from_ruby(VALUE obj) {
-        return std::find(supported_ruby_types.cbegin(),
-                         supported_ruby_types.cend(),
-                         rb_type(obj)) != supported_ruby_types.cend();
-    }
-}
+//namespace Rice::detail {
+//    bool From_Ruby<SimpleRbBLE::ByteArray>::can_convert_from_ruby(VALUE obj) {
+//        return std::find(supported_ruby_types.cbegin(),
+//                         supported_ruby_types.cend(),
+//                         rb_type(obj)) != supported_ruby_types.cend();
+//    }
+//}

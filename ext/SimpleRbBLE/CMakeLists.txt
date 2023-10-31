@@ -48,9 +48,7 @@ include_directories(.)
 # For config.h
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-add_library(SimpleRbBLE SHARED
-        containers/CharacteristicValueTracker.hpp
-        containers/CharacteristicValueTracker.cpp)
+add_library(SimpleRbBLE SHARED)
 
 add_compile_options(-fthreadsafe-statics)
 #add_compile_options(-fPIC -Wl,-fPIC)
@@ -58,12 +56,21 @@ set(CMAKE_CXX_FLAGS_DEBUG "-ggdb3 -O0 -fdiagnostics-color=always -fno-eliminate-
 target_link_options(SimpleRbBLE PUBLIC
         LINKER:--no-strip-discarded
         LINKER:--discard-none
-#        LINKER:--ld-generated-unwind-info
+        LINKER:--ld-generated-unwind-info
         LINKER:-z,defs
         LINKER:-z,now
         LINKER:-fPIC
+        LINKER:--gc-keep-exported
+        LINKER:--no-gc-sections
+        LINKER:--dynamic-list-cpp-typeinfo
+        LINKER:--no-copy-dt-needed-entries
+        LINKER:--unresolved-symbols=report-all
+        LINKER:--enable-new-dtags
+        LINKER:-O0
+        LINKER:--export-dynamic
+        LINKER:--ctf-variables
 #        LINKER:--embedded-relocs
-) # LINKER:--gc-keep-exported LINKER:--no-gc-sections
+)
 
 target_link_libraries(SimpleRbBLE PUBLIC ${Ruby_LIBRARIES})
 target_include_directories(SimpleRbBLE PUBLIC ${Ruby_INCLUDE_DIRS})
@@ -108,13 +115,14 @@ target_precompile_headers(SimpleRbBLE PRIVATE
         ./containers/NamedBitSet.hpp
         ./containers/NamedBitSet.ipp
         ./containers/Callback.hpp
-        ./types/spans.hpp
         ./types/SimpleBLE.hpp
         ./types/ruby.hpp
         ./types/ranges.hpp
         ./types/helpers.hpp
         ./types/chrono.hpp
         ./types/declarations.hpp
+        ./concerns/CharacteristicValueTracker.hpp
+        ./concerns/Rubyable.hpp
 )
 target_sources(SimpleRbBLE PUBLIC
         ./management/RubyQueue.cpp
@@ -133,10 +141,13 @@ target_sources(SimpleRbBLE PUBLIC
         ./utils/CallableTraits.cpp
         ./utils/garbage_collection.cpp
         ./utils/async.cpp
-        ./utils/ruby.cpp
         ./containers/ByteArray.cpp
+        ./concerns/CharacteristicValueTracker.cpp
+        ./concerns/Rubyable.cpp
 )
 
 # TODO: `install(EXPORT...` to generate .cmake files for import
 install(TARGETS SimpleRbBLE DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME SimpleRbBLE.so)
+
 #print_target_properties(SimpleRbBLE)
+#dump_variables()

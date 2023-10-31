@@ -80,7 +80,8 @@ using namespace SimpleRbBLE;
 
 // See https://jasonroelofs.com/rice/4.x
 extern "C" [[maybe_unused]] void Init_SimpleRbBLE() {
-    SimpleRbBLE::main_thread_in_ruby = SimpleRbBLE::in_ruby.assert_guard();
+    SimpleRbBLE::main_thread_in_ruby = SimpleRbBLE::in_ruby.assert_in_ruby_guard();
+    assert(SimpleRbBLE::main_thread_in_ruby);
     Init_ExceptionHandling();
 #ifdef HAVE_VALGRIND
     VALGRIND_PRINTF_BACKTRACE("Enabling leak checking now.\n");

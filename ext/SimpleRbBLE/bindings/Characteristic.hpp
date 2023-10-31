@@ -6,7 +6,7 @@
 #include "bindings/Service.hpp"
 #include "containers/ByteArray.hpp"
 #include "utils/hash.hpp"
-#include "containers/CharacteristicValueTracker.hpp"
+#include "concerns/CharacteristicValueTracker.hpp"
 
 namespace SimpleRbBLE {
     enum class CharacteristicCapabilityType : std::size_t {

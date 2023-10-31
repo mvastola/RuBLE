@@ -78,7 +78,7 @@ namespace SimpleRbBLE {
             }
 
             rb_thread_call_with_gvl([](void *queueItem) -> void * {
-                auto in_ruby_guard = in_ruby.assert_guard();
+                auto in_ruby_guard = in_ruby.assert_in_ruby_guard();
                 (*reinterpret_cast<QueueItemType*>(queueItem))();
                 return nullptr;
             }, &item);
