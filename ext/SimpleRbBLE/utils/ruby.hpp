@@ -83,6 +83,7 @@ namespace SimpleRbBLE {
             delete resultPtr;
             return std::move(result);
         }
+
         template <typename T, typename... Args>
         [[maybe_unused]] T ensuring_ruby(std::function<T(Args...)> &&fn, Args &&...args) {
             auto wrapper = [&fn, &args...]() -> T { return std::invoke(fn, args...); };

@@ -124,9 +124,8 @@ namespace SimpleRbBLE {
             return result;
         }
 
-        Rice::Array map_to_ruby_objects(const auto &arg) requires HasRubyObject<ProxyClass> {
+        Rice::Array map_to_ruby_objects(const auto &arg) const requires HasRubyObject<ProxyClass> {
             std::vector<ProxyPtr> proxyVec = map_to_objects(arg);
-//            ToRubyObjectResult<ProxyClass> (*fn)(const ProxyClass&) = Ruby::to_ruby_object<Rice::Object>;
             auto xform = [](const ProxyPtr &obj) -> Rice::Object { return obj->self(); };
             auto objs = proxyVec | views::transform(xform);
             Rice::Array result(objs.begin(), objs.end());
