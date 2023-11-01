@@ -4,7 +4,7 @@
 #include <ruby/ruby.h>
 #include <thread>
 #include "types/helpers.hpp"
-#include "types/chrono.hpp"
+#include "types/stl.hpp"
 
 namespace SimpleRbBLE::Utils {
     namespace Async {

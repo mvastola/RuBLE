@@ -30,7 +30,6 @@ namespace SimpleRbBLE::ExceptionHandling {
             if (_old_terminate_handler != nullptr) _old_terminate_handler();
 
         });
-        std::cerr << "Termination handler replaced" << std::endl;
     }
 
     [[maybe_unused]] void abort_with_stack() {
@@ -45,15 +44,3 @@ namespace SimpleRbBLE::ExceptionHandling {
     }
 }
 
-#ifdef HAVE_BOOST_STACKTRACE
-void boost::assertion_failed_msg(const char *expr, const char *msg, const char *function, const char *, long) {
-    std::cerr << "Expression '" << expr << "' is false in function '" << function << "': " << (msg ? msg : "<...>")
-              << ".\nBacktrace:\n" << boost::stacktrace::stacktrace() << '\n';
-
-    std::abort();
-}
-
-[[maybe_unused]] void boost::assertion_failed(const char *expr, const char *function, const char *file, long line) {
-    ::boost::assertion_failed_msg(expr, nullptr, function, file, line);
-}
-#endif

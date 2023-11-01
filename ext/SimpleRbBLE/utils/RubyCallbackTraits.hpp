@@ -10,15 +10,18 @@
 // hard to decipher what's wrong from the ArgumentError
 // unfortunately, Proc#arity isn't sufficiently informative because it doesn't
 // take into account required kw args.
-namespace SimpleRbBLE::Utils {
-    class CallableTraits {
+namespace SimpleRbBLE::Utils::Ruby {
+    static constexpr std::initializer_list<std::string_view> FnParameterTypes {
+        "req", "opt", "rest", "keyreq", "key", "keyrest"
+    };
+
+    class CallbackTraits {
         bool _is_lambda = false;
-        std::unordered_map<std::string, uint_least8_t> _map;
+        std::unordered_map<std::string_view, uint_least8_t> _map;
     public:
         using MapValueType = decltype(_map)::mapped_type;
-        static const std::unordered_set<std::string> ParameterTypes;
 
-        CallableTraits(const VALUE &val);
+        CallbackTraits(const VALUE &val);
 
         [[maybe_unused]] constexpr bool is_lambda() const { return _is_lambda; }
 
@@ -39,4 +42,7 @@ namespace SimpleRbBLE::Utils {
         // throws an exception if the argument can't be called with exactly N positional args
         static void assert_accepts_n_args(const VALUE &val, const uint8_t &n, bool allow_nil = true);
     };
+}
+namespace SimpleRbBLE {
+    namespace Ruby = Utils::Ruby;
 }

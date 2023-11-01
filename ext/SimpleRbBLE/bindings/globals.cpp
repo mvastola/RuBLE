@@ -2,7 +2,7 @@
 #include "types/ruby.hpp"
 #include "types/SimpleBLE.hpp"
 #include "common.hpp"
-#include "utils/ruby.hpp"
+#include "utils/ruby_context.hpp"
 #include "utils/hash.hpp"
 #include "utils/garbage_collection.hpp"
 #include "utils/exception_handling.hpp"

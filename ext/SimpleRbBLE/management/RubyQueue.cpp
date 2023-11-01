@@ -1,5 +1,5 @@
 #include "management/RubyQueue.hpp"
-#include "utils/ruby.hpp"
+#include "utils/ruby_context.hpp"
 #include "utils/async.hpp"
 #include <ruby/thread.h>
 

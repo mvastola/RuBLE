@@ -1,14 +1,16 @@
 #pragma once
 
 #include <rice/rice.hpp>
-#include <rice/stl.hpp>
 #include <ruby/ruby.h>
+#include <thread>
 #include <type_traits>
-#include <concepts>
 
 namespace SimpleRbBLE {
     namespace Rice = ::Rice;
     using namespace ::Rice;
+
+    using RubyThreadId = VALUE;
+    using CppThreadId = std::thread::id;
 
     template <typename T = void>
     using RbThreadCreateFn = VALUE(*)(T*);
@@ -31,9 +33,4 @@ namespace SimpleRbBLE {
 
     template<typename T>
     concept HasRubyObject = RubyValue<ToRubyObjectResult<T>> && requires { typename T::DataObject; };
-
-
-//                         (std::derived_from<ArgT, Rice::Object> || std::same_as<VALUE, ArgT>)
 }
-
-

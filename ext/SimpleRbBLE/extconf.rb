@@ -50,7 +50,30 @@ config_data = {
 }
 #config_data.flat_join! # to make cmake happy
 
-# TODO: invoke mini_portile2 for SimpleBLE
+# Now download SimpleBLE
+# TODO: can we get away with the require_relative? The issue is I think RVM, rubygems, and/or bundler
+#   separates the extension dir (though it may just be the install dir) from the gem's root dir
+#   so I'm not sure if the relative path from the extconf.rb to lib/tasks/lib is always the same.
+#   If that's the case, we need something like the following:
+# $:.unshift (Pathname.new(@this_spec.full_gem_path) / 'lib' / 'tasks' / 'lib').to_s
+# require 'simpleble'
+require_relative '../../lib/tasks/lib/simpleble'
+
+# TODO: we should probably fix a known-working version come release time
+@simpleble_release = with_config('simpleble-release') || 'latest'
+@simpleble = SimpleBLE.new(tag: @simpleble_release) 
+@simpleble.download!
+@simpleble.extract!
+@simpleble.install!
+
+config_data[:simpleble] = {
+  requested_tag: @simpleble_release,
+  release_tag: @simpleble.real_tag_name,
+  release: @simpleble.release.dup.tap { _1.delete('assets') },
+  asset: @simpleble.matching_asset.dup.tap { _1.delete('uploader') },
+  install_location: @simpleble.install_dir
+}
+
 
 OUT_FILE = Pathname.new(__dir__) / 'build-config.json'
 File.write(OUT_FILE, JSON.pretty_generate(config_data))

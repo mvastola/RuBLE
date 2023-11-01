@@ -35,15 +35,16 @@ Gem::Specification.new do |spec|
   spec.extensions = ['ext/SimpleRbBLE/extconf.rb']
   spec.extra_rdoc_files = Dir['{.,pages}/*.md']
 
-  # spec.add_dependency "example-gem", "~> 1.0"
-  spec.add_development_dependency "rice"
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rake-compiler"
-  spec.add_development_dependency "minitest"
-  spec.add_development_dependency "faraday"
-  spec.add_development_dependency "mini_portile2"
-  spec.add_development_dependency "os"
-  spec.add_development_dependency "rubyzip"
+  # spec.add_dependency 'example-gem', '~> 1.0'
+  spec.add_development_dependency 'rice'
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rake-compiler'
+  spec.add_development_dependency 'minitest'
+  spec.add_development_dependency 'faraday'
+  spec.add_development_dependency 'faraday-follow_redirects'
+  spec.add_development_dependency 'faraday-retry'
+  spec.add_development_dependency 'os'
+  spec.add_development_dependency 'rubyzip'
 
 end

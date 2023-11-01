@@ -1,17 +1,15 @@
 #pragma once
 
 #include "containers/Callback.hpp"
+#include "types/stl.hpp"
 #include <deque>
 #include <mutex>
-#include <semaphore>
 #include <chrono>
 #include <thread>
 #include <shared_mutex>
 
-namespace chrono = std::chrono;
 
 namespace SimpleRbBLE {
-    const constexpr auto semaphore_max = std::numeric_limits<uint16_t>::max();
     // All ruby calls must take place in thread known to ruby
     // Since SimpleBLE creates its own thread from which callbacks are invoked,
     // we have that (non-ruby) thread add a function to RubyQueue,
@@ -22,9 +20,6 @@ namespace SimpleRbBLE {
         using QueueItemType = FnType;
         using QueueType [[maybe_unused]] = std::deque<QueueItemType>;
 
-        using RubyThreadId = VALUE;
-        using CppThreadId [[maybe_unused]] = std::thread::id;
-        using Semaphore [[maybe_unused]] = std::counting_semaphore<semaphore_max>;
     private:
         static std::shared_ptr<RubyQueue> _instance;
         std::shared_ptr<QueueType> _q = std::shared_ptr<QueueType>(new QueueType());

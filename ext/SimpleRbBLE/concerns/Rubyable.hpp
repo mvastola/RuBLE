@@ -3,7 +3,7 @@
 #include <concepts>
 #include "types/ruby.hpp"
 #include "utils/human_type_names.hpp"
-#include "utils/ruby.hpp"
+#include "utils/ruby_context.hpp"
 #include "utils/hexadecimal.hpp"
 
 namespace SimpleRbBLE {

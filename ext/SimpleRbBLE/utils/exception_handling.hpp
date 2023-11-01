@@ -14,12 +14,16 @@
 
 #ifdef HAVE_BOOST_STACKTRACE
 namespace boost {
-    //NOLINTNEXTLINE(*-redundant-declaration)
-    void assertion_failed_msg(char const *expr, char const *msg, char const *function, char const * /*file*/,
-                                     long /*line*/);
+    inline void assertion_failed_msg(const char *expr, const char *msg, const char *function, const char *, long) {
+        std::cerr << "Expression '" << expr << "' is false in function '" << function << "': " << (msg ? msg : "<...>")
+                  << ".\nBacktrace:\n" << boost::stacktrace::stacktrace() << '\n';
 
-    //NOLINTNEXTLINE(*-redundant-declaration)
-    [[maybe_unused]] void assertion_failed(char const *expr, char const *function, char const *file, long line);
+        std::abort();
+    }
+
+    [[maybe_unused]] inline void assertion_failed(const char *expr, const char *function, const char *file, long line) {
+        ::boost::assertion_failed_msg(expr, nullptr, function, file, line);
+    }
 } // namespace boost
 #endif
 
@@ -48,7 +52,7 @@ namespace SimpleRbBLE::ExceptionHandling {
     }
 
     template<class E>
-    constexpr void throw_with_backtrace(const E &e) {
+    [[maybe_unused]] constexpr void throw_with_backtrace(const E &e) {
         throw add_backtrace(e);
     }
 

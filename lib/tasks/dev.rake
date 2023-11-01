@@ -4,7 +4,7 @@ namespace :dev do
   task :initialize, %i[flags] do |task, args|
     # Bundler.require
     Bundler.setup
-    require_relative './dev/dev_tasks'
+    require_relative './lib/dev_tasks'
     flags = (args.flags || '').split(/,\s*/).each(&:strip!).reject(&:empty?).map(&:to_sym).to_set
     @devTasks = DevTasks.new(*flags)
   end

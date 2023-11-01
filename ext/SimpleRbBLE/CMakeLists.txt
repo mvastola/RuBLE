@@ -23,6 +23,7 @@ string(JSON RICE_VERSION GET "${JSON_BUILD_CONFIG}" rice version)
 string(JSON EXTENSION_NAME GET "${JSON_BUILD_CONFIG}" extension name)
 string(JSON EXTENSION_VERSION GET "${JSON_BUILD_CONFIG}" extension version)
 string(JSON DEBUG_MODE GET "${JSON_BUILD_CONFIG}" extension debug_build)
+string(JSON SIMPLEBLE_EXTRACT_DIR GET "${JSON_BUILD_CONFIG}" simpleble install_location)
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES AND EXISTS "${CMAKE_SOURCE_DIR}/../../.git")
     set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build.")
@@ -42,7 +43,6 @@ find_package(Boost OPTIONAL_COMPONENTS headers stacktrace_backtrace stacktrace_a
 find_path(VALGRIND_HEADER_DIR valgrind/valgrind.h)
 set(HAVE_VALGRIND ${VALGRIND_HEADER_DIR})
 
-find_package(simpleble REQUIRED)
 
 include_directories(.)
 # For config.h
@@ -51,14 +51,13 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 add_library(SimpleRbBLE SHARED)
 
 add_compile_options(-fthreadsafe-statics)
-#add_compile_options(-fPIC -Wl,-fPIC)
 set(CMAKE_CXX_FLAGS_DEBUG "-ggdb3 -O0 -fdiagnostics-color=always -fno-eliminate-unused-debug-symbols -fno-eliminate-unused-debug-types -femit-class-debug-always -fno-indirect-inlining -fno-partial-inlining -fno-omit-frame-pointer -ggnu-pubnames -ginline-points -gstatement-frontiers -gvariable-location-views -fdiagnostics-color=always -fconcepts-diagnostics-depth=1")
 target_link_options(SimpleRbBLE PUBLIC
         LINKER:--no-strip-discarded
         LINKER:--discard-none
         LINKER:--ld-generated-unwind-info
         LINKER:-z,defs
-        LINKER:-z,now
+#        LINKER:-z,now
         LINKER:-fPIC
         LINKER:--gc-keep-exported
         LINKER:--no-gc-sections
@@ -69,17 +68,15 @@ target_link_options(SimpleRbBLE PUBLIC
         LINKER:-O0
         LINKER:--export-dynamic
         LINKER:--ctf-variables
-#        LINKER:--embedded-relocs
 )
 
 target_link_libraries(SimpleRbBLE PUBLIC ${Ruby_LIBRARIES})
 target_include_directories(SimpleRbBLE PUBLIC ${Ruby_INCLUDE_DIRS})
 
 target_include_directories(SimpleRbBLE PRIVATE ${RICE_INCLUDE_PATH})
-target_link_libraries(SimpleRbBLE PUBLIC simpleble::simpleble)
-include(${simpleble_CONFIG})
 
 setup_boost(SimpleRbBLE)
+setup_simpleble(SimpleRbBLE)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(SIMPLERBBLE_DEBUG true)
@@ -102,7 +99,8 @@ target_precompile_headers(SimpleRbBLE PRIVATE
         ./bindings/Peripheral.hpp
         ./utils/containers.hpp
         ./utils/hexadecimal.hpp
-        ./utils/CallableTraits.hpp
+        ./utils/RubyCallbackTraits.hpp
+        ./utils/ruby_context.hpp
         ./utils/ruby.hpp
         ./utils/human_type_names.hpp
         ./utils/inspection.hpp
@@ -117,9 +115,8 @@ target_precompile_headers(SimpleRbBLE PRIVATE
         ./containers/Callback.hpp
         ./types/SimpleBLE.hpp
         ./types/ruby.hpp
-        ./types/ranges.hpp
         ./types/helpers.hpp
-        ./types/chrono.hpp
+        ./types/stl.hpp
         ./types/declarations.hpp
         ./concerns/CharacteristicValueTracker.hpp
         ./concerns/Rubyable.hpp
@@ -138,7 +135,7 @@ target_sources(SimpleRbBLE PUBLIC
         ./utils/hash.cpp
         ./utils/exception_handling.cpp
         ./utils/inspection.cpp
-        ./utils/CallableTraits.cpp
+        ./utils/RubyCallbackTraits.cpp
         ./utils/garbage_collection.cpp
         ./utils/async.cpp
         ./containers/ByteArray.cpp

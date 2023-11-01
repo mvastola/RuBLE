@@ -1,7 +1,7 @@
 #pragma once
 #include "types/declarations.hpp"
 #include "types/ruby.hpp"
-#include "utils/CallableTraits.hpp"
+#include "utils/RubyCallbackTraits.hpp"
 #include "utils/garbage_collection.hpp"
 
 using namespace std::string_literals;
@@ -15,7 +15,7 @@ namespace SimpleRbBLE {
 
         // TODO: confirm this is a proc (taking the right number of args)
         constexpr void set(VALUE cb) {
-            Utils::CallableTraits::assert_accepts_n_args(cb, _arg_count, true);
+            Ruby::CallbackTraits::assert_accepts_n_args(cb, _arg_count, true);
             _cb = cb;
         }
 
@@ -25,6 +25,8 @@ namespace SimpleRbBLE {
 
         template<class... Types>
         Object fire(const Types& ...args) {
+            if constexpr (DEBUG) assert(sizeof...(Types) == arg_count());
+
             Object cb(_cb);
             if (!cb.test()) return Qnil;
             const std::initializer_list<Object> argList { args... };

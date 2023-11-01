@@ -7,10 +7,11 @@
 #include "types/declarations.hpp"
 #include "types/helpers.hpp"
 #include "types/ruby.hpp"
-#include "utils/ruby.hpp"
+#include "utils/ruby_context.hpp"
 #include "utils/human_type_names.hpp"
 #include "utils/garbage_collection.hpp"
 
+namespace ranges = std::ranges;
 namespace views = ranges::views;
 
 namespace SimpleRbBLE {

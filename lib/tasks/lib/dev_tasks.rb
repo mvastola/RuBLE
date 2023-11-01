@@ -5,7 +5,6 @@ require 'json'
 require_relative './pager'
 
 class DevTasks
-  HASHER = OpenSSL::Digest.new('SHA256')
   EXTENSION_NAME = 'SimpleRbBLE'
   ROOT_DIR = (Pathname.new(__dir__) / '../../..').cleanpath(false)
   TMP_DIR = ROOT_DIR / 'tmp'
@@ -23,15 +22,14 @@ class DevTasks
   CMAKE_CXX_COMPILER = '/usr/bin/g++-13'
 
   class << self
-    def hash_file(path)
+    def hash_file(path, digest: 'SHA256')
+      hasher = OpenSSL::Digest.new(digest.to_s)
       File.open(path.to_s, 'rb') do |f|
-        HASHER << f.readpartial(8192) until f.eof?
+        hasher << f.readpartial(8192) until f.eof?
       end
-      HASHER.hexdigest
+      hasher.hexdigest
     rescue RefError # TODO: catch file not found errors (this is placeholder)
       nil
-    ensure
-      HASHER.reset
     end
 
     def state_hash
@@ -55,8 +53,6 @@ class DevTasks
 
       JSON.pretty_generate(fields)
       # HASHER.tap { _1 << fields.to_json }.digest
-    ensure
-      HASHER.reset
     end
   end
 

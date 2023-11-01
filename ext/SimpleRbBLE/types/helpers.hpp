@@ -1,13 +1,9 @@
 #pragma once
 #include <concepts>
-#include <type_traits>
-#include <string>
 
 namespace std {
-    struct nullopt_t;
+    struct nullopt_t; // NOLINT(*-dcl58-cpp)
 }
-namespace ranges = std::ranges;
-
 
 namespace SimpleRbBLE::Utils {
     template<typename T>

@@ -4,11 +4,6 @@
 #ifdef HAVE_VALGRIND
 #include <valgrind/valgrind.h>
 #endif
-//#include <iostream>
-//#include <memory>
-//#include <concepts>
-//#include <span>
-//#include <cstddef>
 
 // from https://stackoverflow.com/a/6713727
 // #define STRINGIFICATOR(X) #X
@@ -36,7 +31,7 @@ namespace SimpleRbBLE {
     template<const auto &FIELD_NAMES>
     class NamedBitSet;
 
-    using str_char_type = std::string::value_type;
+    using str_char_type [[maybe_unused]] = std::string::value_type;
 
     class RubyQueue;
 
