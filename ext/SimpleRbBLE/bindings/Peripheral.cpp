@@ -28,7 +28,6 @@ namespace SimpleRbBLE {
         });
     }
 
-
     bool Peripheral::initialized() const { return _peripheral->initialized(); }
 
     std::string Peripheral::identifier() const { return _peripheral->identifier(); }

@@ -5,6 +5,12 @@
 #include <algorithm>
 
 namespace SimpleRbBLE::Utils {
+    // TODO: I'm not 100% on if this code is correct. In any case it might be simpler to use the boost library
+    //   (https://www.boost.org/doc/libs/1_83_0/libs/endian/doc/html/endian.html#conversion) also, is this really even
+    //   needed? I'm thinking maybe we should take this out unless it becomes a problem/request.
+    //   I haven't come across endianness being handled elsewhere in the ruby or SimpleBLE source, so (assuming I haven't
+    //   missed anything) maybe there's a standard for bluetooth devices, or they're all proprietary in terms of encoding,
+    //   or maybe ruby doesn't even play well with endianness changes anywhere
     namespace Endianness {
         constexpr const bool endianness_byteswap_needed = std::endian::native == std::endian::big; // NOLINT(clion-simplify)
 

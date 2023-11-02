@@ -4,6 +4,3 @@
 [submodule "contrib/rice"]
 	path = contrib/rice
 	url = https://github.com/jasonroelofs/rice/
-[submodule "contrib/libdemangle"]
-	path = contrib/libdemangle
-	url = https://github.com/radareorg/libdemangle.git

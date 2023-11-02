@@ -87,9 +87,14 @@ namespace SimpleRbBLE {
 
     void RubyQueue::push(QueueItemType fn) {
         if (_stopping.test()) {
-            if (DEBUG) std::cerr << "Warning: attempted to push to SimpleRbBLE callback queue, ";
-            if (DEBUG) std::cerr << "but queue has been stopped. Refusing to push." << std::endl;
-            return;
+            if (DEBUG) {
+                std::cerr << "Warning: attempted to push to SimpleRbBLE callback queue, " <<
+                          "but queue has been stopped. Refusing to push." << std::endl;
+#ifdef HAVE_BOOST_STACKTRACE
+                std::cerr << "C++ Backtrace:" << std::endl << boost::stacktrace::stacktrace() << std::endl;
+#endif
+                return;
+            }
         }
 
         {

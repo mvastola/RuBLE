@@ -10,7 +10,7 @@
 
 
 namespace SimpleRbBLE {
-    // All ruby calls must take place in thread known to ruby
+    // All ruby calls must take place in thread known to ruby (i.e. where rb_get_execution_context works)
     // Since SimpleBLE creates its own thread from which callbacks are invoked,
     // we have that (non-ruby) thread add a function to RubyQueue,
     // which is monitored from a ruby thread and invoked immediately invoked with a FIFO ordering
@@ -18,7 +18,9 @@ namespace SimpleRbBLE {
     public:
         using FnType = std::function<void(void)>;
         using QueueItemType = FnType;
-        using QueueType [[maybe_unused]] = std::deque<QueueItemType>;
+        // TODO: perhaps switch to https://www.boost.org/doc/libs/1_83_0/doc/html/boost/lockfree/queue.html
+        // to reduce the need for atomics/etc?
+        using QueueType = std::deque<QueueItemType>;
 
     private:
         static std::shared_ptr<RubyQueue> _instance;
@@ -60,8 +62,6 @@ namespace SimpleRbBLE {
         static void stop_on_exit(VALUE); // Argument is unused, but rb_set_end_proc requires it
         void kill();
     };
-
-
 
 //    using RubyQueue_DT = Data_Type<RubyQueue>;
 //    using RubyQueue_DO = Data_Object<RubyQueue>;
