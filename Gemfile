@@ -7,8 +7,8 @@ gemspec development_group: :dev
 
 gem 'activesupport', groups: %i[dev]
 gem 'rainbow', groups: %i[dev]
-gem 'concurrent-ruby', groups: %i[dev]
-gem 'concurrent-ruby-ext', groups: %i[dev]
+#gem 'concurrent-ruby', groups: %i[dev]
+#gem 'concurrent-ruby-ext', groups: %i[dev]
 
 gem 'ruby-progressbar'
 gem "rake", "~> 13.0"

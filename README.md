@@ -2,20 +2,31 @@
 
 Preliminary attempt to implement an interface to the easy-to-use [SimpleBLE](https://github.com/OpenBluetoothToolbox/SimpleBL) (Bluetooth Low Energy) library in Ruby using the very nifty [rice](https://github.com/jasonroelofs/rice) gem.
 
-Currently it's just me tooling around, but some basic functionality is working. If this gets to alpha stage, I'll publish on RubyGems.
+I'm reasonably far along now (actually, theoretically, this is fully-functional) and I'm only aware of one bug (which I'm pretty sure is in SimpleBLE). It's definitely not tested though, and I'm not happy yet with the code quality, nor confident in the feature set. I should publish it soon though to get feedback.
 
-## Development
+## TODOs
 
-I'm currently debugging a few issues and built my own version of ruby-3.2.2 (with better debug info). If you have RVM, it's very easy to reproduce:
+- See [Known Issues](#known-issues) just below
+- Make tests (/ figure out how to mock bluetooth devices!)
+- Create gem on rubygems, and automate building/packaging for different OSes
+- See lots of tiny todos in the comments throughout my code (`grep -rIn TODO` should flag them all)
+- Documentation
+- RBS file
 
-1. `cd /usr/local/rvm/src`
-2. `cp -a ruby-3.2.2{,-dbg}`
-3. `cd ruby-3.2.2-dbg`
-4. `./configure -C --prefix=/usr/local/rvm/rubies/ruby-3.2.2-dbg --disable-install-doc --enable-shared --enable-debug-env --with-valgrind --enable-mkmf-verbose --enable-yjit --enable-devel --enable-dtrace STRIP=/bin/true 'CFLAGS=-fno-inline -O0 -ggdb3' 'debugflags=-fno-inline -O0 -ggdb3' # (Customize as desired)`
-5. `make all`
-6. `make install`
-
-Then, if you simply `rvm list`, you'll see a new version listed as ruby-3.2.2-dbg. To use in this project, just `cd` into the source directory and (assuming RVM is loaded) RVM will autodetect the ruby install it needs to use. From there, make sure to clear all temporary/build files for the C++ code and recompile.
+## Known Issues
+- For some reason, if ruby crashes (e.g. segfaults) while a device is connected, the device seems to be invisible to ruby once restarting, until one disconnects the bluetooth adapter from the device through other means
+- This won't package correctly if you try to turn it into a gem.  Namely, you'll have to build the extension manually by doing the following (starting in the base directory):
+  
+    ```bash
+      $ bundle install
+      $ cd ext/SimpleRbBLE
+      $ bundle exec ruby extconf.rb
+      $ mkdir build
+      $ cd build
+      $ cmake ..
+      $ make
+      $ make install
+    ```
 
 ## Installation
 

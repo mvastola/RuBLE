@@ -20,7 +20,8 @@ namespace SimpleRbBLE {
         if (!_starting.test_and_set()) {
 //            if constexpr (DEBUG) std::cerr << "Starting RubyQueue" << std::endl;
             RbThreadCreateFn<void> runThread = [](void *rubyQueuePtr) -> VALUE {
-                return reinterpret_cast<RubyQueue*>(rubyQueuePtr)->run();
+                reinterpret_cast<RubyQueue*>(rubyQueuePtr)->run();
+                return Qnil;
             };
             // TODO: figure out how/if to handle case where thread creation fails
             // TODO: wrap this in rice's `protect` fn

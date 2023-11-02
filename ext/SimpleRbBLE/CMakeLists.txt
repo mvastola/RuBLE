@@ -7,7 +7,7 @@ set(CMAKE_SHARED_LIBRARY_PREFIX  "") # So target file isn't libSimpleRbBLE.so
 set(STACKTRACE_BACKEND_PRIORITIES backtrace;addr2line;windgb_cached;windbg;basic)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # TODO: why can't I enable this without a compile error(?)
-set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_STATIC_LIBS ON)
 # Error when enabled: /usr/bin/ld: /usr/lib/x86_64-linux-gnu/libboost_stacktrace_backtrace.a(backtrace.o): relocation R_X86_64_TPOFF32 against symbol `_ZGVZN5boost10stacktrace6detail15construct_stateERKNS1_16program_locationEE5state' can not be used when making a shared object; recompile with -fPIC
 # /usr/bin/ld: failed to set dynamic section sizes: bad value
 
