@@ -1,18 +1,15 @@
-cmake_minimum_required(VERSION 3.25.1)
+cmake_minimum_required(VERSION 3.25.1) # TODO: see if this can/should be lowered
 project(SimpleRbBLE LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 23) # TODO: see if this will compile with C++20
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_SHARED_LIBRARY_PREFIX  "")
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_VERBOSE_MAKEFILE ON)
-set(Boost_USE_STATIC_LIBS OFF)
-#set(Boost_DEBUG ON)
-#set(_Ruby_DEBUG_OUTPUT ON)
-set(CMAKE_INSTALL_DO_STRIP OFF)
+set(CMAKE_SHARED_LIBRARY_PREFIX  "") # So target file isn't libSimpleRbBLE.so
 set(STACKTRACE_BACKEND_PRIORITIES backtrace;addr2line;windgb_cached;windbg;basic)
-set(RUBY_FIND_VERSION 3.2)
-set(BOOST_STACKTRACE_LINK ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+# TODO: why can't I enable this without a compile error(?)
+set(Boost_USE_STATIC_LIBS OFF)
+# Error when enabled: /usr/bin/ld: /usr/lib/x86_64-linux-gnu/libboost_stacktrace_backtrace.a(backtrace.o): relocation R_X86_64_TPOFF32 against symbol `_ZGVZN5boost10stacktrace6detail15construct_stateERKNS1_16program_locationEE5state' can not be used when making a shared object; recompile with -fPIC
+# /usr/bin/ld: failed to set dynamic section sizes: bad value
 
 # relies on extconf.rb having been run
 cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_SOURCE_DIR}/../../lib/SimpleRbBLE")
@@ -25,20 +22,10 @@ string(JSON EXTENSION_VERSION GET "${JSON_BUILD_CONFIG}" extension version)
 string(JSON DEBUG_MODE GET "${JSON_BUILD_CONFIG}" extension debug_build)
 string(JSON SIMPLEBLE_EXTRACT_DIR GET "${JSON_BUILD_CONFIG}" simpleble install_location)
 
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES AND EXISTS "${CMAKE_SOURCE_DIR}/../../.git")
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build.")
-elseif (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES AND ENV{SIMPLERBBLE_DEBUG_ON} OR "${DEBUG_MODE}")
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build.")
-endif()
-
 include(SimpleRbBLEHelpers.cmake)
 include(FindBacktrace)
-#include(FindPkgConfig)
-#include(FindBoost)
-#include(FindRuby)
 
 # I was having trouble with this not finding my personal rvm. we could use build-config.json here
-find_package(Ruby 3.2 REQUIRED Ruby_FIND_VIRTUALENV)
 find_package(Boost OPTIONAL_COMPONENTS headers stacktrace_backtrace stacktrace_addr2line stacktrace_basic stacktrace_windbg stacktrace_windbg_cached)
 find_path(VALGRIND_HEADER_DIR valgrind/valgrind.h)
 set(HAVE_VALGRIND ${VALGRIND_HEADER_DIR})
@@ -50,40 +37,61 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 add_library(SimpleRbBLE SHARED)
 
-add_compile_options(-fthreadsafe-statics)
-set(CMAKE_CXX_FLAGS_DEBUG "-ggdb3 -O0 -fdiagnostics-color=always -fno-eliminate-unused-debug-symbols -fno-eliminate-unused-debug-types -femit-class-debug-always -fno-indirect-inlining -fno-partial-inlining -fno-omit-frame-pointer -ggnu-pubnames -ginline-points -gstatement-frontiers -gvariable-location-views -fdiagnostics-color=always -fconcepts-diagnostics-depth=1")
-target_link_options(SimpleRbBLE PUBLIC
-        LINKER:--no-strip-discarded
-        LINKER:--discard-none
-        LINKER:--ld-generated-unwind-info
-        LINKER:-z,defs
-#        LINKER:-z,now
-        LINKER:-fPIC
-        LINKER:--gc-keep-exported
-        LINKER:--no-gc-sections
-        LINKER:--dynamic-list-cpp-typeinfo
-        LINKER:--no-copy-dt-needed-entries
-        LINKER:--unresolved-symbols=report-all
-        LINKER:--enable-new-dtags
-        LINKER:-O0
-        LINKER:--export-dynamic
-        LINKER:--ctf-variables
+target_compile_options(SimpleRbBLE PUBLIC
+        -ggdb3 # TODO: strip debug info into separate file (don't necessarily need to package it with distro)
+        -fthreadsafe-statics
 )
 
-target_link_libraries(SimpleRbBLE PUBLIC ${Ruby_LIBRARIES})
-target_include_directories(SimpleRbBLE PUBLIC ${Ruby_INCLUDE_DIRS})
+target_link_options(SimpleRbBLE PUBLIC
+    LINKER:-z,defs
+    LINKER:-fPIC
+    LINKER:--dynamic-list-cpp-typeinfo
+    LINKER:--export-dynamic
+    LINKER:--demangle
+)
 
-target_include_directories(SimpleRbBLE PRIVATE ${RICE_INCLUDE_PATH})
+# TODO: should this be debug only? (need to figure out what normal install paths are and where they come from)
+cmake_path(SET CMAKE_INSTALL_PREFIX NORMALIZE "${CMAKE_SOURCE_DIR}/../../lib/SimpleRbBLE")
 
-setup_boost(SimpleRbBLE)
-setup_simpleble(SimpleRbBLE)
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR DEBUG_MODE)
     set(SIMPLERBBLE_DEBUG true)
-    cmake_path(SET CMAKE_INSTALL_PREFIX NORMALIZE "${CMAKE_SOURCE_DIR}/../../lib/SimpleRbBLE")
-    set_target_properties(SimpleRbBLE PROPERTIES INSTALL_RPATH_USE_LINK_PATH ON)
+    set(CMAKE_VERBOSE_MAKEFILE ON)
+    #set(Boost_DEBUG ON)
+    #set(_Ruby_DEBUG_OUTPUT ON)
+    target_compile_options(SimpleRbBLE PUBLIC
+            -ggdb3
+            -O0
+            -fdiagnostics-color=always
+            -fno-eliminate-unused-debug-symbols
+            -fno-eliminate-unused-debug-types
+            -femit-class-debug-always
+            -fno-indirect-inlining
+            -fno-partial-inlining
+            -fno-omit-frame-pointer
+            -ggnu-pubnames
+            -ginline-points
+            -gstatement-frontiers
+            -gvariable-location-views
+            -fdiagnostics-color=always
+            -fconcepts-diagnostics-depth=1
+    )
+    target_link_options(SimpleRbBLE PUBLIC
+            LINKER:--no-strip-discarded
+            LINKER:--discard-none
+            LINKER:--ld-generated-unwind-info
+            LINKER:--gc-keep-exported
+            LINKER:--no-gc-sections
+            LINKER:--no-copy-dt-needed-entries
+            LINKER:--unresolved-symbols=report-all
+            LINKER:--enable-new-dtags
+            LINKER:-O0
+            LINKER:--ctf-variables
+    )
 endif()
 
+setup_ruby(SimpleRbBLE)
+setup_boost(SimpleRbBLE)
+setup_simpleble(SimpleRbBLE)
 configure_file(config.h.in config.h)
 
 target_precompile_headers(SimpleRbBLE PRIVATE
@@ -121,10 +129,9 @@ target_precompile_headers(SimpleRbBLE PRIVATE
         ./concerns/CharacteristicValueTracker.hpp
         ./concerns/Rubyable.hpp
 )
-target_sources(SimpleRbBLE PUBLIC
+target_sources(SimpleRbBLE PRIVATE
         ./management/RubyQueue.cpp
         ./management/Registry.cpp
-        ./bindings/SimpleRbBLE.cpp
         ./bindings/Service.cpp
         ./bindings/globals.cpp
         ./bindings/Descriptor.cpp
@@ -142,9 +149,15 @@ target_sources(SimpleRbBLE PUBLIC
         ./concerns/CharacteristicValueTracker.cpp
         ./concerns/Rubyable.cpp
 )
+# TODO: does PUBLIC vs PRIVATE in target_sources actually do anything here?
+target_sources(SimpleRbBLE PUBLIC
+    ./bindings/SimpleRbBLE.cpp
+)
+
 
 # TODO: `install(EXPORT...` to generate .cmake files for import
 install(TARGETS SimpleRbBLE DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME SimpleRbBLE.so)
 
 #print_target_properties(SimpleRbBLE)
+#print_target_properties(simpleble::simpleble)
 #dump_variables()

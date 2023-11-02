@@ -139,7 +139,7 @@ class SimpleBLE
     raise "Download size/checksum mismatch!" unless downloaded?
 
     progressbar&.stop
-    puts "Successfully downloaded to #{download_path.inspect}!"
+    puts "Successfully downloaded #{download_url} to #{download_path.inspect}!"
   rescue
     progressbar&.stop
     raise

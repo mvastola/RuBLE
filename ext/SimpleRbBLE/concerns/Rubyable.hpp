@@ -7,6 +7,7 @@
 #include "utils/hexadecimal.hpp"
 
 namespace SimpleRbBLE {
+    // TODO: Use this for Adapter/Peripheral/Service/Characteristic/Descriptor
     template <class T>
     class Rubyable {
     protected:

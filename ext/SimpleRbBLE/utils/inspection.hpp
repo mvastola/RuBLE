@@ -58,9 +58,6 @@ namespace SimpleRbBLE::Utils {
     using namespace Inspection;
 } // SimpleRbBLE::Utils
 
-
-
-
 template<typename Key, class ProxyClass, class Value>
 constexpr std::ostream &operator<<(std::ostream &os, const SimpleRbBLE::Registry<Key, ProxyClass, Value> &reg) {
     return os << reg.to_s();
