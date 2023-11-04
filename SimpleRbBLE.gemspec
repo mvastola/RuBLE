@@ -21,14 +21,14 @@ Gem::Specification.new do |spec|
   spec.metadata['bug_tracker_uri'] = "https://github.com/mvastola/SimpleRbBLE/issues"
   spec.metadata['source_code_uri'] = "https://github.com/mvastola/SimpleRbBLE"
   spec.metadata['changelog_uri'] = "https://github.com/mvastola/SimpleRbBLE/blob/master/CHANGELOG.md"
-  # TODO: spec.metadata['documentation_uri'] = "https://rubydoc.info/gems/SimpleRbBLE"
+  spec.metadata['documentation_uri'] = "https://rubydoc.info/gems/SimpleRbBLE"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  #spec.files = `git -C #{__dir__.shellescape} ls-files -z`.split("\x0").reject do |f|
-  #    (File.expand_path(f) == __FILE__) ||
-  #      f.start_with?(*%w[bin/ test/ spec/ features/ .git .circleci appveyor Gemfile])
-  #end
+  spec.files = `git -C #{__dir__.shellescape} ls-files -z`.split("\x0").reject do |f|
+      (File.expand_path(f) == __FILE__) ||
+        f.start_with?(*%w[bin contrib test/ spec/ features/ tmp .idea .run .git])
+  end
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rice'
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rake-compiler'
+  #spec.add_development_dependency 'rake-compiler'
   spec.add_development_dependency 'minitest'
   spec.add_development_dependency 'faraday'
   spec.add_development_dependency 'faraday-follow_redirects'

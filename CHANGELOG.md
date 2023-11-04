@@ -1,5 +1,6 @@
 ## [Unreleased]
 
-## [0.1.0] - 2023-08-12
+## 0.0.3-alpha - 2023-11-03
 
 - Initial release
+- Theoretically working, but missing important components (incl packaging)

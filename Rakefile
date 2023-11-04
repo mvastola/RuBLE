@@ -17,12 +17,12 @@ ROOT_DIR.glob('lib/tasks/*.rake').each { |r| import r }
 
 RuboCop::RakeTask.new
 
-require 'rake/extensiontask'
+#require 'rake/extensiontask'
 # TODO: figure out how to build/install the gem with precompiled binaries
 # ...or at least debug why systemwide installation can be finnicky
-Rake::ExtensionTask.new(EXTENSION_NAME) do |ext|
-  ext.lib_dir = "lib/#{EXTENSION_NAME}"
-end
+#Rake::ExtensionTask.new(EXTENSION_NAME) do |ext|
+#  ext.lib_dir = "lib/#{EXTENSION_NAME}"
+#end
 
 
 # TODO: configure rubocop

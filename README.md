@@ -9,6 +9,8 @@ I'm reasonably far along now (actually, theoretically, this is fully-functional)
 - See [Known Issues](#known-issues) just below
 - Make tests (/ figure out how to mock bluetooth devices!)
 - Create gem on rubygems, and automate building/packaging for different OSes
+    - Implement `rake-compiler`-compatible rake tasks for compiling gem 
+    - Forward all relevant configuration options to cmake somehow
 - See lots of tiny todos in the comments throughout my code (`grep -rIn TODO` should flag them all)
 - Documentation
 - RBS file

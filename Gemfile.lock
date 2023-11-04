@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    SimpleRbBLE (0.0.3)
+    SimpleRbBLE (0.0.3.alpha)
 
 GEM
   remote: https://rubygems.org/
@@ -55,8 +55,6 @@ GEM
     racc (1.7.2)
     rainbow (3.1.1)
     rake (13.1.0)
-    rake-compiler (1.2.5)
-      rake
     rdoc (6.5.0)
       psych (>= 4.0.0)
     regexp_parser (2.8.2)
@@ -100,7 +98,6 @@ DEPENDENCIES
   os
   rainbow
   rake (~> 13.0)
-  rake-compiler
   rice
   rubocop (~> 1.21)
   ruby-progressbar
