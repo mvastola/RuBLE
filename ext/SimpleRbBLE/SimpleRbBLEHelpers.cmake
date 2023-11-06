@@ -59,6 +59,16 @@ macro(dump_variables)
         message(STATUS "${_variableName}=${${_variableName}}")
     endforeach()
 endmacro()
+
+# TODO: Should we fall back with this?
+# include(FetchContent)
+# FetchContent_Declare(
+#   Boost
+#   URL https://github.com/boostorg/boost/releases/download/boost-1.81.0/boost-1.81.0.tar.xz
+#   URL_MD5 6cf0cdd797bca685910d527ae3c08cb3
+#   DOWNLOAD_EXTRACT_TIMESTAMP ON
+# )
+# FetchContent_MakeAvailable(Boost)
 macro(setup_boost build_target)
 #    find_package(Boost OPTIONAL_COMPONENTS headers exception)
     get_target_property(BOOST_HEADER_DIRS Boost::headers INTERFACE_INCLUDE_DIRECTORIES)

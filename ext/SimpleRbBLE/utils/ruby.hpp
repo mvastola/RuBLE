@@ -2,6 +2,7 @@
 
 #include "types/ruby.hpp"
 #include "utils/ruby_context.hpp"
+#include "utils/exception_handling.hpp"
 //#include "types/stl.hpp"
 #include <ruby/thread.h>
 #include <memory>
@@ -28,6 +29,18 @@ namespace SimpleRbBLE {
         [[maybe_unused]] T ensuring_ruby(std::function<T(Args...)> &&fn, Args &&...args) {
             auto wrapper = [&fn, &args...]() -> T { return std::invoke(fn, args...); };
             return ensure_ruby<T>(wrapper);
+        }
+
+        template <typename T, typename... Args>
+        T cpp_protect(std::function<T(Args...)> &&fn, Args &&...args) {
+            auto wrapper = [&fn, &args...]() -> T {
+                try {
+                    return std::invoke(fn, args...);
+                } catch (const std::exception &ex) {
+                    ExceptionHandling::throw_with_backtrace(ex);
+                }
+            };
+            return Rice::detail::cpp_protect(wrapper);
         }
 
         [[maybe_unused]] constexpr VALUE to_ruby_value(const VALUE &val) { return val; }

@@ -10,27 +10,33 @@ AllCops:
   StyleGuideBaseURL: https://rubystyle.guide
 #Rails:
 #  StyleGuideBaseURL: https://rails.rubystyle.guide
-Style/HashSyntax:
-  EnforcedStyle: no_mixed_keys
-Style/ClassAndModuleChildren:
+
+# TODO: enable Gemspec/DevelopmentDependencies and pick an `EnforcedStyle`
+Gemspec/DevelopmentDependencies:
   Enabled: false
-Style/Documentation:
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+Layout/EmptyLinesAroundAccessModifier:
+  EnforcedStyle: only_before
+Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: false
-Style/EmptyMethod:
-  EnforcedStyle: expanded
-Layout/SpaceInsideArrayLiteralBrackets:
-  EnforcedStyle: space
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: start_of_line
+#Layout/ExtraSpacing:
+#  Enabled: false  # Disabled pending resoulution of #5657
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
 Layout/HashAlignment:
   EnforcedColonStyle: table
   EnforcedHashRocketStyle: table
-Layout/AccessModifierIndentation:
-  EnforcedStyle: outdent
-Layout/EndAlignment:
-  EnforcedStyleAlignWith: start_of_line
-Layout/ExtraSpacing:
-  Enabled: false  # Disabled pending resoulution of #5657
-Layout/SpaceAroundOperators:
-  Enabled: false # Disabled pending resoulution of #5657
+Layout/LineLength:
+  Enabled: false
+#Layout/SpaceAroundOperators:
+#  Enabled: false # Disabled pending resoulution of #5657
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: space
+
 Metrics/AbcSize:
   Enabled: false
 Metrics/BlockLength:
@@ -40,44 +46,46 @@ Metrics/BlockLength:
     - class_methods
     - namespace
     - task
-Layout/LineLength:
-  Enabled: false
 Metrics/MethodLength:
   Max: 25
+Metrics/ParameterLists:
+  Enabled: false
+
 Naming/MethodParameterName:
   AllowedNames:
     - as
     - to
     - io
     - id
+
+Style/AccessorGrouping:
+  Enabled: false
 Style/Alias:
   EnforcedStyle: prefer_alias_method
-Style/Lambda:
-  EnforcedStyle: literal
-Style/DoubleNegation:
-  Enabled: false
-Style/MultilineIfModifier:
-  Enabled: false
-Style/SymbolArray:
-  MinSize: 1
-Style/SpecialGlobalVars:
-  EnforcedStyle: use_perl_names
-Style/FrozenStringLiteralComment:
-  EnforcedStyle: always_true
-  SafeAutoCorrect: true
-Layout/FirstHashElementIndentation:
-  EnforcedStyle: consistent
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: comma
-Metrics/ParameterLists:
-  Enabled: false
-Layout/EmptyLinesAroundAccessModifier:
-  EnforcedStyle: only_before
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: false
-Style/AccessorGrouping:
+Style/ClassAndModuleChildren:
   Enabled: false
 Style/CommentedKeyword:
   Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/DoubleNegation:
+  Enabled: false
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always_true
+  SafeAutoCorrect: true
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+Style/Lambda:
+  EnforcedStyle: literal
 Style/MultilineBlockChain:
   Enabled: false
+Style/MultilineIfModifier:
+  Enabled: false
+Style/SpecialGlobalVars:
+  EnforcedStyle: use_perl_names
+Style/SymbolArray:
+  MinSize: 1
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma

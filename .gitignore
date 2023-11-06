@@ -1,4 +1,4 @@
-#/.bundle/
+/.bundle/
 /.yardoc
 /_yardoc/
 /coverage/
@@ -9,11 +9,9 @@ tmp/
 *.o
 *.so
 *.log
-{cmake-,}build*/
 Makefile
 tmp/
 .gdb_history
 *.patch
 mkmf.log
-cmake-build-debug
-build
+cmake-build*

@@ -7,7 +7,7 @@
 
 namespace SimpleRbBLE {
     namespace Rice = ::Rice;
-    using namespace ::Rice;
+    using ::Rice::Object, ::Rice::Data_Object, ::Rice::Data_Type, ::Rice::Arg;
 
     using RubyThreadId = VALUE;
     using CppThreadId = std::thread::id;

@@ -53,7 +53,7 @@ namespace SimpleRbBLE::ExceptionHandling {
 
     // TODO: see if we can somehow add C++ backtrace data to ruby exceptions
     template<class E>
-    [[maybe_unused]] constexpr void throw_with_backtrace(const E &e) {
+    constexpr void throw_with_backtrace(const E &e) {
         throw add_backtrace(e);
     }
 

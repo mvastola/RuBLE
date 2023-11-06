@@ -66,7 +66,7 @@ namespace SimpleRbBLE {
     }
 
     void Init_Utils() {
-        rb_mUtils = define_module_under(rb_mSimpleRbBLE, "Utils");
+        rb_mUtils = Rice::define_module_under(rb_mSimpleRbBLE, "Utils");
         if (!DEBUG) return;
         rb_mUtils.define_singleton_function("maybe_swap_endianness", &Utils::maybe_swap_endianness<uint64_t>);
     }
@@ -88,14 +88,14 @@ extern "C" [[maybe_unused]] void Init_SimpleRbBLE() {
     VALGRIND_CLO_CHANGE("--leak-check=full");
 #endif
     Rice::detail::Registries::instance.instances.isEnabled = true;
-    rb_mSimpleRbBLE = define_module("SimpleRbBLE");
+    rb_mSimpleRbBLE = Rice::define_module("SimpleRbBLE");
     rubyQueue = RubyQueue::instance();
 
 #ifdef SIMPLERBBLE_DEBUG
     std::cout << "RubyQueue: " << Utils::to_hex_addr(rubyQueue.get()) << std::endl;
     rb_mSimpleRbBLE.define_singleton_function("c_debug", &c_debug); // to make it easier to break in gdb from ruby
 #endif
-    rb_mSimpleRbBLEUnderlying = define_module_under(rb_mSimpleRbBLE, "Underlying");
+    rb_mSimpleRbBLEUnderlying = Rice::define_module_under(rb_mSimpleRbBLE, "Underlying");
     Init_Utils();
     Init_BluetoothAddressType();
     Init_ByteArray();

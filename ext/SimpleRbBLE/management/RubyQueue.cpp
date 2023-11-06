@@ -12,7 +12,7 @@ namespace SimpleRbBLE {
         return _instance;
     }
 
-    Object RubyQueue::rb_thread() const {
+    Rice::Object RubyQueue::rb_thread() const {
         return { _rb_thread.load() };
     }
 

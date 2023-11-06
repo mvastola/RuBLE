@@ -9,7 +9,7 @@ namespace SimpleRbBLE::Utils::Ruby {
         for (const auto &key: Ruby::FnParameterTypes) _map[key] = 0;
         Rice::Array params = Object(val).call("parameters");
         for (auto el: params) {
-            Array array = el.value();
+            Rice::Array array = el.value();
             std::string type = rb_id2name(rb_sym2id(array[0].value()));
             ++_map[type];
         }
