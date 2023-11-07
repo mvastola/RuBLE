@@ -6,17 +6,11 @@ require "bundler/setup" # Set up gems listed in the Gemfile.
 Bundler.require(*%i[dev build])
 
 
-EXTENSION_NAME = 'SimpleRbBLE'
+EXTENSION_NAME = 'rubble'
 #noinspection RubyMismatchedArgumentType
 ROOT_DIR = Pathname.new(__dir__)
 
-#require "bundler/gem_tasks"
-begin
-  require 'rubygems/tasks'
-  Gem::Tasks.new
-rescue LoadError
-  STDERR.puts "rubygems-tasks not installed. Skipping associated tasks."
-end
+require "bundler/gem_tasks"
 
 begin
   require "rubocop/rake_task"

@@ -1,60 +1,13 @@
 # frozen_string_literal: true
 
-# require_relative './lock_guard'
 require 'json'
 require_relative './pager'
+require_relative './state_hash'
+require_relative './paths'
 
 class DevTasks
-  EXTENSION_NAME = 'SimpleRbBLE'
-  ROOT_DIR = (Pathname.new(__dir__) / '../../..').cleanpath(false)
-  TMP_DIR = ROOT_DIR / 'tmp'
-  EXT_DIR = ROOT_DIR / 'ext' / EXTENSION_NAME
-  TEST_DIR = ROOT_DIR / 'test'
-  LIB_FILE = ROOT_DIR / 'lib' / EXTENSION_NAME / "#{EXTENSION_NAME}.so"
-  BUILD_DIR = TMP_DIR / RbConfig::MAKEFILE_CONFIG['arch'] /
-    EXTENSION_NAME / RbConfig::CONFIG['RUBY_PROGRAM_VERSION']
-  EXT_DIR_FROM_BUILD_DIR = EXT_DIR.relative_path_from(BUILD_DIR)
-  BUILD_INFO_FILE = BUILD_DIR / 'build-config.json'
-  NINJA_FILE = BUILD_DIR / 'build.ninja'
-  HASH_FILE = BUILD_DIR / '.state_hash'
-  SRC_GLOB = '{**/,}*.{{h,c}{,pp},ipp}'
-  OBJFILES_DIR = BUILD_DIR / 'CMakeFiles' / "#{EXTENSION_NAME}.dir"
-  CMAKE_CXX_COMPILER = '/usr/bin/g++-13'
-
-  class << self
-    def hash_file(path, digest: 'SHA256')
-      hasher = OpenSSL::Digest.new(digest.to_s)
-      File.open(path.to_s, 'rb') do |f|
-        hasher << f.readpartial(8192) until f.eof?
-      end
-      hasher.hexdigest
-    rescue RefError # TODO: catch file not found errors (this is placeholder)
-      nil
-    end
-
-    def state_hash
-      fields = []
-      fields << [
-        NINJA_FILE,
-        BUILD_DIR / 'CMakeCache.txt',
-        BUILD_DIR / 'config.h',
-        EXT_DIR / 'CMakeLists.txt',
-        *EXT_DIR.glob('*.cmake'),
-        BUILD_INFO_FILE,
-        EXT_DIR / 'extconf.rb',
-        *ROOT_DIR.glob('*.gemspec'),
-        ROOT_DIR / 'Gemfile',
-        ROOT_DIR / 'Gemfile.lock',
-        ROOT_DIR / 'Rakefile',
-        # TODO(?): Include lib/tasks/dev/*.rb
-        ROOT_DIR / '.ruby-version',
-        TEST_DIR / 'Makefile',
-      ].select(&:file?).to_h { [_1, hash_file(_1)] }
-
-      JSON.pretty_generate(fields)
-      # HASHER.tap { _1 << fields.to_json }.digest
-    end
-  end
+  include Paths
+  include StateHash
 
   attr_reader :pager
   def initialize(*flags)
@@ -69,7 +22,7 @@ class DevTasks
   def single? = flag?(:single)
   def nproc = single? ? 1 : Etc.nprocessors
 
-  def write_hash_file! = HASH_FILE.write(self.class.state_hash)
+  def write_hash_file! = HASH_FILE.write(state_hash)
 
   def ninja_cmd(target: nil)
     verbose_flag = verbose? ? '-v' : nil
@@ -108,7 +61,7 @@ class DevTasks
     write_hash_file!
   end
 
-  def needs_reconfigure? = !HASH_FILE.exist? || HASH_FILE.read.strip != self.class.state_hash
+  def needs_reconfigure? = !HASH_FILE.exist? || HASH_FILE.read.strip != state_hash
   def maybe_reconfigure! = needs_reconfigure? && reconfigure!
 
   def build!

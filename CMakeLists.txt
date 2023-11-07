@@ -1,4 +1,4 @@
 cmake_minimum_required(VERSION 3.25.1)
-project(SimpleRbBLE LANGUAGES CXX)
+project(rubble LANGUAGES CXX)
 
-add_subdirectory(ext/SimpleRbBLE)
+add_subdirectory(ext/rubble)

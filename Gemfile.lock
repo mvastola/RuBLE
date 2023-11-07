@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    SimpleRbBLE (0.0.3.alpha)
+    rubble (0.0.3.alpha)
       zeitwerk (~> 2.6.12)
 
 GEM
@@ -9,6 +9,7 @@ GEM
   specs:
     ast (2.4.2)
     base64 (0.1.1)
+    concurrent-ruby (1.2.2)
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
@@ -71,8 +72,8 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  SimpleRbBLE!
   bundler (~> 2.4.21)
+  concurrent-ruby
   debug
   faraday (~> 2.7.11)
   faraday-follow_redirects (~> 0.3.0)
@@ -81,6 +82,7 @@ DEPENDENCIES
   rainbow (~> 3.1)
   rake (~> 13.0)
   rice (~> 4.1)
+  rubble!
   rubocop (~> 1.57.2)
   ruby-progressbar (~> 1.13.0)
   rubygems-tasks

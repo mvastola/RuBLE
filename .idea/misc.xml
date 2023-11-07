@@ -3,18 +3,18 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.9" />
   </component>
-  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/ext/SimpleRbBLE">
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/ext/rubble">
     <contentRoot DIR="$PROJECT_DIR$" />
   </component>
   <component name="CidrRootsConfiguration">
     <excludeRoots>
-      <file path="$PROJECT_DIR$/ext/SimpleRbBLE/build" />
+      <file path="$PROJECT_DIR$/ext/rubble/build" />
       <file path="$PROJECT_DIR$/tmp" />
       <file path="$PROJECT_DIR$/tmp/x86_64-linux" />
-      <file path="$PROJECT_DIR$/tmp/x86_64-linux/SimpleRbBLE" />
-      <file path="$PROJECT_DIR$/tmp/x86_64-linux/SimpleRbBLE/3.2.2" />
+      <file path="$PROJECT_DIR$/tmp/x86_64-linux/rubble" />
+      <file path="$PROJECT_DIR$/tmp/x86_64-linux/rubble/3.2.2" />
     </excludeRoots>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" project-jdk-name="RVM: ruby-2.6.3 [global]" project-jdk-type="RUBY_SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="RVM: ruby-3.2.2 [global]" project-jdk-type="RUBY_SDK" />
 </project>

@@ -24,6 +24,6 @@ gem 'rake', '~> 13.0'
 
 group :dev do
   gem 'debug'
-  gem 'rubygems-tasks'
+  gem 'concurrent-ruby'
   gem 'rubocop', '~> 1.57.2', require: false
 end

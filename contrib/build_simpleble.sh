@@ -3,7 +3,7 @@ set -euvo pipefail
 
 
 cd "$(git rev-parse --show-toplevel)"
-test -e "SimpleRbBLE.gemspec"
+test -e "rubble.gemspec"
 
 git submodule update --init
 

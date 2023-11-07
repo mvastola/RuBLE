@@ -16,10 +16,10 @@
               <RakeTaskImpl description="" fullCommand="SimpleBLE:install" id="install" />
             </subtasks>
           </RakeTaskImpl>
-          <RakeTaskImpl description="Build SimpleRbBLE-0.0.1.gem into the pkg directory" fullCommand="build" id="build" />
+          <RakeTaskImpl description="Build rubble-0.0.1.gem into the pkg directory" fullCommand="build" id="build" />
           <RakeTaskImpl id="build">
             <subtasks>
-              <RakeTaskImpl description="Generate SHA512 checksum if SimpleRbBLE-0.0.1.gem into the checksums directory" fullCommand="build:checksum" id="checksum" />
+              <RakeTaskImpl description="Generate SHA512 checksum if rubble-0.0.1.gem into the checksums directory" fullCommand="build:checksum" id="checksum" />
             </subtasks>
           </RakeTaskImpl>
           <RakeTaskImpl description="Remove any temporary products" fullCommand="clean" id="clean" />
@@ -27,10 +27,10 @@
           <RakeTaskImpl description="Compile all the extensions" fullCommand="compile" id="compile" />
           <RakeTaskImpl id="compile">
             <subtasks>
-              <RakeTaskImpl description="Compile SimpleRbBLE" fullCommand="compile:SimpleRbBLE" id="SimpleRbBLE" />
-              <RakeTaskImpl id="SimpleRbBLE">
+              <RakeTaskImpl description="Compile rubble" fullCommand="compile:rubble" id="rubble" />
+              <RakeTaskImpl id="rubble">
                 <subtasks>
-                  <RakeTaskImpl description="" fullCommand="compile:SimpleRbBLE:x86_64-linux" id="x86_64-linux" />
+                  <RakeTaskImpl description="" fullCommand="compile:rubble:x86_64-linux" id="x86_64-linux" />
                 </subtasks>
               </RakeTaskImpl>
               <RakeTaskImpl description="" fullCommand="compile:x86_64-linux" id="x86_64-linux" />
@@ -47,13 +47,13 @@
               <RakeTaskImpl description="" fullCommand="dev:initialize" id="initialize" />
             </subtasks>
           </RakeTaskImpl>
-          <RakeTaskImpl description="Build and install SimpleRbBLE-0.0.1.gem into system gems" fullCommand="install" id="install" />
+          <RakeTaskImpl description="Build and install rubble-0.0.1.gem into system gems" fullCommand="install" id="install" />
           <RakeTaskImpl id="install">
             <subtasks>
-              <RakeTaskImpl description="Build and install SimpleRbBLE-0.0.1.gem into system gems without network access" fullCommand="install:local" id="local" />
+              <RakeTaskImpl description="Build and install rubble-0.0.1.gem into system gems without network access" fullCommand="install:local" id="local" />
             </subtasks>
           </RakeTaskImpl>
-          <RakeTaskImpl description="Create tag v0.0.1 and build and push SimpleRbBLE-0.0.1.gem to rubygems.org" fullCommand="release[remote]" id="release[remote]" />
+          <RakeTaskImpl description="Create tag v0.0.1 and build and push rubble-0.0.1.gem to rubygems.org" fullCommand="release[remote]" id="release[remote]" />
           <RakeTaskImpl description="Run RuboCop" fullCommand="rubocop" id="rubocop" />
           <RakeTaskImpl id="rubocop">
             <subtasks>
@@ -65,11 +65,11 @@
           <RakeTaskImpl description="" fullCommand="audit_objfile_symbols" id="audit_objfile_symbols" />
           <RakeTaskImpl id="copy">
             <subtasks>
-              <RakeTaskImpl id="SimpleRbBLE">
+              <RakeTaskImpl id="rubble">
                 <subtasks>
                   <RakeTaskImpl id="x86_64-linux">
                     <subtasks>
-                      <RakeTaskImpl description="" fullCommand="copy:SimpleRbBLE:x86_64-linux:3.2.2" id="3.2.2" />
+                      <RakeTaskImpl description="" fullCommand="copy:rubble:x86_64-linux:3.2.2" id="3.2.2" />
                     </subtasks>
                   </RakeTaskImpl>
                 </subtasks>
@@ -79,8 +79,8 @@
           <RakeTaskImpl description="" fullCommand="default" id="default" />
           <RakeTaskImpl description="" fullCommand="dev" id="dev" />
           <RakeTaskImpl description="" fullCommand="lib" id="lib" />
-          <RakeTaskImpl description="" fullCommand="lib/SimpleRbBLE" id="lib/SimpleRbBLE" />
-          <RakeTaskImpl description="" fullCommand="lib/SimpleRbBLE/SimpleRbBLE.so" id="lib/SimpleRbBLE/SimpleRbBLE.so" />
+          <RakeTaskImpl description="" fullCommand="lib/rubble" id="lib/rubble" />
+          <RakeTaskImpl description="" fullCommand="lib/rubble/rubble.so" id="lib/rubble/rubble.so" />
           <RakeTaskImpl description="" fullCommand="release" id="release" />
           <RakeTaskImpl id="release">
             <subtasks>
@@ -91,13 +91,13 @@
           </RakeTaskImpl>
           <RakeTaskImpl description="" fullCommand="tmp" id="tmp" />
           <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux" id="tmp/x86_64-linux" />
-          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE" id="tmp/x86_64-linux/SimpleRbBLE" />
-          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.2.2" id="tmp/x86_64-linux/SimpleRbBLE/3.2.2" />
-          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.2.2/Makefile" id="tmp/x86_64-linux/SimpleRbBLE/3.2.2/Makefile" />
-          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/SimpleRbBLE/3.2.2/SimpleRbBLE.so" id="tmp/x86_64-linux/SimpleRbBLE/3.2.2/SimpleRbBLE.so" />
+          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/rubble" id="tmp/x86_64-linux/rubble" />
+          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/rubble/3.2.2" id="tmp/x86_64-linux/rubble/3.2.2" />
+          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/rubble/3.2.2/Makefile" id="tmp/x86_64-linux/rubble/3.2.2/Makefile" />
+          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/rubble/3.2.2/rubble.so" id="tmp/x86_64-linux/rubble/3.2.2/rubble.so" />
           <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/stage" id="tmp/x86_64-linux/stage" />
           <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/stage/lib" id="tmp/x86_64-linux/stage/lib" />
-          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/stage/lib/SimpleRbBLE" id="tmp/x86_64-linux/stage/lib/SimpleRbBLE" />
+          <RakeTaskImpl description="" fullCommand="tmp/x86_64-linux/stage/lib/rubble" id="tmp/x86_64-linux/stage/lib/rubble" />
         </subtasks>
       </RakeTaskImpl>
     </option>
