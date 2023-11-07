@@ -14,6 +14,7 @@ end
 require 'zeitwerk'
 loader = Zeitwerk::Loader.new
 loader.inflector.inflect(
+  'rubble'    => 'RubBLE',
   'simpleble' => 'SimpleBLE',
   'os'        => 'OS',
 )

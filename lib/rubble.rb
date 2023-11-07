@@ -3,7 +3,8 @@
 require 'zeitwerk'
 loader = Zeitwerk::Loader.for_gem
 loader.inflector.inflect(
-  'simpleble'   => 'SimpleBLE',
+  'rubble'    => 'RubBLE',
+  'simpleble' => 'SimpleBLE',
 )
 loader.ignore("#{__dir__}/rubble/build")
 loader.ignore("#{__dir__}/tasks")

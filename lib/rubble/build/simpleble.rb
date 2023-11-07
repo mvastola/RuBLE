@@ -2,14 +2,6 @@
 
 # TODO: just use bundler/zeitwerk(?)
 require 'tmpdir'
-require_relative '../../tasks/lib/dev_tasks'
-# require 'debug'
-
-begin
-  require 'ruby-progressbar'
-rescue LoadError
-  warn 'ruby-progressbar gem not installed. Progress bar disabled.'
-end
 
 module RubBLE
   module Build
@@ -131,24 +123,24 @@ module RubBLE
       def download!
         return if downloaded?
 
-        progressbar = defined?(ProgressBar) ? ProgressBar.create(total: download_size) : nil
+        progressbar = ProgressBar.create(total: download_size)
         io = download_path.open('wb')
         _resp = download_client.get do |req|
           # noinspection RubyResolve
           req.options.on_data = ->(chunk, _bytes_recd, _env) do
             io.write(chunk)
-            progressbar&.progress += chunk.length
+            progressbar.progress += chunk.length
           end
         end
         io.close
 
-        progressbar&.stop
+        progressbar.stop
         raise 'Download size/checksum mismatch!' unless downloaded?
 
         warn "Successfully downloaded #{download_url} to #{download_path}!"
       rescue StandardError
         # noinspection RubyScope
-        progressbar&.stop
+        progressbar.stop
         raise
       end
 
@@ -161,19 +153,21 @@ module RubBLE
         Dir.chdir extract_dir.to_s do
           # see https://github.com/rubyzip/rubyzip#reading-a-zip-file
           zip_file = Zip::File.open(download_path.to_s)
+          raise "Could not open zip file #{zip_file}" unless zip_file
+
           matching_files = zip_file.glob("#{extract_src_path}/{**/,}*")
-          progressbar = ProgressBar.create(total: matching_files.count) if defined?(ProgressBar)
+          progressbar = ProgressBar.create(total: matching_files.count)
           matching_files.each do |entry|
             relative_out_path = Pathname.new(entry.name.delete_prefix("#{extract_src_path}/")).cleanpath
 
-            if relative_out_path.absolute? || relative_out_path.each_filename&.include?('..')
+            if relative_out_path.absolute? || relative_out_path.each_filename.include?('..')
               raise "Malformed zip file! (Encountered unsafe path #{relative_out_path})"
             end
 
             entry.extract(relative_out_path.to_s)
-            progressbar&.increment
+            progressbar.increment
           end
-          progressbar&.stop
+          progressbar.stop
         rescue StandardError
           progressbar&.stop
           raise
