@@ -5,7 +5,7 @@ namespace std {
     struct nullopt_t; // NOLINT(*-dcl58-cpp)
 }
 
-namespace Rubble::Utils {
+namespace RubBLE::Utils {
     template<typename T>
     constexpr bool Nullopt = std::same_as<std::remove_cvref_t<T>, std::nullopt_t>;
 

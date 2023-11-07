@@ -1,6 +1,6 @@
 #include "inspection.hpp"
 
-namespace Rubble::Utils::Inspection {
+namespace RubBLE::Utils::Inspection {
     [[maybe_unused]] std::string basic_object_inspect_start(const Rice::Object &o) {
             std::ostringstream oss;
             oss << "#<" << o.class_name();

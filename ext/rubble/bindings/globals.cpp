@@ -13,12 +13,12 @@
 #include "bindings/Characteristic.hpp"
 #include <memory>
 
-namespace Rubble {
+namespace RubBLE {
     thread_local InRuby in_ruby {};
 
     std::shared_ptr<RubyQueue> rubyQueue;
-    Rice::Module rb_mRubble;
-    Rice::Module rb_mRubbleUnderlying;
+    Rice::Module rb_mRubBLE;
+    Rice::Module rb_mRubBLEUnderlying;
     Rice::Module rb_mUtils;
     [[maybe_unused]] BluetoothAddressType_DT rb_cBluetoothAddressType;
     Characteristic_DT rb_cCharacteristic;

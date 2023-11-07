@@ -4,7 +4,7 @@
 #include "types/ruby.hpp"
 #include "utils/hash.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     class Peripheral;
 //    template<Identifiers::OwnerTypedResource T>
 //    class ResourceUniqueIdentifier;

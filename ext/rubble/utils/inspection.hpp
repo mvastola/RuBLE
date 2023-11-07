@@ -5,7 +5,7 @@
 #include "utils/human_type_names.hpp"
 #include "utils/hexadecimal.hpp"
 
-namespace Rubble::Utils {
+namespace RubBLE::Utils {
     namespace Inspection {
         std::string ruby_inspect(Object obj);
 
@@ -56,12 +56,12 @@ namespace Rubble::Utils {
         }
     } // Inspection
     using namespace Inspection;
-} // Rubble::Utils
+} // RubBLE::Utils
 
 template<typename Key, class ProxyClass, class Value>
-constexpr std::ostream &operator<<(std::ostream &os, const Rubble::Registry<Key, ProxyClass, Value> &reg) {
+constexpr std::ostream &operator<<(std::ostream &os, const RubBLE::Registry<Key, ProxyClass, Value> &reg) {
     return os << reg.to_s();
 }
 
 template<const auto &FIELDS>
-constexpr std::ostream &operator<<(std::ostream &os, const Rubble::NamedBitSet<FIELDS> &nbs) { return os << nbs.to_s(); }
+constexpr std::ostream &operator<<(std::ostream &os, const RubBLE::NamedBitSet<FIELDS> &nbs) { return os << nbs.to_s(); }

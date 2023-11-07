@@ -8,7 +8,7 @@
 #include <memory>
 #include <functional>
 
-namespace Rubble {
+namespace RubBLE {
     namespace Utils::Ruby {
         template <typename T, typename Fn = std::function<T()>>
         T ensure_ruby(const Fn &fn) {

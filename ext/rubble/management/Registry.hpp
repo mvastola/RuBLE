@@ -14,7 +14,7 @@
 namespace ranges = std::ranges;
 namespace views = ranges::views;
 
-namespace Rubble {
+namespace RubBLE {
     template<typename Key, class ProxyClass, class Value>
     class Registry {
         VALUE _self = Qnil;
@@ -55,7 +55,7 @@ namespace Rubble {
                      _registry(std::make_shared<Collection>()),
                      _mtx(std::make_shared<std::mutex>()),
                      _self(Registry_DO(*this)) {
-//            std::cout << "Constructing new " << Rubble::human_type_name<ProxyClass>() << " registry at address ";
+//            std::cout << "Constructing new " << RubBLE::human_type_name<ProxyClass>() << " registry at address ";
 //            std::cout << to_hex_addr(this);
 //            if constexpr (is_owned) std::cout << " owned by " << human_type_name(*_owner); // _owner->to_s();
 //            std::cout << std::endl;
@@ -68,7 +68,7 @@ namespace Rubble {
         constexpr Owner *owner() { return _owner; }
 
         [[maybe_unused]] Key key_from_value(const Value &) const {
-            std::cerr << "Type of class: " << Rubble::Utils::human_type_name(*this) << std::endl;
+            std::cerr << "Type of class: " << RubBLE::Utils::human_type_name(*this) << std::endl;
             throw std::invalid_argument(
                     "key_from_value not implemented without .address() returning a BluetoothAddress");
         }

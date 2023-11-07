@@ -12,7 +12,7 @@
 #include <rice/stl.hpp>
 
 
-namespace Rubble::Utils {
+namespace RubBLE::Utils {
     namespace HumanTypeNames {
         // need to predeclare, since the templated fns call the fully specified version
         template<typename T>
@@ -46,4 +46,4 @@ namespace Rubble::Utils {
         [[maybe_unused]] constexpr std::string human_type_name(const std::any &any) { return human_type_name(any.type()); }
     }
     using namespace HumanTypeNames;
-} // Rubble::Utils
+} // RubBLE::Utils

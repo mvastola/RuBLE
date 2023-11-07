@@ -6,10 +6,10 @@
 #include "bindings/Service.hpp"
 #include "bindings/Characteristic.hpp"
 
-namespace Rubble {
+namespace RubBLE {
 
     void Init_Registries() {
-        rb_cAdapterRegistry = define_class_under<AdapterRegistry>(rb_mRubble, "AdapterRegistry")
+        rb_cAdapterRegistry = define_class_under<AdapterRegistry>(rb_mRubBLE, "AdapterRegistry")
                 .define_method("size", &AdapterRegistry::size)
                 .define_method("to_s", &AdapterRegistry::to_s);
         define_map_under<AdapterRegistry::Collection>(rb_cAdapterRegistry, "Map");
@@ -19,7 +19,7 @@ namespace Rubble {
         rb_cAdapterRegistry.define_singleton_attr("registry", &*adapterRegistry, Rice::AttrAccess::Read);
         rb_cAdapterRegistry.iv_set("@registry", *adapterRegistry->_registry);
 
-        rb_cPeripheralRegistry = define_class_under<PeripheralRegistry>(rb_mRubble, "PeripheralRegistry")
+        rb_cPeripheralRegistry = define_class_under<PeripheralRegistry>(rb_mRubBLE, "PeripheralRegistry")
                 .define_method("to_s", &PeripheralRegistry::to_s)
                 .define_method("size", &PeripheralRegistry::size);
 
@@ -28,7 +28,7 @@ namespace Rubble {
 
         if (!peripheralRegistryFactory) peripheralRegistryFactory = PeripheralRegistryFactory::instance();
 
-        rb_cServiceRegistry = define_class_under<ServiceRegistry>(rb_mRubble, "ServiceRegistry")
+        rb_cServiceRegistry = define_class_under<ServiceRegistry>(rb_mRubBLE, "ServiceRegistry")
                 .define_method("to_s", &ServiceRegistry::to_s)
                 .define_method("size", &ServiceRegistry::size);
 
@@ -40,7 +40,7 @@ namespace Rubble {
         ;
         if (!serviceRegistryFactory) serviceRegistryFactory = ServiceRegistryFactory::instance();
 
-        rb_cCharacteristicRegistry = define_class_under<CharacteristicRegistry>(rb_mRubble, "CharacteristicRegistry")
+        rb_cCharacteristicRegistry = define_class_under<CharacteristicRegistry>(rb_mRubBLE, "CharacteristicRegistry")
                 .define_method("to_s", &ServiceRegistry::to_s)
                 .define_method("size", &ServiceRegistry::size);
 

@@ -3,7 +3,7 @@
 
 #include "utils/containers.hpp"
 
-namespace Rubble {
+namespace RubBLE {
 
     ByteArray::ByteArray(Object obj) : ByteArray() {
         if (obj.is_a(rb_cByteArray)) {
@@ -38,7 +38,7 @@ namespace Rubble {
     }
 
     void Init_ByteArray() {
-        rb_cByteArray = define_class_under<ByteArray>(rb_mRubble, "ByteArray")
+        rb_cByteArray = define_class_under<ByteArray>(rb_mRubBLE, "ByteArray")
                 .define_singleton_function("new", &ByteArray::from_ruby)
                 .define_method("get", &ByteArray::to_string)
                 .define_method("to_s", &ByteArray::to_s)
@@ -56,7 +56,7 @@ namespace Rubble {
 }
 
 //namespace Rice::detail {
-//    bool From_Ruby<Rubble::ByteArray>::can_convert_from_ruby(VALUE obj) {
+//    bool From_Ruby<RubBLE::ByteArray>::can_convert_from_ruby(VALUE obj) {
 //        return std::find(supported_ruby_types.cbegin(),
 //                         supported_ruby_types.cend(),
 //                         rb_type(obj)) != supported_ruby_types.cend();

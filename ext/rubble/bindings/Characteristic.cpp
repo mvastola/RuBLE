@@ -8,7 +8,7 @@
 #include "management/RubyQueue.hpp"
 #include "containers/Callback.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     Characteristic::Characteristic(const SimpleBLE::Characteristic &characteristic,
                                    Owner *owner) :
             _owner(owner),
@@ -132,7 +132,7 @@ namespace Rubble {
         // Do we need the constructor and methods to return/receive pointers to work well
         // (so the right virtual functions are called)? Not sure if rice is handling that all,
         // or just not seeing any obvious bugs yet because the base classes are so minimal.
-        rb_cCharacteristic = define_class_under<Characteristic>(rb_mRubble, "Characteristic");
+        rb_cCharacteristic = define_class_under<Characteristic>(rb_mRubBLE, "Characteristic");
         using CapabilityType = Characteristic::Capability;
         rb_cCharacteristicCapabilityType = define_enum<CapabilityType>("CapabilityType", rb_cCharacteristic)
                 .define_value("READ", CapabilityType::READ)
@@ -167,7 +167,7 @@ namespace Rubble {
                 .define_method("value_tracking=", &Characteristic::set_value_tracking)
                 .define_method("last_value", &Characteristic::last_value)
                 ;
-        define_class_under<std::shared_ptr<Rubble::Characteristic>>(rb_mRubble, "CharacteristicPtr");
+        define_class_under<std::shared_ptr<RubBLE::Characteristic>>(rb_mRubBLE, "CharacteristicPtr");
 
     }
 }

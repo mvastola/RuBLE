@@ -1,4 +1,4 @@
-# Rubble (Pre-Alpa)
+# RubBLE (Pre-Alpa)
 
 Preliminary attempt to implement an interface to the easy-to-use [SimpleBLE](https://github.com/OpenBluetoothToolbox/SimpleBLE) (Bluetooth Low Energy) library in Ruby using the very nifty [rice](https://github.com/jasonroelofs/rice) gem.
 

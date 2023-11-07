@@ -9,7 +9,7 @@ namespace chrono = std::chrono;
 namespace views = std::views;
 namespace ranges = std::ranges;
 
-namespace Rubble {
+namespace RubBLE {
     const constexpr auto semaphore_max = std::numeric_limits<uint16_t>::max();
     using Semaphore [[maybe_unused]] = std::counting_semaphore<semaphore_max>;
 

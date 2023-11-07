@@ -11,7 +11,7 @@ rescue LoadError
   warn 'ruby-progressbar gem not installed. Progress bar disabled.'
 end
 
-module Rubble
+module RubBLE
   module Build
     # noinspection RubyTooManyInstanceVariablesInspection
     class SimpleBLE
@@ -182,7 +182,7 @@ module Rubble
       end
 
       def gem_spec
-        @gem_spec ||= Bundler.load.specs.find_by_name_and_platform('Rubble', RUBY_PLATFORM)
+        @gem_spec ||= Bundler.load.specs.find_by_name_and_platform('RubBLE', RUBY_PLATFORM)
       end
 
       def full_gem_path = @full_gem_path || extension_full_path

@@ -1,6 +1,6 @@
 #include "hexadecimal.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     namespace Utils {
         namespace Hexadecimal {
             std::string byte_to_hex(const std::byte &byte) {
@@ -12,4 +12,4 @@ namespace Rubble {
             }
         } // Hexadecimal
     } // Utils
-} // Rubble
+} // RubBLE

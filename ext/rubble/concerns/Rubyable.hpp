@@ -6,7 +6,7 @@
 #include "utils/ruby_context.hpp"
 #include "utils/hexadecimal.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     // TODO: Use this for Adapter/Peripheral/Service/Characteristic/Descriptor
     template <class T>
     class Rubyable {
@@ -42,5 +42,5 @@ namespace Rubble {
             if (_self != Qnil) rb_gc_mark(_self);
         }
     };
-} // Rubble
+} // RubBLE
 

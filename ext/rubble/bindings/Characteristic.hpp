@@ -8,7 +8,7 @@
 #include "utils/hash.hpp"
 #include "concerns/CharacteristicValueTracker.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     enum class CharacteristicCapabilityType : std::size_t {
         READ = 0,
         WRITE_REQUEST,
@@ -27,7 +27,7 @@ namespace Rubble {
                 "indicate"
         };
         using Capability = CharacteristicCapabilityType;
-        using CapabilityFlags = Rubble::NamedBitSet<CAPABILITY_NAMES>;
+        using CapabilityFlags = RubBLE::NamedBitSet<CAPABILITY_NAMES>;
         using DataObject = Data_Object<Characteristic>;
         using Owner = Service;
         using CallbackFnType [[maybe_unused]] = std::function<void(ByteArray payload)>;

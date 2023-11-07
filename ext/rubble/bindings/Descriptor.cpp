@@ -1,7 +1,7 @@
 #include "bindings/Descriptor.hpp"
 #include "bindings/Characteristic.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     Descriptor::Descriptor(BluetoothUUID uuid, Descriptor::Owner *owner) :
         _owner(owner), _uuid(std::move(uuid)),  _self(DataObject(*this))  {}
 
@@ -22,7 +22,7 @@ namespace Rubble {
 
 
     void Init_Descriptor() {
-        rb_cDescriptor = define_class_under<Descriptor>(rb_mRubble, "Descriptor")
+        rb_cDescriptor = define_class_under<Descriptor>(rb_mRubBLE, "Descriptor")
                 .define_method("uuid", &Descriptor::uuid) // returns BluetoothUUID
                 .define_method("inspect", &Descriptor::inspect)
                 .define_method("read", &Descriptor::read)

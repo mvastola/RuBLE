@@ -27,7 +27,7 @@ namespace boost {
 } // namespace boost
 #endif
 
-namespace Rubble::ExceptionHandling {
+namespace RubBLE::ExceptionHandling {
     [[maybe_unused]] void abort_with_stack();
 
 #if defined(HAVE_BOOST_EXCEPTION) && defined(HAVE_BOOST_STACKTRACE)

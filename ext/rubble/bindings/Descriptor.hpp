@@ -5,7 +5,7 @@
 #include <compare>
 #include "utils/inspection.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     class Characteristic;
     class Descriptor {
     public:
@@ -60,9 +60,9 @@ namespace Rubble {
         return uuid() <=> other.uuid();
     }
 
-} // Rubble
+} // RubBLE
 
-constexpr std::ostream &operator<<(std::ostream &os, const Rubble::Descriptor &d) { return os << d.to_s(); }
+constexpr std::ostream &operator<<(std::ostream &os, const RubBLE::Descriptor &d) { return os << d.to_s(); }
 
 
 

@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <compare>
 
-namespace Rubble {
+namespace RubBLE {
     template<typename T>
     concept UnsignedIntegral = std::is_integral_v<T> && std::is_unsigned_v<T>;
 
@@ -156,7 +156,7 @@ namespace Rubble {
 
 //namespace Rice::detail {
 //    template<>
-//    class From_Ruby<Rubble::ByteArray> {
+//    class From_Ruby<RubBLE::ByteArray> {
 //    public:
 //        static constexpr const auto supported_ruby_types =
 //                std::to_array({T_BIGNUM, T_FIXNUM, T_SYMBOL, T_STRING, T_NIL, T_TRUE, T_FALSE});
@@ -164,12 +164,12 @@ namespace Rubble {
 //        bool is_convertible(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
 //            return can_convert_from_ruby(value);
 //        }
-//        Rubble::ByteArray convert(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
-//            return Rubble::ByteArray::from_ruby(value);
+//        RubBLE::ByteArray convert(VALUE value) { // NOLINT(*-convert-member-functions-to-static)
+//            return RubBLE::ByteArray::from_ruby(value);
 //        }
 //    };
 //}
 
-constexpr std::ostream &operator<<(std::ostream &os, const Rubble::ByteArray &cba) {
+constexpr std::ostream &operator<<(std::ostream &os, const RubBLE::ByteArray &cba) {
     return os << cba.data();
 }

@@ -9,7 +9,7 @@
 #include <format>
 #include <ranges>
 
-namespace Rubble::Utils {
+namespace RubBLE::Utils {
     namespace Hexadecimal {
         namespace ranges = std::ranges;
         namespace views = std::views;
@@ -111,5 +111,5 @@ namespace Rubble::Utils {
         [[maybe_unused]] std::string to_hex_data(const T &t) { return ref_to_hex_data(t); }
     } // Hexadecimal
     using namespace Hexadecimal;
-} // Rubble::Utils
+} // RubBLE::Utils
 

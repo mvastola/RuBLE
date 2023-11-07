@@ -7,7 +7,7 @@
 #include "management/Registry.hpp"
 #include "management/RegistryFactory.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     Peripheral::Peripheral(const SimpleBLE::Peripheral &peripheral,
                            Owner *owner) :
             _owner(owner),
@@ -183,8 +183,8 @@ namespace Rubble {
 
 
     void Init_Peripheral() {
-        define_class_under<SimpleBLE::Peripheral>(rb_mRubbleUnderlying, "Peripheral");
-        rb_cPeripheral = define_class_under<Peripheral>(rb_mRubble, "Peripheral")
+        define_class_under<SimpleBLE::Peripheral>(rb_mRubBLEUnderlying, "Peripheral");
+        rb_cPeripheral = define_class_under<Peripheral>(rb_mRubBLE, "Peripheral")
 //                .define_constructor(Constructor<Peripheral>())
                 .define_method("inspect", &Peripheral::to_s)
                 .define_method("initialized?", &Peripheral::initialized)
@@ -206,7 +206,7 @@ namespace Rubble {
                 .define_method("on_disconnect", &Peripheral::on_disconnect, Arg("cb").keepAlive())
                 .define_singleton_attr("unpair_all_on_exit", &Peripheral::unpair_all_on_exit, Rice::AttrAccess::ReadWrite)
                 ;
-        define_class_under<std::shared_ptr<Rubble::Peripheral>>(rb_mRubble, "PeripheralPtr");
+        define_class_under<std::shared_ptr<RubBLE::Peripheral>>(rb_mRubBLE, "PeripheralPtr");
     }
 }
 

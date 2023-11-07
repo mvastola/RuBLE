@@ -2,7 +2,7 @@
 #include "types/declarations.hpp"
 #include <optional>
 
-namespace Rubble {
+namespace RubBLE {
     // just felt cleaner to abstract out this logic. open to being persuaded otherwise
     class CharacteristicValueTracker {
     protected:
@@ -36,5 +36,5 @@ namespace Rubble {
 
         virtual void ruby_mark() const;
     };
-} // Rubble
+} // RubBLE
 

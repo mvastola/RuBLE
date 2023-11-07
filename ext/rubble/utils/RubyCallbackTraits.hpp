@@ -10,7 +10,7 @@
 // hard to decipher what's wrong from the ArgumentError
 // unfortunately, Proc#arity isn't sufficiently informative because it doesn't
 // take into account required kw args.
-namespace Rubble::Utils::Ruby {
+namespace RubBLE::Utils::Ruby {
     static constexpr std::initializer_list<std::string_view> FnParameterTypes {
         "req", "opt", "rest", "keyreq", "key", "keyrest"
     };
@@ -43,6 +43,6 @@ namespace Rubble::Utils::Ruby {
         static void assert_accepts_n_args(const VALUE &val, const uint8_t &n, bool allow_nil = true);
     };
 }
-namespace Rubble {
+namespace RubBLE {
     namespace Ruby = Utils::Ruby;
 }

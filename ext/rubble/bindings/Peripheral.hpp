@@ -5,7 +5,7 @@
 #include "containers/NamedBitSet.ipp"
 #include "utils/hash.hpp"
 
-namespace Rubble {
+namespace RubBLE {
 //    enum class PeripheralStatus : std::size_t {
 //        INITIALIZED = 0, CONNECTED, CONNECTABLE, PAIRED
 //    };
@@ -15,7 +15,7 @@ namespace Rubble {
                 "initialized", "connected", "connectable", "paired"
         };
         using StatusFlagSet = NamedBitSet<StatusFlagNames>;
-//        using Status = Rubble::PeripheralStatus;
+//        using Status = RubBLE::PeripheralStatus;
 
         using DataObject [[maybe_unused]] = Data_Object<Peripheral>;
         using Owner = Adapter;

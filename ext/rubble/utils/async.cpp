@@ -1,6 +1,6 @@
 #include "async.hpp"
 
-namespace Rubble::Utils::Async {
+namespace RubBLE::Utils::Async {
     void thread_sleep() {
         rb_thread_schedule();
         // TODO: maybe multiply sleep time by getloadavg() on linux (from cstdlib)

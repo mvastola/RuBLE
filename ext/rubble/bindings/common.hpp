@@ -3,11 +3,11 @@
 #include "types/ruby.hpp"
 #include "types/declarations.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     extern std::shared_ptr<RubyQueue> rubyQueue;
 
-    extern Rice::Module rb_mRubble;
-    extern Rice::Module rb_mRubbleUnderlying;
+    extern Rice::Module rb_mRubBLE;
+    extern Rice::Module rb_mRubBLEUnderlying;
     extern Rice::Module rb_mUtils;
     [[maybe_unused]] extern BluetoothAddressType_DT rb_cBluetoothAddressType;
     extern Characteristic_DT rb_cCharacteristic;
@@ -29,7 +29,7 @@ namespace Rubble {
     extern std::shared_ptr<ServiceRegistryFactory> serviceRegistryFactory;
     extern std::shared_ptr<CharacteristicRegistryFactory> characteristicRegistryFactory;
 
-    extern void Init_Rubble();
+    extern void Init_RubBLE();
     extern void Init_Adapter();
     extern void Init_BluetoothAddressType();
     extern void Init_Characteristic();

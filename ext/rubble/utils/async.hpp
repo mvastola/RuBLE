@@ -6,7 +6,7 @@
 #include "types/helpers.hpp"
 #include "types/stl.hpp"
 
-namespace Rubble::Utils {
+namespace RubBLE::Utils {
     namespace Async {
         using namespace std::chrono_literals;
         // Not sure exactly which of these is doing the trick, but calling this when waiting

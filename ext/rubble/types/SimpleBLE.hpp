@@ -4,7 +4,7 @@
 #include <simpleble/Adapter.h>
 #include <simpleble/Characteristic.h>
 
-namespace Rubble {
+namespace RubBLE {
     using BluetoothAddress = SimpleBLE::BluetoothAddress;
     using BluetoothAddressType = SimpleBLE::BluetoothAddressType;
     using BluetoothUUID = SimpleBLE::BluetoothUUID;

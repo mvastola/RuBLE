@@ -12,9 +12,9 @@ require 'securerandom'
 #require 'rainbow/ext/string'
 #require_relative 'tracepoint_manager'
 
-@ba1 = Rubble::ByteArray.new(1234)
-@ba2 = Rubble::ByteArray.new('abc')
-@ba3 = Rubble::ByteArray.new(0xf0f0f0f0f0)
-@ba4 = Rubble::ByteArray.new(SecureRandom.uuid)
+@ba1 = RubBLE::ByteArray.new(1234)
+@ba2 = RubBLE::ByteArray.new('abc')
+@ba3 = RubBLE::ByteArray.new(0xf0f0f0f0f0)
+@ba4 = RubBLE::ByteArray.new(SecureRandom.uuid)
 require "irb"
 IRB.start(__FILE__)

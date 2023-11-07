@@ -8,7 +8,7 @@
 #include "management/RubyQueue.hpp"
 #include "utils/containers.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     using Rice::String;
     Adapter::Adapter(const SimpleBLE::Adapter &adapter) :
             _adapter(std::make_shared<SimpleBLE::Adapter>(adapter)),
@@ -158,17 +158,17 @@ namespace Rubble {
     void Adapter::ruby_mark() const {
 //    std::cout << "ruby_mark-ing adapter proxy: " << address() << std::endl;
 //    rb_gc_mark(self());
-        Rice::ruby_mark<Rubble::PeripheralRegistry>(_peripheral_registry.get());
+        Rice::ruby_mark<RubBLE::PeripheralRegistry>(_peripheral_registry.get());
 //        rb_gc_mark(_peripheral_registry->self());
-        if (_on_scan_start) Rice::ruby_mark<Rubble::Callback>(_on_scan_start.get());
-        if (_on_scan_stop) Rice::ruby_mark<Rubble::Callback>(_on_scan_stop.get());
-        if (_on_scan_update) Rice::ruby_mark<Rubble::Callback>(_on_scan_update.get());
-        if (_on_scan_find) Rice::ruby_mark<Rubble::Callback>(_on_scan_find.get());
+        if (_on_scan_start) Rice::ruby_mark<RubBLE::Callback>(_on_scan_start.get());
+        if (_on_scan_stop) Rice::ruby_mark<RubBLE::Callback>(_on_scan_stop.get());
+        if (_on_scan_update) Rice::ruby_mark<RubBLE::Callback>(_on_scan_update.get());
+        if (_on_scan_find) Rice::ruby_mark<RubBLE::Callback>(_on_scan_find.get());
     }
 
     void Init_Adapter() {
-        define_class_under<SimpleBLE::Adapter>(rb_mRubbleUnderlying, "SimpleBLEAdapter");
-        rb_cAdapter = define_class_under<Adapter>(rb_mRubble, "Adapter")
+        define_class_under<SimpleBLE::Adapter>(rb_mRubBLEUnderlying, "SimpleBLEAdapter");
+        rb_cAdapter = define_class_under<Adapter>(rb_mRubBLE, "Adapter")
                 .define_singleton_function("bluetooth_enabled?", &Adapter::bluetooth_enabled) // returns bool
                 .define_singleton_function("get_adapters", &Adapter::get_ruby_adapters) // returns vector<Adapter>
                 .define_method("initialized?", &Adapter::initialized)
@@ -186,7 +186,7 @@ namespace Rubble {
                 .define_method("on_scan_update", &Adapter::on_scan_update, Arg("cb").keepAlive() = Qnil)
                 .define_method("on_scan_find", &Adapter::on_scan_find, Arg("cb").keepAlive() = Qnil)
                 ;
-//        define_class_under<std::shared_ptr<Rubble::Adapter>>(rb_mRubble, "AdapterPtr");
+//        define_class_under<std::shared_ptr<RubBLE::Adapter>>(rb_mRubBLE, "AdapterPtr");
     }
 }
 

@@ -9,7 +9,7 @@
 #include <shared_mutex>
 
 
-namespace Rubble {
+namespace RubBLE {
     // All ruby calls must take place in thread known to ruby (i.e. where rb_get_execution_context works)
     // Since SimpleBLE creates its own thread from which callbacks are invoked,
     // we have that (non-ruby) thread add a function to RubyQueue,

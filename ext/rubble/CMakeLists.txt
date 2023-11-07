@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25.1) # TODO: see if this can/should be lowered
-project(Rubble LANGUAGES CXX)
+project(RubBLE LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23) # TODO: see if this will compile with C++20
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,7 +22,7 @@ string(JSON EXTENSION_VERSION GET "${JSON_BUILD_CONFIG}" extension version)
 string(JSON DEBUG_MODE GET "${JSON_BUILD_CONFIG}" debug_build)
 string(JSON SIMPLEBLE_EXTRACT_DIR GET "${JSON_BUILD_CONFIG}" simpleble install_location)
 
-include(RubbleHelpers.cmake)
+include(RubBLEHelpers.cmake)
 include(FindBacktrace)
 
 # I was having trouble with this not finding my personal rvm. we could use build-config.json here
@@ -152,12 +152,12 @@ target_sources(rubble PRIVATE
 
 # TODO: does PUBLIC vs PRIVATE in target_sources actually do anything here?
 target_sources(rubble PUBLIC
-    ./bindings/Rubble.cpp
+    ./bindings/RubBLE.cpp
 )
 
 # TODO: `install(EXPORT...` to generate .cmake files for import
 install(TARGETS rubble DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME rubble.so)
 
-#print_target_properties(Rubble)
+#print_target_properties(RubBLE)
 #print_target_properties(simpleble::simpleble)
 #dump_variables()

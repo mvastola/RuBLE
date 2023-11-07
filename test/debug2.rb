@@ -8,14 +8,14 @@ require "bundler/setup" # Set up gems listed in the Gemfile.
 
 require 'rubble'
 
-q = Rubble::RubyQueue.instance
+q = RubBLE::RubyQueue.instance
 queue_thread = Thread.new do
-  Rubble.c_debug
+  RubBLE.c_debug
   q.run
   puts "Queue thread shutting down"
 end
 
-@cb = Rubble::Callback.new
+@cb = RubBLE::Callback.new
 prok = ->() { puts 'Howdy!' }
 @cb.set(prok)
 puts @cb
@@ -30,7 +30,7 @@ puts q
 puts queue_thread
 
 sleep 3
-Rubble.c_debug
+RubBLE.c_debug
 q.stop
 queue_thread.join
 

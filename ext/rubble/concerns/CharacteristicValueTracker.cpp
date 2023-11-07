@@ -1,6 +1,6 @@
 #include "CharacteristicValueTracker.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     bool CharacteristicValueTracker::record_new_value(ByteArray new_data) const {
         if (!value_tracking()) return true; // always assume value changed if no tracking
         std::shared_ptr<ByteArray> old_value =

@@ -4,7 +4,7 @@
 #include <ruby/thread.h>
 
 using namespace std::chrono_literals;
-namespace Rubble {
+namespace RubBLE {
     constinit std::shared_ptr<RubyQueue> RubyQueue::_instance {};
 
     const std::shared_ptr<RubyQueue> &RubyQueue::instance() {
@@ -33,13 +33,13 @@ namespace Rubble {
     void RubyQueue::ensure_started() {
         if (Utils::wait_until([&]{ return _startup_latch.try_acquire(); }, 15s)) {
 //            std::cout << "RubyQueue started." << std::endl;
-//            std::cerr << "Rubble queue start ensured." << std::endl;
+//            std::cerr << "RubBLE queue start ensured." << std::endl;
             return;
         }
 
-        std::cerr << "Rubble queue failed to start. Killing it." << std::endl;
+        std::cerr << "RubBLE queue failed to start. Killing it." << std::endl;
         kill();
-        throw std::runtime_error("Rubble queue failed to start. Aborting.");
+        throw std::runtime_error("RubBLE queue failed to start. Aborting.");
     }
 
     VALUE RubyQueue::run() {
@@ -62,7 +62,7 @@ namespace Rubble {
         _thread_id.store(std::this_thread::get_id());
         _startup_latch.release();
         _running.test_and_set();
-//        std::cerr << "Rubble::RubyQueue has started." << std::endl;
+//        std::cerr << "RubBLE::RubyQueue has started." << std::endl;
 
         QueueItemType item;
         while (!_stopping.test()) {
@@ -89,7 +89,7 @@ namespace Rubble {
     void RubyQueue::push(QueueItemType fn) {
         if (_stopping.test()) {
             if (DEBUG) {
-                std::cerr << "Warning: attempted to push to Rubble callback queue, " <<
+                std::cerr << "Warning: attempted to push to RubBLE callback queue, " <<
                           "but queue has been stopped. Refusing to push." << std::endl;
 #ifdef HAVE_BOOST_STACKTRACE
                 std::cerr << "C++ Backtrace:" << std::endl << boost::stacktrace::stacktrace() << std::endl;
@@ -141,7 +141,7 @@ namespace Rubble {
 
         if (Utils::wait_until([&]{ return !rq->running(); }, 1s)) return;
 
-        std::cerr << "Rubble::RubyQueue won't exit. Forcing it.." << std::endl;
+        std::cerr << "RubBLE::RubyQueue won't exit. Forcing it.." << std::endl;
         rq->kill();
     }
 

@@ -3,13 +3,13 @@ require_relative 'lib/rubble/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'rubble'
-  spec.version = Rubble::VERSION
+  spec.version = RubBLE::VERSION
   spec.authors = ['Mike Vastola']
   spec.email = ['mike@vasto.la']
 
-  spec.summary = 'Ruby Interface for SimpleBLE (BLE library)'
-  spec.description = 'RubBLE is a ruby interface to the SimpleBLE library, which provides '\
-                     'a cross-platform interface for interacting with Bluetooth Low Energy (BLE) '\
+  spec.summary = 'Rub(y Simple)BLE library'
+  spec.description = 'RubBLE is a ruby interface to the SimpleBLE library, providing '\
+                     'a cross-platform DSL for interacting with Bluetooth Low Energy (BLE) '\
                      'devices.'
   spec.homepage = 'https://github.com/mvastola/rubble'
   spec.license = 'MIT'

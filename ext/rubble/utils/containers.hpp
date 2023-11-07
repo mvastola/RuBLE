@@ -7,7 +7,7 @@
 namespace views = std::views;
 namespace ranges = std::ranges;
 
-namespace Rubble::Utils {
+namespace RubBLE::Utils {
     namespace Containers {
         constexpr std::string join(const ranges::viewable_range auto &range, const std::string_view &sep) {
             if (ranges::empty(range)) return "";
@@ -36,6 +36,6 @@ namespace Rubble::Utils {
 
     } // Containers
     using namespace Containers;
-} // Rubble::Utils
+} // RubBLE::Utils
 
 

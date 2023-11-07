@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <utility>
 
-namespace Rubble::Utils::Ruby::Context {
+namespace RubBLE::Utils::Ruby::Context {
     class InRuby;
     class InRubyGuard {
         InRuby *_inRuby = nullptr;
@@ -63,7 +63,7 @@ namespace Rubble::Utils::Ruby::Context {
     }
 }
 
-namespace Rubble {
+namespace RubBLE {
     namespace Utils {
         namespace RubyContext = Ruby::Context;
     }

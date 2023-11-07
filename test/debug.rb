@@ -26,9 +26,9 @@ class Tester
       end
     end
 
-    def registry = @registry ||= Rubble::AdapterRegistry.registry
+    def registry = @registry ||= RubBLE::AdapterRegistry.registry
 
-    def adapters = @adapters ||= Rubble::Adapter.get_adapters
+    def adapters = @adapters ||= RubBLE::Adapter.get_adapters
 
     def adapter
       return @adapter if @adapter

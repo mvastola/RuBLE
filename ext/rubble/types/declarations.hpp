@@ -21,7 +21,7 @@ namespace Rice {
     class Enum;
 }
 
-namespace Rubble {
+namespace RubBLE {
 #ifdef RUBBLE_DEBUG
     static constexpr const bool DEBUG = true;
 #else

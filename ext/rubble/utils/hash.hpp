@@ -2,7 +2,7 @@
 #include <utility>
 #include "types/declarations.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     template<typename Key>
     using HasherType = std::hash<Key>;
 
@@ -18,35 +18,35 @@ template<> struct std::hash<SimpleBLE::Adapter> {
     std::size_t operator()(const SimpleBLE::Adapter& a) const noexcept;
 };
 
-template<> struct std::hash<Rubble::Adapter> {
-    std::size_t operator()(const Rubble::Adapter& a) const noexcept;
+template<> struct std::hash<RubBLE::Adapter> {
+    std::size_t operator()(const RubBLE::Adapter& a) const noexcept;
 };
 
 template<> struct std::hash<SimpleBLE::Peripheral> {
     std::size_t operator()(const SimpleBLE::Peripheral& p) const noexcept;
 };
 
-template<> struct std::hash<Rubble::Peripheral> {
-    std::size_t operator()(const Rubble::Peripheral& p) const noexcept;
+template<> struct std::hash<RubBLE::Peripheral> {
+    std::size_t operator()(const RubBLE::Peripheral& p) const noexcept;
 };
 
 template<> struct std::hash<SimpleBLE::Service> {
     std::size_t operator()(const SimpleBLE::Service& s) const noexcept;
 };
 
-template<> struct std::hash<Rubble::Service> {
-    std::size_t operator()(const Rubble::Service& s) const noexcept;
+template<> struct std::hash<RubBLE::Service> {
+    std::size_t operator()(const RubBLE::Service& s) const noexcept;
 };
 
 template<> struct std::hash<SimpleBLE::Characteristic> {
     std::size_t operator()(const SimpleBLE::Characteristic& s) const noexcept;
 };
 
-template<> struct std::hash<Rubble::Characteristic> {
-    std::size_t operator()(const Rubble::Characteristic& s) const noexcept;
+template<> struct std::hash<RubBLE::Characteristic> {
+    std::size_t operator()(const RubBLE::Characteristic& s) const noexcept;
 };
 
-template<> struct std::hash<Rubble::Descriptor> {
-    std::size_t operator()(const Rubble::Descriptor& s) const noexcept;
+template<> struct std::hash<RubBLE::Descriptor> {
+    std::size_t operator()(const RubBLE::Descriptor& s) const noexcept;
 };
 

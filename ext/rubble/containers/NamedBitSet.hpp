@@ -12,15 +12,15 @@
 
 #include "types/helpers.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     template<const auto &FIELD_NAMES> class NamedBitSet;
 }
 
-template<const auto &FIELDS> struct std::hash<Rubble::NamedBitSet<FIELDS>> {
-    constexpr std::size_t operator()(const Rubble::NamedBitSet<FIELDS> &nbs) const noexcept;
+template<const auto &FIELDS> struct std::hash<RubBLE::NamedBitSet<FIELDS>> {
+    constexpr std::size_t operator()(const RubBLE::NamedBitSet<FIELDS> &nbs) const noexcept;
 };
 
-namespace Rubble {
+namespace RubBLE {
     // this namespace from https://en.cppreference.com/w/cpp/utility/variant/visit
     namespace visit {
         template<class... Ts>
@@ -131,9 +131,9 @@ namespace Rubble {
 }
 
 template<const auto &FIELDS>
-constexpr std::size_t std::hash<Rubble::NamedBitSet<FIELDS>>::operator()(const Rubble::NamedBitSet<FIELDS> &nbs) const noexcept {
+constexpr std::size_t std::hash<RubBLE::NamedBitSet<FIELDS>>::operator()(const RubBLE::NamedBitSet<FIELDS> &nbs) const noexcept {
     std::size_t h1 = typeid(nbs).hash_code();
-    static auto hasher = std::hash<decltype(Rubble::NamedBitSet<FIELDS>::BitSet)>{};
+    static auto hasher = std::hash<decltype(RubBLE::NamedBitSet<FIELDS>::BitSet)>{};
     return h1 ^ (hasher(nbs.bits()) << 1);
 }
 

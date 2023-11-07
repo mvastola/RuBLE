@@ -9,7 +9,7 @@ require_relative '../../lib/rubble/build'
 require 'mkmf-rice'
 # TODO: see what https://rubygems.org/gems/autobuild has to offer
 
-@generator = Rubble::Build::Extconf.new
+@generator = RubBLE::Build::Extconf.new
 @generator.setup_simpleble!
 
 require 'json'

@@ -7,7 +7,7 @@
 #include "utils/containers.hpp"
 using namespace std::string_literals;
 
-namespace Rubble {
+namespace RubBLE {
     template<const auto &FIELD_NAMES>
     constexpr std::string NamedBitSet<FIELD_NAMES>::to_s() const { return Utils::join(flag_names(), "|"); }
 

@@ -1,6 +1,6 @@
 #include "exception_handling.hpp"
 
-namespace Rubble::ExceptionHandling {
+namespace RubBLE::ExceptionHandling {
     std::terminate_handler _old_terminate_handler = nullptr;
 
     void wrap_termination_handler() {

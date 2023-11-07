@@ -5,7 +5,7 @@
 #include "utils/garbage_collection.hpp"
 
 using namespace std::string_literals;
-namespace Rubble {
+namespace RubBLE {
     struct Callback {
     protected:
         std::size_t  _arg_count;
@@ -46,7 +46,7 @@ namespace Rubble {
 
 namespace Rice {
     template<>
-    constexpr void ruby_mark<Rubble::Callback>(Rubble::Callback *cb) { cb->ruby_mark(); }
+    constexpr void ruby_mark<RubBLE::Callback>(RubBLE::Callback *cb) { cb->ruby_mark(); }
 }
 
 

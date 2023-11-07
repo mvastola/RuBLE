@@ -5,7 +5,7 @@ require "bundler/setup" # Set up gems listed in the Gemfile.
 
 require 'rubble'
 @cb = ->(a, b=2, *c, d:, e: 3, **f) { [a,b,c,d,e,f].inspect }
-puts @result = Rubble::Utils::get_props_array(@cb)
+puts @result = RubBLE::Utils::get_props_array(@cb)
 
 require "irb"
 IRB.start(__FILE__)

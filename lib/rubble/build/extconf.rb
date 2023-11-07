@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Rubble
+module RubBLE
   module Build
     class Extconf
       attr_reader :config_data
@@ -15,10 +15,10 @@ module Rubble
         @config_data[:os]          = os_data
       end
 
-      include Rubble::Build::Data::OS
-      include Rubble::Build::Data::Bundler
-      include Rubble::Build::Data::Rice
-      include Rubble::Build::Data::Extension
+      include RubBLE::Build::Data::OS
+      include RubBLE::Build::Data::Bundler
+      include RubBLE::Build::Data::Rice
+      include RubBLE::Build::Data::Extension
 
       def debug_mode?
         return @debug_mode if defined?(@debug_mode)

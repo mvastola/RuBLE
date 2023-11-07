@@ -5,7 +5,7 @@
 #include <thread>
 #include <type_traits>
 
-namespace Rubble {
+namespace RubBLE {
     namespace Rice = ::Rice;
     using ::Rice::Object, ::Rice::Data_Object, ::Rice::Data_Type, ::Rice::Arg;
 

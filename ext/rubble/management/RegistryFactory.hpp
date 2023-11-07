@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 
-namespace Rubble {
+namespace RubBLE {
 // there is always a single singleton instance of this class,
 // but each instance holds a registry of registries (so to speak)
 // the keys of the meta-registry are hashes of Owner

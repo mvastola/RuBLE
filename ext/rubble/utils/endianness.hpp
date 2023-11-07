@@ -4,7 +4,7 @@
 #include <span>
 #include <algorithm>
 
-namespace Rubble::Utils {
+namespace RubBLE::Utils {
     // TODO: I'm not 100% on if this code is correct. In any case it might be simpler to use the boost library
     //   (https://www.boost.org/doc/libs/1_83_0/libs/endian/doc/html/endian.html#conversion) also, is this really even
     //   needed? I'm thinking maybe we should take this out unless it becomes a problem/request.

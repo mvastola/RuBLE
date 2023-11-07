@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module Rubble
+module RubBLE
   module Build
   end
 end
 
 begin
-  Rubble::VERSION
+  RubBLE::VERSION
 rescue LoadError
   require_relative 'version'
 end
@@ -17,5 +17,5 @@ loader.inflector.inflect(
   'simpleble' => 'SimpleBLE',
   'os'        => 'OS',
 )
-loader.push_dir("#{__dir__}/build", namespace: Rubble::Build)
+loader.push_dir("#{__dir__}/build", namespace: RubBLE::Build)
 loader.setup

@@ -7,7 +7,7 @@
 #include "bindings/Peripheral.hpp"
 #include "types/declarations.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     Service::Service(const SimpleBLE::Service &service, Owner *owner) :
             _owner(owner),
             _service(std::make_shared<SimpleBLE::Service>(service)),
@@ -102,11 +102,11 @@ namespace Rubble {
     }
 
     void Init_Service() {
-        rb_cService = define_class_under<Service>(rb_mRubble, "Service")
+        rb_cService = define_class_under<Service>(rb_mRubBLE, "Service")
                 .define_method("uuid", &Service::uuid) // returns BluetoothUUID
                 .define_method("data", &Service::data) // returns SimpleBLE::ByteArray
                 .define_method("characteristics", &Service::characteristics) // returns std::vector<Characteristic>
                 .define_method("inspect", &Service::to_s);
-        define_class_under<std::shared_ptr<Rubble::Service>>(rb_mRubble, "ServicePtr");
+        define_class_under<std::shared_ptr<RubBLE::Service>>(rb_mRubBLE, "ServicePtr");
     }
 }

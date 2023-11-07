@@ -1,7 +1,7 @@
 #include "RubyCallbackTraits.hpp"
 #include "types/ruby.hpp"
 
-namespace Rubble::Utils::Ruby {
+namespace RubBLE::Utils::Ruby {
     CallbackTraits::CallbackTraits(const VALUE &val) {
         if (RB_NIL_OR_UNDEF_P(val) || rb_obj_is_proc(val) != Qtrue)
             throw std::invalid_argument("Argument must be a proc or lambda");

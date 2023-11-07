@@ -1,4 +1,4 @@
 #include "Rubyable.hpp"
 
-namespace Rubble {
-} // Rubble
+namespace RubBLE {
+} // RubBLE

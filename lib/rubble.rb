@@ -10,7 +10,7 @@ loader.ignore("#{__dir__}/tasks")
 loader.ignore("#{__dir__}/rubble/build.rb")
 loader.setup
 
-module Rubble
+module RubBLE
   # TODO: is this used? (should it be?)
   class Error < StandardError; end
   class << self
@@ -30,7 +30,7 @@ begin
   require_relative 'rubble/rubble.so'
 rescue LoadError => ex
   if (symbol = ex.message[/\A[^:]+: undefined symbol: (\S+) - /, 1])
-    demangled = Rubble.try_demangle(symbol)
+    demangled = RubBLE.try_demangle(symbol)
     ex.message << "\n\nDemangled symbol: #{demangled}" if demangled
   end
   raise

@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include "utils/hash.hpp"
 
-namespace Rubble {
+namespace RubBLE {
     namespace Rice = ::Rice;
 
 //    template<Identifiers::OwnerTypedResource T>

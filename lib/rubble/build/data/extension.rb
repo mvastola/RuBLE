@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Rubble
+module RubBLE
   module Build
     module Data
       module Extension
