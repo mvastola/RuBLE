@@ -88,11 +88,6 @@ macro(build_boost)
             PREPEND "stacktrace_"
             OUTPUT_VARIABLE STACKTRACE_BACKENDS)
 
-#    set(USES_TERMINAL_DOWNLOAD ON)
-#    set(USES_TERMINAL_UPDATE ON)
-#    set(LOG_DOWNLOAD ON)
-#    set(LOG_UPDATE ON)
-
     set(BOOST_ENABLE_PYTHON OFF)
     set(BUILD_SHARED_LIBS OFF)
     set(Boost_DEBUG OFF)
@@ -102,26 +97,14 @@ macro(build_boost)
     # TODO: add option to use local boost (in which case we can link dynamically)
 
         include(FetchContent)
-#        cmake_policy(SET CMP0097 NEW)
         FetchContent_Declare(
             Boost
             SOURCE_DIR "${CACHE_LOCATION}"
             URL "${rb_boost_asset_browser_download_url}"
-#            GIT_REPOSITORY "${REPO}" # TODO: would an archive make more sense(?)
-#            GIT_TAG "${TAG}" # TODO: set this in build-config.cmake
-#            GIT_PROGRESS ON
-#            GIT_SHALLOW ON
-#            GIT_SUBMODULES ""
-#            GIT_SUBMODULES_RECURSE OFF
-#            GIT_REMOTE_UPDATE_STRATEGY REBASE
-#            UPDATE_COMMAND git submodule update --init --recursive --remote -f --depth 1 -j ${NPROC}
             DOWNLOAD_EXTRACT_TIMESTAMP ON
-            USES_TERMINAL_DOWNLOAD ON
-            USES_TERMINAL_UPDATE ON
             OVERRIDE_FIND_PACKAGE
     )
     FetchContent_MakeAvailable(Boost)
-#    dump_variables()
 
     find_package(
         Boost
