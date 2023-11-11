@@ -2,11 +2,11 @@
 
 require 'pathname'
 require 'rbconfig'
-require_relative '../../rubble/build'
+require_relative '../../ruble/build'
 
 module Paths
   class << self
-    include RubBLE::Build::Data::Extension
+    include RuBLE::Build::Data::Extension
   end
 
   GEM_NAME = Paths.gem_name

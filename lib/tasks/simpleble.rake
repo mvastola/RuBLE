@@ -3,7 +3,7 @@ namespace :SimpleBLE do
   task :initialize, %i[release] do |task, args|
     opts = { tag: args.release }.compact
 
-    require_relative '../rubble/build/simpleble'
+    require_relative '../ruble/build/simpleble'
     @simpleble = SimpleBLE.new(**opts)
   end
 

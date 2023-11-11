@@ -3,16 +3,16 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.9" />
   </component>
-  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/ext/rubble">
+  <component name="CMakeWorkspace">
     <contentRoot DIR="$PROJECT_DIR$" />
   </component>
   <component name="CidrRootsConfiguration">
     <excludeRoots>
-      <file path="$PROJECT_DIR$/ext/rubble/build" />
+      <file path="$PROJECT_DIR$/ext/ruble/build" />
       <file path="$PROJECT_DIR$/tmp" />
       <file path="$PROJECT_DIR$/tmp/x86_64-linux" />
-      <file path="$PROJECT_DIR$/tmp/x86_64-linux/rubble" />
-      <file path="$PROJECT_DIR$/tmp/x86_64-linux/rubble/3.2.2" />
+      <file path="$PROJECT_DIR$/tmp/x86_64-linux/ruble" />
+      <file path="$PROJECT_DIR$/tmp/x86_64-linux/ruble/3.2.2" />
     </excludeRoots>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

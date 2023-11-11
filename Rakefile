@@ -33,7 +33,6 @@ end
 #require 'rake/extensiontask'
 # TODO: figure out how to build/install the gem with precompiled binaries
 # ...or at least debug why systemwide installation can be finnicky
-# EXTENSION_NAME = 'rubble'
 #Rake::ExtensionTask.new(EXTENSION_NAME) do |ext|
 #  ext.lib_dir = "lib/#{EXTENSION_NAME}"
 #end

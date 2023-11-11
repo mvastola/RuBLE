@@ -6,16 +6,16 @@ ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
 require "bundler/setup" # Set up gems listed in the Gemfile.
 #Bundler.require
 
-require 'rubble'
+require 'ruBLE'
 
-q = RubBLE::RubyQueue.instance
+q = RuBLE::RubyQueue.instance
 queue_thread = Thread.new do
-  RubBLE.c_debug
+  RuBLE.c_debug
   q.run
   puts "Queue thread shutting down"
 end
 
-@cb = RubBLE::Callback.new
+@cb = RuBLE::Callback.new
 prok = ->() { puts 'Howdy!' }
 @cb.set(prok)
 puts @cb
@@ -30,7 +30,7 @@ puts q
 puts queue_thread
 
 sleep 3
-RubBLE.c_debug
+RuBLE.c_debug
 q.stop
 queue_thread.join
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    RubBLE (0.0.3.alpha)
+    ruble (0.0.3.alpha)
       zeitwerk (~> 2.6.12)
 
 GEM
@@ -24,7 +24,7 @@ GEM
     faraday-retry (2.2.0)
       faraday (~> 2.0)
     io-console (0.6.0)
-    irb (1.8.3)
+    irb (1.9.0)
       rdoc
       reline (>= 0.3.8)
     json (2.6.3)
@@ -75,7 +75,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  RubBLE!
   bundler (~> 2.4.21)
   concurrent-ruby (~> 1.2.2)
   debug
@@ -87,6 +86,7 @@ DEPENDENCIES
   rainbow (~> 3.1)
   rake (~> 13.0)
   rice (~> 4.1)
+  ruble!
   rubocop
   rubocop-rake
   terrapin (~> 0.6.0)

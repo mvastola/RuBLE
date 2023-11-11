@@ -1,4 +1,4 @@
 cmake_minimum_required(VERSION 3.25.1)
-project(RubBLE LANGUAGES CXX)
+project(RuBLE LANGUAGES CXX)
 
-add_subdirectory(ext/rubble)
+add_subdirectory(ext/ruble)

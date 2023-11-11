@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module RubBLE
+module RuBLE
   module Build
     class Checksums
       CHECKSUMS_FILE_RELATIVE = 'CHECKSUMS'

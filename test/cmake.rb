@@ -1,7 +1,7 @@
-require_relative '../lib/rubble/build'
+require_relative '../lib/ruBLE/build'
 require 'pathname'
 
-CMake = Class.new { include RubBLE::Build::CMake }.new
+CMake = Class.new { include RuBLE::Build::CMake }.new
 
 def flatten_hash(...) = CMake.cmake_flatten_hash(...)
 def generate(...)     = CMake.cmake_generate(...)
