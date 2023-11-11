@@ -51,9 +51,11 @@ module RuBLE
         end
 
         def set_result(path, value, force: true)
+          path = CLIFlag.format_key(path)
+
           return UNSET if value.equal?(UNSET)
 
-          result_hash = path[0..-2].reduce(result) { |memo, obj| memo[obj] ||= {} }
+          result_hash = path[0..-2].reduce(result) { |memo, obj| memo[obj.to_s] ||= {} }
           if force || !result_hash.key?(path.last) || result_hash[path.last].equal?(UNSET)
             result_hash[path.last] = value
           else

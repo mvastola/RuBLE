@@ -1,14 +1,14 @@
-block(PROPAGATE ruble_boost_setup BOOST_STACKTRACE_BACKEND
-        BOOST_STACKTRACE_BACKTRACE_INCLUDE_FILE )
+block(PROPAGATE setup_boost BOOST_STACKTRACE_BACKEND
+        BOOST_STACKTRACE_BACKTRACE_INCLUDE_FILE)
 
     set(STACKTRACE_BACKEND_PRIORITIES backtrace;addr2line;windgb_cached;windbg;basic;noop)
     set(BOOST_ENABLE_PYTHON OFF)
     set(BUILD_SHARED_LIBS ${rb_boost_dynamic})
     set(Boost_DEBUG OFF)
-    set(Boost_VERBOSE OFF)
+    set(Boost_VERBOSE ${build_mode_verbose})
     set(BUILD_TESTING OFF)
 
-    # TODO: add option to use local boost (in which case we can link dynamically)
+    # TODO: handle option to use local boost (in which case we can link dynamically)
     cmake_path(SET CACHE_LOCATION NORMALIZE
             "${CMAKE_CURRENT_SOURCE_DIR}/../../tmp/${rb_boost_release_tag}")
 
@@ -17,9 +17,9 @@ block(PROPAGATE ruble_boost_setup BOOST_STACKTRACE_BACKEND
     set(LINKED_LIBS exception;endian;algorithm) # + detected stacktrace backend
     set(STACKTRACE_BACKEND_PRIORITIES backtrace;addr2line;windgb_cached;windbg;basic;noop)
 
-    set(ALL_LIBS ${HEADER_ONLY_LIBS};${LINKED_LIBS})
+    set(ALL_LIBS ${HEADER_ONLY_LIBS} ${LINKED_LIBS})
     set(BUILD_DEPS ${ALL_LIBS})
-    set(BOOST_INCLUDE_LIBRARIES ${ADDITIONAL_DEPENDENCIES};${BUILD_DEPS})
+    set(BOOST_INCLUDE_LIBRARIES ${ADDITIONAL_DEPENDENCIES} ${BUILD_DEPS})
 
     list(TRANSFORM HEADER_ONLY_LIBS PREPEND "Boost::"
             OUTPUT_VARIABLE HEADER_ONLY_NAMESPACES)
@@ -51,9 +51,13 @@ block(PROPAGATE ruble_boost_setup BOOST_STACKTRACE_BACKEND
             NO_DEFAULT_PATH
     )
 
-    target_link_libraries(${build_target} INTERFACE ${HEADER_ONLY_NAMESPACES})
-    target_link_libraries(${build_target} PRIVATE ${LINKED_NAMESPACES})
-    add_dependencies(${build_target} ${PREFIXED_BUILD_DEPS})
+#    message(STATUS ${BOOST_INCLUDE_LIBRARIES})
+#    message(STATUS ${HEADER_ONLY_NAMESPACES})
+    message(STATUS "Boost build target: ${EXTENSION_NAME}")
+    target_link_libraries(${EXTENSION_NAME} INTERFACE ${HEADER_ONLY_NAMESPACES})
+    target_link_libraries(${EXTENSION_NAME} PRIVATE ${LINKED_NAMESPACES})
+    add_dependencies(${EXTENSION_NAME} ${PREFIXED_BUILD_DEPS})
 
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost_stacktrace.cmake")
 
 endblock()

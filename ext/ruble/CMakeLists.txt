@@ -10,20 +10,19 @@ set(CMAKE_TLS_VERIFY ON)
 # relies on extconf.rb having been run
 cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/build-config.cmake)
-set(RUBY_ARCH ${rb_target_cpu}-${rb_target_os})
-set(RICE_INCLUDE_PATH ${rice_include_dir})
-set(RICE_VERSION ${rice_version})
-set(EXTENSION_NAME ${extconf_name})
-set(EXTENSION_VERSION ${extconf_version})
-set(DEBUG_MODE ${extconf_debug_build})
-set(LOCAL_DEV_MODE ${extconf_debug_build}) # TODO: separate these
-#cmake_host_system_information(RESULT NPROC QUERY NUMBER_OF_PHYSICAL_CORES)
-
+include("${CMAKE_CURRENT_SOURCE_DIR}/build-config.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/debug.cmake")
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost.cmake")
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/simpleble.cmake")
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ruby.cmake")
+
+set(RUBY_ARCH "${rb_target_cpu}-${rb_target_os}")
+set(RICE_INCLUDE_PATH "${rice_include_dir}")
+set(RICE_VERSION "${rice_version}")
+set(EXTENSION_NAME "${extconf_name}")
+set(EXTENSION_VERSION "${extconf_version}")
+set(DEBUG_MODE ${build_mode_debug})
+set(DEV_MODE ${build_mode_developmentd})
+set(VERBOSE_MODE ${build_mode_verbose})
+set(RELEASE_MODE ${build_mode_release})
+#cmake_host_system_information(RESULT NPROC QUERY NUMBER_OF_PHYSICAL_CORES)
 
 # I was having trouble with this not finding my personal rvm. we could use build-config.json here
 find_path(VALGRIND_HEADER_DIR valgrind/valgrind.h)
@@ -34,14 +33,14 @@ include_directories(.)
 # For config.h
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-add_library(ruble SHARED)
+add_library("${EXTENSION_NAME}" SHARED)
 
-target_compile_options(ruble PUBLIC
+target_compile_options("${EXTENSION_NAME}" PUBLIC
         -ggdb3 # TODO: strip debug info into separate file (don't necessarily need to package it with distributable version)
         -fthreadsafe-statics
 )
 
-target_link_options(ruble PUBLIC
+target_link_options("${EXTENSION_NAME}" PUBLIC
     LINKER:-z,defs
     LINKER:-fPIC
     LINKER:--dynamic-list-cpp-typeinfo
@@ -54,8 +53,9 @@ cmake_path(SET CMAKE_INSTALL_PREFIX NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../..
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR DEBUG_MODE)
     set(RUBLE_DEBUG true)
-#    set(CMAKE_VERBOSE_MAKEFILE ON)
-    target_compile_options(ruble PUBLIC
+    set(CMAKE_VERBOSE_MAKEFILE ${build_mode_verbose})
+    # TODO: very few of these are likely needed
+    target_compile_options("${EXTENSION_NAME}" PUBLIC
             -ggdb3
             -O0
             -fdiagnostics-color=always
@@ -72,7 +72,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR DEBUG_MODE)
             -fdiagnostics-color=always
             -fconcepts-diagnostics-depth=1
     )
-    target_link_options(ruble PUBLIC
+    target_link_options("${EXTENSION_NAME}" PUBLIC
             LINKER:--no-strip-discarded
             LINKER:--discard-none
             LINKER:--ld-generated-unwind-info
@@ -86,12 +86,13 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR DEBUG_MODE)
     )
 endif()
 
-setup_ruby(ruble)
-setup_boost(ruble)
-setup_simpleble(ruble)
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ruby.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/simpleble.cmake")
+
 configure_file(config.h.in config.h)
 
-target_precompile_headers(ruble PRIVATE
+target_precompile_headers("${EXTENSION_NAME}" PRIVATE
         ${CMAKE_BINARY_DIR}/config.h
         ./management/RegistryFactory.hpp
         ./management/Registry.hpp
@@ -125,7 +126,7 @@ target_precompile_headers(ruble PRIVATE
         ./concerns/CharacteristicValueTracker.hpp
         ./concerns/Rubyable.hpp
 )
-target_sources(ruble PRIVATE
+target_sources("${EXTENSION_NAME}" PRIVATE
         ./management/RubyQueue.cpp
         ./management/Registry.cpp
         ./bindings/Service.cpp
@@ -146,12 +147,12 @@ target_sources(ruble PRIVATE
 )
 
 # TODO: does PUBLIC vs PRIVATE in target_sources actually do anything here?
-target_sources(ruble PUBLIC
+target_sources("${EXTENSION_NAME}" PUBLIC
     ./bindings/RuBLE.cpp # The only source file that defines exported functions
 )
 
 # TODO: `install(EXPORT...` to generate .cmake files for import
-install(TARGETS ruble DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME ruble.so)
+install(TARGETS "${EXTENSION_NAME}" DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME ruble.so)
 
 #print_target_properties(ruble)
 #print_target_properties(Boost::exception)

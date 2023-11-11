@@ -5,6 +5,10 @@ module RuBLE
     module Settings
       class CLIFlag
         class << self
+          def format_key(key)
+            key.is_any_of?(String, Symbol) ? key.to_s.split('.').map(&:to_sym).freeze : key
+          end
+
           def alias(key, flags, value, desc: UNSET, &block)
             new(key, flags, default: value, desc:, &block)
           end
@@ -13,7 +17,7 @@ module RuBLE
         attr_reader *%i[key flags args type desc initial default block]
         def initialize(key, flags, *args, type: UNSET, desc: UNSET,
                        initial: UNSET, default: UNSET, &block)
-          @key = key.to_s.split('.')
+          @key = self.class.format_key(key).freeze
           @flags = [flags].flatten
           @args = args
           @type = type

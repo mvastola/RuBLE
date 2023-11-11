@@ -2,27 +2,22 @@
 
 require 'open3'
 
-module RuBLE
-  module Build
-    module Data
-      module Extension
-        include Memery
+module RuBLE::Build
+  module Data
+    module Extension
+      include Memery # TODO: use ActiveSupport::Concern so this doesn't load 10x
 
-        memoize def gem_spec = Data.this_gem
-        memoize def gem_name = gem_spec.name.freeze
+      extend ActiveSupport::Concern
+
+      included do
+        memoize def spec = Data.this_gem
         memoize def root_dir = Data.bundler.root.cleanpath(false)
         # memoize def gem_full_path = Pathname.new(gem_spec.full_gem_path).freeze
-        def gem_full_path = root_dir
+        def full_path = root_dir
 
-        memoize def gem_version = gem_spec.version.freeze
-        def extension_version = gem_version
+        memoize def name = spec.name.freeze
+        memoize def version = spec.version.freeze
 
-        memoize def extension_names
-          gem_spec.extensions.map do |extconf_path|
-            Pathname.new(extconf_path).parent.basename.to_s.freeze
-          end.freeze
-        end
-        memoize def extension_name = extension_names.first
 
         memoize def git_root = run_cmd('git rev-parse --show-toplevel', path: true)
         memoize def git_root? = !!git_root
@@ -34,12 +29,12 @@ module RuBLE
         memoize def git_tag = (git_last_tag if git_tagged?)
         memoize def git_commit_str = [git_head, git_dirty? && '-dirty'].select(&:itself).join
 
-        memoize def github_url = gem_spec.metadata['source_code_uri']
+        memoize def github_url = spec.metadata['source_code_uri']
         memoize def github_release_asset(asset:, tag: git_tag)
           "#{github_url}/releases/download/#{tag}/#{asset}".freeze if tag
         end
 
-        memoize def debug_asset_name = "#{extension_name}.#{target_os}-#{target_cpu}.so.debug"
+        memoize def debug_asset_name = "#{name}.#{target_os}-#{target_cpu}.so.debug"
         memoize def debug_info_url   = github_release_asset(asset: debug_asset_name)
 
         memoize def target_os = RbConfig::CONFIG['target_os']
@@ -50,8 +45,8 @@ module RuBLE
         memoize def linker_package_metadata
           {
             type:         'gem',
-            name:         gem_name,
-            version:      gem_version,
+            name:         name,
+            version:      version,
             dirty:        git_dirty?,
             commit:       git_commit_str,
             release:      git_tag,
@@ -71,14 +66,12 @@ module RuBLE
 
         memoize def extension_data
           {
-            gem_name:   gem_name,
-            name:       extension_name,
-            version:    gem_version.to_s,
-            path:       gem_full_path.to_s,
-            package:    {
+            name:    name,
+            version: version.to_s,
+            path:    full_path.to_s,
+            package: {
               linker_metadata: linker_package_metadata.to_json,
             },
-            debug_build: true,
           }.freeze
         end
 

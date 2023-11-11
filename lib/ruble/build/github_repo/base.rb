@@ -16,9 +16,9 @@ module RuBLE
         end
 
         attr_reader *%i[requested_tag static precompiled path]
-        def initialize(tag: 'default', static: default_linkage, path: nil, precompiled: nil)
+        def initialize(tag:, static:, path:, precompiled:)
           # rubocop:disable Style/ClassEqualityComparison
-          raise ArgumentError, "Option #{name}.path is not yet supported." if kwargs[:path]
+          raise ArgumentError, "Option #{name}.path is not yet supported." if path
           raise "Cannot instantiate #{self.class} directly. Must subclass." if self.class == GithubRepo
 
           @requested_tag = tag.to_s.freeze
@@ -33,8 +33,9 @@ module RuBLE
         memoize def github_repo_url = self.class.github_repo_url
         memoize def github_api_base_url = self.class.github_api_base_url
 
-        memoize def default_linkage = 'static'
         memoize def static? = static
+        memoize def dynamic = !static
+        memoize def dynamic? = dynamic
         memoize def linkage = (static? ? 'static' : 'dynamic')
         memoize def precompiled? = precompiled
         memoize def build? = !precompiled?
@@ -79,11 +80,6 @@ module RuBLE
           matching_asset.fetch('size')
         end
 
-        memoize def gem_spec
-          Bundler.load.specs.find_by_name_and_platform('RuBLE', RUBY_PLATFORM)
-        end
-
-        alias_method :full_gem_path, :gem_full_path
 
         memoize def config_data
           release_data = release.dup.tap { _1.delete('assets') }
@@ -99,6 +95,7 @@ module RuBLE
             precompiled:,
             requested_tag:,
             commit_hash:,
+            local_path:    path,
             release_tag:   real_tag_name,
             asset:         filter_github_metadata(asset_data),
             repo_url:      github_repo_url,

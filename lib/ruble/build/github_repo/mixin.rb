@@ -3,9 +3,32 @@
 module RuBLE::Build
   module GithubRepo
     module Mixin
+      GITHUB_REPO_DEFAULTS = {
+        static:      true,
+        path:        false,
+        precompiled: false,
+        tag:         'default'
+      }.freeze
+
       extend ActiveSupport::Concern
 
       class_methods do
+        def add_github_repo_data(name, **defaults)
+          klass_name = RuBLE::Build.zeitwerk.inflector.camelize(name.to_s, __dir__).to_sym
+          klass = RuBLE::Build::GithubRepo.const_get(klass_name)
+          add_github_repo_config_opts(name, **GITHUB_REPO_DEFAULTS, **defaults)
+
+          define_method name.to_sym do
+            # TODO: accept custom path
+            # TODO: choose shared vs static
+            # TODO: choose build vs precompiled vs system
+            kwargs = Settings.config[name].to_h.slice(*%i[static path precompiled tag])
+            klass.new(**kwargs)
+          end
+          memoize name.to_sym
+          klass
+        end
+
         def add_github_repo_config_opts(name, **defaults)
           defaults.symbolize_keys!
           # TODO: this should be enhanced a bit. Specifically, it should be possible to alert to incompatible

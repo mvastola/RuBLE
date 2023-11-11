@@ -4,33 +4,11 @@ module RuBLE
   module Build
     class Extconf
       include Memery
-
-      GITHUB_REPO_DEFAULTS = {
-        static:      true,
-        path:        false,
-        precompiled: false,
-        tag:         'default'
-      }.freeze
+      SETTINGS = %i[debug verbose development release].freeze
 
       class << self
         private :new
         def instance = @instance ||= new
-
-        def add_github_repo_data(name, **defaults)
-          klass_name = RuBLE::Build.zeitwerk.inflector.camelize(name.to_s, __dir__).to_sym
-          klass = RuBLE::Build::GithubRepo.const_get(klass_name)
-          add_github_repo_config_opts(name, **GITHUB_REPO_DEFAULTS, **defaults)
-
-          define_method name.to_sym do
-            # TODO: accept custom path
-            # TODO: choose shared vs static
-            # TODO: choose build vs precompiled vs system
-            kwargs = Settings[name].slice(*%i[static path precompiled tag])
-            klass.new(**kwargs)
-          end
-          memoize name.to_sym
-          klass
-        end
       end
 
       include RuBLE::Build::Data::OS
@@ -41,10 +19,15 @@ module RuBLE
 
       include RuBLE::Build::GithubRepo::Mixin
       add_github_repo_data :simpleble, precompiled: true
-      add_github_repo_data :boost, precompiled: false
+      add_github_repo_data :boost
 
       memoize def config = Settings.config
-      memoize def debug? = config.debug
+      delegate *SETTINGS, to: :config
+      SETTINGS.each { memoize _1 }.each { alias_method :"#{_1}?", _1 }
+
+      memoize def build_mode
+        SETTINGS.to_h { [ _1, send(:"#{_1}?") ] }
+      end
 
       memoize def default_library_version(name:)
         gem_spec.metadata.fetch("#{name}_library_version")
@@ -58,6 +41,7 @@ module RuBLE
 
       memoize def config_data
         @config_data = {
+          build_mode:,
           bundler:      bundler_data,
           extconf:      extension_data,
           rb:           rbconfig_data,
