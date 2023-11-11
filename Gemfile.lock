@@ -7,13 +7,63 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (7.1.2)
+      base64
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      mutex_m
+      tzinfo (~> 2.0)
     ast (2.4.2)
     base64 (0.2.0)
+    bigdecimal (3.1.4)
     climate_control (0.2.0)
     concurrent-ruby (1.2.2)
+    config (5.0.0)
+      deep_merge (~> 1.2, >= 1.2.1)
+      dry-validation (~> 1.0, >= 1.0.0)
+    connection_pool (2.4.1)
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
+    deep_merge (1.2.2)
+    drb (2.2.0)
+      ruby2_keywords
+    dry-configurable (1.1.0)
+      dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
+    dry-core (1.0.1)
+      concurrent-ruby (~> 1.0)
+      zeitwerk (~> 2.6)
+    dry-inflector (1.0.0)
+    dry-initializer (3.1.1)
+    dry-logic (1.5.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
+    dry-schema (1.13.3)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 1.0, >= 1.0.1)
+      dry-core (~> 1.0, < 2)
+      dry-initializer (~> 3.0)
+      dry-logic (>= 1.4, < 2)
+      dry-types (>= 1.7, < 2)
+      zeitwerk (~> 2.6)
+    dry-types (1.7.1)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0)
+      dry-inflector (~> 1.0)
+      dry-logic (~> 1.4)
+      zeitwerk (~> 2.6)
+    dry-validation (1.10.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+      dry-initializer (~> 3.0)
+      dry-schema (>= 1.12, < 2)
+      zeitwerk (~> 2.6)
     faraday (2.7.11)
       base64
       faraday-net_http (>= 2.0, < 3.1)
@@ -23,6 +73,8 @@ GEM
     faraday-net_http (3.0.2)
     faraday-retry (2.2.0)
       faraday (~> 2.0)
+    i18n (1.14.1)
+      concurrent-ruby (~> 1.0)
     io-console (0.6.0)
     irb (1.9.0)
       rdoc
@@ -31,6 +83,8 @@ GEM
     language_server-protocol (3.17.0.3)
     memery (1.5.0)
       ruby2_keywords (~> 0.0.2)
+    minitest (5.20.0)
+    mutex_m (0.2.0)
     os (1.1.4)
     parallel (1.23.0)
     parser (3.2.2.4)
@@ -68,6 +122,8 @@ GEM
     stringio (3.0.9)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
     zeitwerk (2.6.12)
 
@@ -75,8 +131,10 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activesupport (~> 7.1.2)
   bundler (~> 2.4.21)
   concurrent-ruby (~> 1.2.2)
+  config (~> 5.0)
   debug
   faraday (~> 2.7.11)
   faraday-follow_redirects (~> 0.3.0)

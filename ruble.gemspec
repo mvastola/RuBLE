@@ -22,8 +22,8 @@ Gem::Specification.new do |spec|
   spec.metadata['changelog_uri'] = 'https://github.com/mvastola/RuBLE/blob/master/CHANGELOG.md'
   spec.metadata['documentation_uri'] = 'https://rubydoc.info/gems/RuBLE'
   spec.metadata['rubygems_mfa_required'] = 'true' # Why does this need to be a string??
-  spec.metadata['boost_library_release_tag'] = 'boost-1.83.0'
-  spec.metadata['simpleble_library_release_tag'] = 'v0.6.1'
+  spec.metadata['boost_library_release_tag'] = RuBLE::BOOST_LIBRARY_RELEASE_TAG
+  spec.metadata['simpleble_library_release_tag'] = RuBLE::SIMPLEBLE_LIBRARY_RELEASE_TAG
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -53,13 +53,15 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'rice', '~> 4.1'
 
-  # spec.add_development_dependency 'activesupport', '~> 7.1.2'
   spec.add_development_dependency 'concurrent-ruby', '~> 1.2.2'
 
   spec.add_development_dependency 'faraday', '~> 2.7.11'
   spec.add_development_dependency 'faraday-follow_redirects', '~> 0.3.0'
   spec.add_development_dependency 'faraday-retry', '~> 2.2.0'
 
+  # Handy Utils
+  spec.add_development_dependency 'activesupport', '~> 7.1.2'
+  spec.add_development_dependency 'config', '~> 5.0'
   spec.add_development_dependency 'memery', '~> 1.5'
   spec.add_development_dependency 'os', '~> 1.1'
 

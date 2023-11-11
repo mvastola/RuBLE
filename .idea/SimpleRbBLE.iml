@@ -3,4 +3,78 @@
   <component name="ModuleRunConfigurationManager">
     <shared />
   </component>
+  <component name="RakeTasksCache">
+    <option name="myRootTask">
+      <RakeTaskImpl id="rake">
+        <subtasks>
+          <RakeTaskImpl id="SimpleBLE">
+            <subtasks>
+              <RakeTaskImpl description="Fetch SimpleBLE release" fullCommand="SimpleBLE:initialize[release]" id="initialize[release]" />
+              <RakeTaskImpl description="" fullCommand="SimpleBLE:download" id="download" />
+              <RakeTaskImpl description="" fullCommand="SimpleBLE:extract" id="extract" />
+              <RakeTaskImpl description="" fullCommand="SimpleBLE:info" id="info" />
+              <RakeTaskImpl description="" fullCommand="SimpleBLE:initialize" id="initialize" />
+              <RakeTaskImpl description="" fullCommand="SimpleBLE:install" id="install" />
+            </subtasks>
+          </RakeTaskImpl>
+          <RakeTaskImpl description="Build ruble-0.0.3.alpha.gem into the pkg directory" fullCommand="build" id="build" />
+          <RakeTaskImpl id="build">
+            <subtasks>
+              <RakeTaskImpl description="Generate SHA512 checksum if ruble-0.0.3.alpha.gem into the checksums directory" fullCommand="build:checksum" id="checksum" />
+            </subtasks>
+          </RakeTaskImpl>
+          <RakeTaskImpl description="Remove any temporary products" fullCommand="clean" id="clean" />
+          <RakeTaskImpl description="Remove any generated files" fullCommand="clobber" id="clobber" />
+          <RakeTaskImpl description="Remove package products" fullCommand="clobber_package" id="clobber_package" />
+          <RakeTaskImpl id="dev">
+            <subtasks>
+              <RakeTaskImpl description="Audit missing symbols in built object files" fullCommand="dev:audit_objfile_symbols[flags]" id="audit_objfile_symbols[flags]" />
+              <RakeTaskImpl description="Compiles code for debugging" fullCommand="dev:build[flags]" id="build[flags]" />
+              <RakeTaskImpl description="Reconfigures only if needed" fullCommand="dev:maybe_reconfigure[flags]" id="maybe_reconfigure[flags]" />
+              <RakeTaskImpl description="Cleans/Clobbers all generated files" fullCommand="dev:pristine[flags]" id="pristine[flags]" />
+              <RakeTaskImpl description="Cleans/Clobbers, generates Makefiles/etc before build" fullCommand="dev:reconfigure[flags]" id="reconfigure[flags]" />
+              <RakeTaskImpl description="" fullCommand="dev:audit_objfile_symbols" id="audit_objfile_symbols" />
+              <RakeTaskImpl description="" fullCommand="dev:build" id="build" />
+              <RakeTaskImpl description="" fullCommand="dev:initialize" id="initialize" />
+              <RakeTaskImpl description="" fullCommand="dev:maybe_reconfigure" id="maybe_reconfigure" />
+              <RakeTaskImpl description="" fullCommand="dev:pristine" id="pristine" />
+              <RakeTaskImpl description="" fullCommand="dev:reconfigure" id="reconfigure" />
+            </subtasks>
+          </RakeTaskImpl>
+          <RakeTaskImpl description="Build the gem file ruble-0.0.3.alpha.gem" fullCommand="gem" id="gem" />
+          <RakeTaskImpl description="Build and install ruble-0.0.3.alpha.gem into system gems" fullCommand="install" id="install" />
+          <RakeTaskImpl id="install">
+            <subtasks>
+              <RakeTaskImpl description="Build and install ruble-0.0.3.alpha.gem into system gems without network access" fullCommand="install:local" id="local" />
+            </subtasks>
+          </RakeTaskImpl>
+          <RakeTaskImpl description="Build all the packages" fullCommand="package" id="package" />
+          <RakeTaskImpl description="Create tag v0.0.3.alpha and build and push ruble-0.0.3.alpha.gem to rubygems.org" fullCommand="release[remote]" id="release[remote]" />
+          <RakeTaskImpl description="Force a rebuild of the package files" fullCommand="repackage" id="repackage" />
+          <RakeTaskImpl description="Run RuboCop" fullCommand="rubocop" id="rubocop" />
+          <RakeTaskImpl id="rubocop">
+            <subtasks>
+              <RakeTaskImpl description="Autocorrect RuboCop offenses (only when it's safe)" fullCommand="rubocop:autocorrect" id="autocorrect" />
+              <RakeTaskImpl description="Autocorrect RuboCop offenses (safe and unsafe)" fullCommand="rubocop:autocorrect_all" id="autocorrect_all" />
+              <RakeTaskImpl description="" fullCommand="rubocop:auto_correct" id="auto_correct" />
+            </subtasks>
+          </RakeTaskImpl>
+          <RakeTaskImpl description="" fullCommand="audit_objfile_symbols" id="audit_objfile_symbols" />
+          <RakeTaskImpl description="" fullCommand="default" id="default" />
+          <RakeTaskImpl description="" fullCommand="dev" id="dev" />
+          <RakeTaskImpl description="" fullCommand="pkg" id="pkg" />
+          <RakeTaskImpl description="" fullCommand="pkg/ruble-0.0.3.alpha" id="pkg/ruble-0.0.3.alpha" />
+          <RakeTaskImpl description="" fullCommand="pkg/ruble-0.0.3.alpha.gem" id="pkg/ruble-0.0.3.alpha.gem" />
+          <RakeTaskImpl description="" fullCommand="release" id="release" />
+          <RakeTaskImpl id="release">
+            <subtasks>
+              <RakeTaskImpl description="" fullCommand="release:guard_clean" id="guard_clean" />
+              <RakeTaskImpl description="" fullCommand="release:rubygem_push" id="rubygem_push" />
+              <RakeTaskImpl description="" fullCommand="release:source_control_push" id="source_control_push" />
+            </subtasks>
+          </RakeTaskImpl>
+        </subtasks>
+      </RakeTaskImpl>
+    </option>
+  </component>
 </module>

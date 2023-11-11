@@ -12,9 +12,10 @@ require 'mkmf-rice'
 # noinspection RubyMismatchedArgumentType
 THIS_DIR = Pathname.new(__dir__)
 
+require 'debug' # if @generator.debug?
 @generator = RuBLE::Build::Extconf.instance
-require 'debug' if @generator.debug_mode?
-
+@settings = RuBLE::Build::Settings.config
+debugger
 @generator.write_build_config(path: THIS_DIR / 'build-config.cmake')
 
 # TODO: need to confirm the values (for install dir, compile args, etc) outputted in Makefile

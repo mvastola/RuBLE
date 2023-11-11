@@ -8,7 +8,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_TLS_VERIFY ON)
 
 # relies on extconf.rb having been run
-cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_SOURCE_DIR}/../../lib/ruble")
+cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/build-config.cmake)
 set(RUBY_ARCH ${rb_target_cpu}-${rb_target_os})
@@ -17,11 +17,13 @@ set(RICE_VERSION ${rice_version})
 set(EXTENSION_NAME ${extconf_name})
 set(EXTENSION_VERSION ${extconf_version})
 set(DEBUG_MODE ${extconf_debug_build})
-#set(SIMPLEBLE_EXTRACT_DIR ${rb_simpleble_install_location})
+set(LOCAL_DEV_MODE ${extconf_debug_build}) # TODO: separate these
+#cmake_host_system_information(RESULT NPROC QUERY NUMBER_OF_PHYSICAL_CORES)
 
-cmake_host_system_information(RESULT NPROC QUERY NUMBER_OF_PHYSICAL_CORES)
-
-include(RuBLEHelpers.cmake)
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/debug.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/simpleble.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ruby.cmake")
 
 # I was having trouble with this not finding my personal rvm. we could use build-config.json here
 find_path(VALGRIND_HEADER_DIR valgrind/valgrind.h)
@@ -48,7 +50,7 @@ target_link_options(ruble PUBLIC
 )
 
 # TODO: should this be debug only? (need to figure out what normal install paths are and where they come from)
-cmake_path(SET CMAKE_INSTALL_PREFIX NORMALIZE "${CMAKE_SOURCE_DIR}/../../lib/ruble")
+cmake_path(SET CMAKE_INSTALL_PREFIX NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR DEBUG_MODE)
     set(RUBLE_DEBUG true)

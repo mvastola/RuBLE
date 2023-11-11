@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative 'version'
+
+require 'active_support/all'
 require_relative 'build/core_ext'
 
 module RuBLE
@@ -11,10 +13,12 @@ module RuBLE
         require 'zeitwerk'
         Zeitwerk::Loader.new.tap do |loader|
           loader.inflector.inflect(
-            'cmake'     => 'CMake',
-            'ruble'     => 'RuBLE',
-            'simpleble' => 'SimpleBLE',
-            'os'        => 'OS',
+            'cli_source' => 'CLISource',
+            'cli_flag'   => 'CLIFlag',
+            'cmake'      => 'CMake',
+            'ruble'      => 'RuBLE',
+            'simpleble'  => 'SimpleBLE',
+            'os'         => 'OS',
           )
           loader.push_dir("#{__dir__}/build", namespace: RuBLE::Build)
           loader.ignore("#{__dir__}/build/core_ext.rb")
