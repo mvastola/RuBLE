@@ -1,14 +1,16 @@
 PATH
   remote: .
   specs:
-    SimpleRbBLE (0.0.3.alpha)
+    RubBLE (0.0.3.alpha)
       zeitwerk (~> 2.6.12)
 
 GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
-    base64 (0.1.1)
+    base64 (0.2.0)
+    climate_control (0.2.0)
+    concurrent-ruby (1.2.2)
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
@@ -27,6 +29,8 @@ GEM
       reline (>= 0.3.8)
     json (2.6.3)
     language_server-protocol (3.17.0.3)
+    memery (1.5.0)
+      ruby2_keywords (~> 0.0.2)
     os (1.1.4)
     parallel (1.23.0)
     parser (3.2.2.4)
@@ -40,7 +44,7 @@ GEM
     rdoc (6.6.0)
       psych (>= 4.0.0)
     regexp_parser (2.8.2)
-    reline (0.3.9)
+    reline (0.4.0)
       io-console (~> 0.5)
     rexml (3.2.6)
     rice (4.1.0)
@@ -57,13 +61,13 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.30.0)
       parser (>= 3.2.1.0)
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    rubygems-tasks (0.2.6)
-      irb (~> 1.0)
-      rake (>= 10.0.0)
-    rubyzip (2.3.2)
-    stringio (3.0.8)
+    stringio (3.0.9)
+    terrapin (0.6.0)
+      climate_control (>= 0.0.3, < 1.0)
     unicode-display_width (2.5.0)
     zeitwerk (2.6.12)
 
@@ -71,20 +75,21 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  SimpleRbBLE!
+  RubBLE!
   bundler (~> 2.4.21)
+  concurrent-ruby (~> 1.2.2)
   debug
   faraday (~> 2.7.11)
   faraday-follow_redirects (~> 0.3.0)
   faraday-retry (~> 2.2.0)
+  memery (~> 1.5)
   os (~> 1.1)
   rainbow (~> 3.1)
   rake (~> 13.0)
   rice (~> 4.1)
-  rubocop (~> 1.57.2)
-  ruby-progressbar (~> 1.13.0)
-  rubygems-tasks
-  rubyzip (~> 2.3.2)
+  rubocop
+  rubocop-rake
+  terrapin (~> 0.6.0)
 
 RUBY VERSION
    ruby 3.2.2p53

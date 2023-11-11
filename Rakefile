@@ -1,39 +1,42 @@
 # frozen_string_literal: true
 
-# TODO: see if I can bypass needing to prefix commands with `bundle exec` via this:
-#ENV["BUNDLE_GEMFILE"] ||= File.expand_path("./Gemfile", __dir__)
+# TODO: see if I can bypass needing to prefix rake commands with `bundle exec` via this:
+
+# ENV["BUNDLE_GEMFILE"] ||= File.expand_path("./Gemfile", __dir__)
 require "bundler/setup" # Set up gems listed in the Gemfile.
 Bundler.require(*%i[dev build])
 
+require "bundler/gem_tasks"
+require "rubygems/package_task"
 
-EXTENSION_NAME = 'SimpleRbBLE'
-#noinspection RubyMismatchedArgumentType
+# noinspection RubyMismatchedArgumentType
 ROOT_DIR = Pathname.new(__dir__)
+ROOT_DIR.glob('lib/tasks/*.rake').each { |r| import r }
 
-#require "bundler/gem_tasks"
-begin
-  require 'rubygems/tasks'
-  Gem::Tasks.new
-rescue LoadError
-  STDERR.puts "rubygems-tasks not installed. Skipping associated tasks."
+GEMSPECS = ROOT_DIR.glob('*.gemspec')
+
+GEMSPECS.each do |gemspec|
+  spec = Bundler.load_gemspec(gemspec.to_s)
+  Gem::PackageTask.new(spec).define
 end
 
 begin
   require "rubocop/rake_task"
-  RuboCop::RakeTask.new
+  RuboCop::RakeTask.new do |task|
+    task.requires << 'rubocop-rake'
+  end
+  task default: :rubocop
 rescue LoadError
   STDERR.puts "Rubocop not installed. Skipping associated tasks."
 end
 
-ROOT_DIR.glob('lib/tasks/*.rake').each { |r| import r }
 #require 'rake/extensiontask'
 # TODO: figure out how to build/install the gem with precompiled binaries
 # ...or at least debug why systemwide installation can be finnicky
+# EXTENSION_NAME = 'rubble'
 #Rake::ExtensionTask.new(EXTENSION_NAME) do |ext|
 #  ext.lib_dir = "lib/#{EXTENSION_NAME}"
 #end
 
 
-# TODO: configure rubocop
-task default: :rubocop
 

@@ -1,0 +1,5 @@
+.state_hash
+/extconf.h
+/build
+/build-config.cmake
+/config.h

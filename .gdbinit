@@ -12,7 +12,7 @@ set record full insn-number-max 20
 #set disable-randomization on
 #set record full insn-number-max 200000
 source contrib/gdb-cpp-frame-filters.py
-add-symbol-file lib/SimpleRbBLE/SimpleRbBLE.so
+add-symbol-file lib/rubble/rubble.so
 catch throw
 #b c_debug
 #b rb_check_typeddata

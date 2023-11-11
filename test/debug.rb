@@ -6,7 +6,7 @@ ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
 #require "bundler/setup" # Set up gems listed in the Gemfile.
 #Bundler.require
 
-require 'SimpleRbBLE'
+require 'rubble'
 
 require 'rainbow/ext/string'
 require_relative 'tracepoint_manager'
@@ -26,15 +26,15 @@ class Tester
       end
     end
 
-    def registry = @registry ||= SimpleRbBLE::AdapterRegistry.registry
+    def registry = @registry ||= RubBLE::AdapterRegistry.registry
 
-    def adapters = @adapters ||= SimpleRbBLE::Adapter.get_adapters
+    def adapters = @adapters ||= RubBLE::Adapter.get_adapters
 
     def adapter
       return @adapter if @adapter
 
       @adapter = adapters.first
-      #SimpleRbBLE.c_debug
+      #rubble.c_debug
       puts "#{@adapter.inspect} (#{@adapter.object_id}) -- #{@adapter.address}"
 
       @callback_proc = method(:callback).to_proc
