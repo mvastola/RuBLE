@@ -22,8 +22,6 @@ Gem::Specification.new do |spec|
   spec.metadata['changelog_uri'] = 'https://github.com/mvastola/RuBLE/blob/master/CHANGELOG.md'
   spec.metadata['documentation_uri'] = 'https://rubydoc.info/gems/RuBLE'
   spec.metadata['rubygems_mfa_required'] = 'true' # Why does this need to be a string??
-  spec.metadata['boost_library_release_tag'] = RuBLE::BOOST_LIBRARY_RELEASE_TAG
-  spec.metadata['simpleble_library_release_tag'] = RuBLE::SIMPLEBLE_LIBRARY_RELEASE_TAG
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
