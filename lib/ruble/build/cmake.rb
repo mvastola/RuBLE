@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
 require 'debug'
-module RuBLE
-  module Build
-    module CMake
-      CMAKE_LITERALS = {
-        nil   => 'NULL',
-        true  => 'ON',
-        false => 'OFF',
-      }.freeze
-      CMAKE_KEY_SEPARATOR = '_'
-      STRINGY_TYPES = [ String, Symbol, Pathname ].freeze
+module RuBLE::Build
+  module CMake
+    CMAKE_LITERALS = {
+      nil   => 'NULL',
+      true  => 'ON',
+      false => 'OFF',
+    }.freeze
+    CMAKE_KEY_SEPARATOR = '_'
+    STRINGY_TYPES = [ String, Symbol, Pathname ].freeze
 
+    extend ActiveSupport::Concern
+
+    included do
       def cmake_generate(data, path: nil)
         enum = cmake_serialized_enumerator(data)
         return enum.reduce(String.new) do |memo, obj|

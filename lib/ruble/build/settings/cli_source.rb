@@ -19,6 +19,7 @@ module RuBLE
         attr_reader *%i[original_opts parsed_opts remaining_opts result parser raise_on_unknown]
 
         def initialize(*opts, raise_on_unknown: true)
+
           @original_opts = opts.freeze
           @parsed_opts = nil
           @result = nil
@@ -32,6 +33,7 @@ module RuBLE
 
           @result = {}
           @parser = OptionParser.new
+          RuBLE::Build::Extconf # make sure it's loaded, so we have all flags set up
           self.class.flags.each do |flag|
             flag.configure(self)
           end
