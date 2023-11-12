@@ -16,8 +16,8 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/debug.cmake")
 set(RUBY_ARCH "${rb_target_cpu}-${rb_target_os}")
 set(RICE_INCLUDE_PATH "${rice_include_dir}")
 set(RICE_VERSION "${rice_version}")
-set(EXTENSION_NAME "${extconf_name}")
-set(EXTENSION_VERSION "${extconf_version}")
+set(EXTENSION_NAME "${rb_ext_name}")
+set(EXTENSION_VERSION "${rb_ext_version}")
 set(DEBUG_MODE ${build_mode_debug})
 set(DEV_MODE ${build_mode_developmentd})
 set(VERBOSE_MODE ${build_mode_verbose})
@@ -151,8 +151,10 @@ target_sources("${EXTENSION_NAME}" PUBLIC
     ./bindings/RuBLE.cpp # The only source file that defines exported functions
 )
 
-# TODO: `install(EXPORT...` to generate .cmake files for import
-install(TARGETS "${EXTENSION_NAME}" DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME ruble.so)
+if (DEV_MODE) # This is probably only wanted locally
+    # TODO(?): `install(EXPORT...` to generate .cmake files for import
+    install(TARGETS "${EXTENSION_NAME}" DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME ruble.so)
+endif()
 
 #print_target_properties(ruble)
 #print_target_properties(Boost::exception)

@@ -15,20 +15,22 @@ module RuBLE
           def github_api_base_url = "https://api.github.com/repos/#{github_repo}"
         end
 
-        attr_reader *%i[requested_tag static precompiled path]
-        def initialize(tag:, static:, path:, precompiled:)
-          # rubocop:disable Style/ClassEqualityComparison
-          raise ArgumentError, "Option #{name}.path is not yet supported." if path
+        attr_reader *%i[requested_tag static precompiled path supported_release_tag]
+        def initialize(**config)
           raise "Cannot instantiate #{self.class} directly. Must subclass." if self.class == GithubRepo
 
-          @requested_tag = tag.to_s.freeze
-          @static = static
-          @path = path unless path.nil?
-          @precompiled = precompiled unless precompiled.nil?
+          config.deep_symbolize_keys!
+          @requested_tag = config.fetch(:tag).to_s.freeze
+          @static = config.fetch(:static)
+          @path = config.fetch(:path)
+          @precompiled = config.fetch(:precompiled)
+          @supported_release_tag = config.fetch(:supported_release_tag)
+
+          raise ArgumentError, "Option #{name}.path is not yet supported." if path
         end
 
 
-        memoize def gem_spec = Extconf.instance.gem_spec
+        memoize def gem_spec = Extconf.instance.spec
         memoize def github_repo = self.class.github_repo
         memoize def github_repo_url = self.class.github_repo_url
         memoize def github_api_base_url = self.class.github_api_base_url
@@ -40,22 +42,27 @@ module RuBLE
         memoize def precompiled? = precompiled
         memoize def build? = !precompiled?
 
-        memoize def latest_release(include_prereleases: false)
-          github_api.get('releases').body.detect do |release|
-            is_draft = release.fetch('draft')
-            is_prerelease = release.fetch('prerelease')
+        memoize def default_release_tag
+          Extconf.instance.development? ? latest_release_tag : supported_release_tag
+        end
+
+        memoize def latest_release_tag(include_prereleases: false)
+          resp = github_api.get('releases').body.each(&:deep_symbolize_keys!)
+          resp.detect do |release|
+            is_draft = release.fetch(:draft)
+            is_prerelease = release.fetch(:prerelease)
             !is_draft && (include_prereleases || !is_prerelease)
-          end.fetch('id')
+          end.fetch(:tag_name)
         end
 
         memoize def release
           tag = requested_tag.to_s
-          tag = Extconf.instance.debug? ? latest_release : tag_from_gemspec if tag == 'default'
+          tag = default_release_tag if tag == 'default'
 
-          github_api.get("releases/#{tag}").body.freeze
+          github_api.get("releases/tags/#{tag}").body.tap(&:deep_symbolize_keys!).freeze
         end
 
-        memoize def release_name = release.fetch('name').freeze
+        memoize def release_name = release.fetch(:name).freeze
 
         memoize def tag_from_gemspec
           class_name = self.class.name
@@ -64,28 +71,30 @@ module RuBLE
           gem_spec.metadata.fetch("#{class_name.downcase}_library_release_tag")
         end
 
-        memoize def real_tag_name = release.fetch('tag_name').freeze
+        memoize def real_tag_name = release.fetch(:tag_name).freeze
 
-        memoize def commit_hash
-          github_api.get("commits/#{real_tag_name}").body.fetch('sha').freeze
+        memoize def ref_hash(refspec)
+          github_api.get("commits/#{refspec}").body.fetch('sha').freeze
         end
 
-        memoize def assets = release.fetch('assets').to_h { [ _1.fetch('name'), _1 ] }.freeze
+        memoize def commit_hash = ref_hash(real_tag_name)
+
+        memoize def assets = release.fetch(:assets).to_h { [ _1.fetch(:name), _1 ] }.freeze
 
         def matching_asset
-          raise NotImplementedError, "This function must be defined in the subclass"
+          raise NotImplementedError, 'This function must be defined in the subclass'
         end
 
         memoize def download_size
-          matching_asset.fetch('size')
+          matching_asset.fetch(:size)
         end
 
 
         memoize def config_data
-          release_data = release.dup.tap { _1.delete('assets') }
-          release_data['author']&.reject! { |k, _v| k.to_s.end_with?('_url') }
+          release_data = release.dup.tap { _1.delete(:assets) }
+          release_data[:author]&.reject! { |k, _v| k.to_s.end_with?('_url') }
 
-          asset_data = matching_asset.dup.tap { _1.delete('uploader') }
+          asset_data = matching_asset.dup.tap { _1.delete(:uploader) }
 
           {
             **filter_github_metadata(release_data),
@@ -117,7 +126,7 @@ module RuBLE
             f.request  :retry
             f.response :raise_error
             f.response :follow_redirects
-            # f.response :logger
+            f.response :logger
           end
         end
 

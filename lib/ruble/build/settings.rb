@@ -13,6 +13,7 @@ module RuBLE::Build::Settings
 
       @cli_settings = RuBLE::Build::Settings::CLISource.new(*ARGV)
 
+      build_data = ::RuBLE::Build::Data
       ::Config.setup do |config|
         config.const_name = 'BuildConfig'
         config.use_env = true
@@ -21,9 +22,18 @@ module RuBLE::Build::Settings
         config.env_separator = '_'
         config.env_converter = :downcase
         config.fail_on_missing = true
-        config.load_and_set_settings(cli_settings.tap(&:load).result.to_h)
       end
-      @config = ::BuildConfig
+      # debugger
+      # FIXME!! This is b0rked (need to look into ::Config to see how values are being lost)
+      ::Config.load_and_set_settings
+      @config = ::BuildConfig.tap do |config|
+        # envconfig = config.to_h
+        config.add_source!(cli_settings)
+        ext_dir = (build_data.root_dir / build_data.spec.extensions.first).parent
+        config.add_source!(ext_dir / 'dependencies.yml')
+        # debugger
+        config.tap(&:reload!)
+      end
     end
   end
 end

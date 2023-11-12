@@ -11,10 +11,10 @@ module RuBLE
           def clear! = flags.clear
         end
 
-        add_flag(:debug, %w[-d --[no-]debug], desc: 'Build in debug mode', type: FalseClass)
-        add_flag(:verbose, %w[-v --[no-]verbose], desc: 'Output commands during build', type: FalseClass)
-        add_flag(:development, %w[--dev --development], desc: 'Use latest releases of libraries', type: FalseClass)
-        add_flag(:release, %w[-r --release], desc: 'Build extension for distribution on rubygems', type: FalseClass)
+        add_flag(:debug, %w[-d --[no-]debug], desc: 'Build in debug mode', initial: true)
+        add_flag(:verbose, %w[-v --[no-]verbose], desc: 'Output commands during build', initial: true)
+        add_flag(:development, %w[--dev --development], desc: 'Use latest releases of libraries', initial: true)
+        add_flag(:release, %w[-r --release], desc: 'Build extension for distribution on rubygems', initial: true)
 
         attr_reader *%i[original_opts parsed_opts remaining_opts result parser raise_on_unknown]
 
@@ -33,7 +33,8 @@ module RuBLE
 
           @result = {}
           @parser = OptionParser.new
-          RuBLE::Build::Extconf # make sure it's loaded, so we have all flags set up
+          # RuBLE::Build::Extconf.instance.tap(&:config_data) # make sure it's loaded, so we have all flags set up
+          debugger
           self.class.flags.each do |flag|
             flag.configure(self)
           end

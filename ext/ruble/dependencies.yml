@@ -1,0 +1,4 @@
+boost:
+  supported_release_tag: boost-1.83.0
+simpleble:
+  supported_release_tag: v0.6.1

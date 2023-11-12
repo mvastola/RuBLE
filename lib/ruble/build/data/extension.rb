@@ -11,7 +11,7 @@ module RuBLE::Build
 
       included do
         memoize def spec = Data.this_gem
-        memoize def root_dir = Data.bundler.root.cleanpath(false)
+        memoize def root_dir = Data.root_dir
         # memoize def gem_full_path = Pathname.new(gem_spec.full_gem_path).freeze
         def full_path = root_dir
 

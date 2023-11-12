@@ -7,23 +7,22 @@ module RuBLE::Build
         static:      true,
         path:        false,
         precompiled: false,
-        tag:         'default'
+        tag:         'default',
       }.freeze
 
       extend ActiveSupport::Concern
 
       class_methods do
         def add_github_repo_data(name, **defaults)
+          add_github_repo_config_opts(name, **GITHUB_REPO_DEFAULTS, **defaults)
           klass_name = RuBLE::Build.zeitwerk.inflector.camelize(name.to_s, __dir__).to_sym
           klass = RuBLE::Build::GithubRepo.const_get(klass_name)
-          add_github_repo_config_opts(name, **GITHUB_REPO_DEFAULTS, **defaults)
 
           define_method name.to_sym do
             # TODO: accept custom path
             # TODO: choose shared vs static
             # TODO: choose build vs precompiled vs system
-            kwargs = Settings.config[name].to_h.slice(*%i[static path precompiled tag])
-            klass.new(**kwargs)
+            klass.new(**Settings.config[name].to_h)
           end
           memoize name.to_sym
           klass
