@@ -58,18 +58,12 @@ module RuBLE
         memoize def release
           tag = requested_tag.to_s
           tag = default_release_tag if tag == 'default'
+          tag = latest_release_tag if tag == 'latest'
 
           github_api.get("releases/tags/#{tag}").body.tap(&:deep_symbolize_keys!).freeze
         end
 
         memoize def release_name = release.fetch(:name).freeze
-
-        memoize def tag_from_gemspec
-          class_name = self.class.name
-          raise "Can't determine name of anonymous class" unless class_name
-
-          gem_spec.metadata.fetch("#{class_name.downcase}_library_release_tag")
-        end
 
         memoize def real_tag_name = release.fetch(:tag_name).freeze
 
@@ -126,7 +120,7 @@ module RuBLE
             f.request  :retry
             f.response :raise_error
             f.response :follow_redirects
-            f.response :logger
+            # f.response :logger
           end
         end
 

@@ -14,10 +14,11 @@ THIS_DIR = Pathname.new(__dir__)
 
 @generator = RuBLE::Build::Extconf.instance
 
-# if true || @generator.debug?
+if @generator.debug?
   require 'debug'
+
   pp RuBLE::Build::Settings.config
-# end
+end
 
 @generator.write_build_config(path: THIS_DIR / 'build-config.cmake')
 
