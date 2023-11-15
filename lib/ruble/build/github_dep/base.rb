@@ -23,22 +23,20 @@ module RuBLE
         # def cli_flag_prefix = "--#{self.class.name.underscore.gsub('_', '-')}".freeze
         # def env_prefix = "#{Data.gem_name.upcase}_#{self.class.name.underscore}_".freeze
 
-        attr_reader *%i[requested_tag static precompiled path]
-        def initialize(**config)
+        attr_reader *%i[requested_tag static precompiled local]
+        def initialize(supports_precompiled: false, **config)
           raise "Cannot instantiate #{self.class} directly. Must subclass." if self.class == GithubDep::Base
 
           config.deep_symbolize_keys!
-          local_dirs = dir_config
-          @requested_tag = config.fetch(:tag).to_s.freeze
-          @static = config.fetch(:static)
-          @path = config.fetch(:path)
-          @precompiled = config.fetch(:precompiled)
+          @requested_tag = config.fetch(:tag, default_release_tag).to_s.freeze
+          @local = config.fetch(:local, false)
+          @static = config.fetch(:static, !local || Extconf.release?) # !Extconf.development?)
+          @precompiled = config.fetch(:precompiled, false)
 
-          raise ArgumentError, "Option #{name}.path is not yet supported." if path
-        end
-
-        memoize def supported_release_tag
-          GithubDep::Base.dependency_versions.fetch(self.class.name.&underscore.to_sym)
+          if precompiled? && !supports_precompiled
+            raise ArgumentError, "Precompiled releases of #{name} are not available."
+          end
+          raise ArgumentError, "Option 'local' for #{name} is not yet supported." if local
         end
 
         memoize def gem_spec = Extconf.instance.spec
@@ -46,6 +44,7 @@ module RuBLE
         memoize def github_repo_url = self.class.github_repo_url
         memoize def github_api_base_url = self.class.github_api_base_url
 
+        memoize def local? = local
         memoize def static? = static
         memoize def dynamic = !static
         memoize def dynamic? = dynamic
@@ -54,7 +53,11 @@ module RuBLE
         memoize def build? = !precompiled?
 
         memoize def default_release_tag
-          Extconf.instance.development? ? latest_release_tag : supported_release_tag
+          Extconf.development? ? latest_release_tag : supported_release_tag
+        end
+
+        memoize def supported_release_tag
+          GithubDep::Base.dependency_versions.fetch(self.class.name.&underscore.to_sym)
         end
 
         memoize def latest_release_tag(include_prereleases: false)
@@ -90,12 +93,9 @@ module RuBLE
           raise NotImplementedError, 'This function must be defined in the subclass'
         end
 
-        memoize def download_size
-          matching_asset.fetch(:size)
-        end
+        memoize def download_size = matching_asset.fetch(:size)
 
-
-        memoize def config_data
+        memoize def build_config
           release_data = release.dup.tap { _1.delete(:assets) }
           release_data[:author]&.reject! { |k, _v| k.to_s.end_with?('_url') }
 

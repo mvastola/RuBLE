@@ -52,7 +52,7 @@ module RuBLE
           EXTRACT_OS_PATH_PRUNE.fetch(self.class.os.to_sym).freeze
         end
 
-        memoize def config_data
+        memoize def build_config
           super.dup.tap do |data|
             data[:archive_path] = extract_src_path
           end.freeze
