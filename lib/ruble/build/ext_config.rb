@@ -2,7 +2,7 @@
 
 module RuBLE
   module Build
-    class ExtconfConfig
+    class ExtConfig
       GLOBAL_FLAGS = %i[debug verbose development release].freeze
       GLOBAL_FLAG_INQUIRERS = GLOBAL_FLAGS.map { :"#{_1}?" }.freeze
 
@@ -75,24 +75,48 @@ module RuBLE
         @cli_config ||= {}
         dep_config = @cli_config[dep_name.to_s.underscore.to_sym] ||= {}
         parser.on("--[no-]static-#{dashed_name}", "Link #{name} statically") do |v|
-          dep_config[:static] = !!v
+          dep_config[:static] = v.present?
         end
 
         parser.on("--with-local-#{dashed_name} [LIB_PATH]",
-                  "Use local (pre-built) copy of #{name} (in LIB_PATH if specified, else autodetected)") do |v|
-          dep_config[:local] = v
+                  "Use local (pre-built) copy of #{name} (in LIB_PATH if specified, else auto-detected)") do |v|
+          if dep_config.key?(:tag)
+            warn "Argument --with-local-#{dashed_name} given, but --with-#{dashed_name}-release already present. "\
+                 "These are mutually exclusive. Will ignore previous --with-#{dashed_name}-release."
+            dep_config.delete(:tag)
+          end
+
+          if dep_config.key?(:precompiled)
+            # TODO: change this?
+            warn "--[no-]-use-precompiled-#{dashed_name} is ignored when --with-local-#{dashed_name} "\
+                 'is given (local libraries are expected be already built)'
+            dep_config.delete(:precompiled)
+          end
+          dep_config[:local] = v == true ? 'AUTODETECT' : v
         end
 
         parser.on("--with-#{dashed_name}-release [GIT_RELEASE_TAG]",
                   "Fetch #{name} from, optionally at the given tag and compile it (unless 'precompiled' is set)."\
                   'Defaults to the latest stable release (development mode) or latest version officially '\
                   'supported by this gem') do |v|
+          if dep_config.key?(:local)
+            warn "Argument --with-#{dashed_name}-release given, but --with-local-#{dashed_name} already present. "\
+                 "These are mutually exclusive. Will ignore previous --with-local-#{dashed_name}."
+            dep_config.delete(:local)
+          end
+
           dep_config[:tag] = v == true ? 'default' : v
         end
 
-        parser.on("--[no-]-use-precompiled-#{dashed_name}",
-                  "Link precompiled version of #{name}") do |v|
-          dep_config[:precompiled] = !!v
+        parser.on("--[no-]-use-precompiled-#{dashed_name}", "Link precompiled version of #{name}") do |v|
+          if dep_config.key?(:local)
+            # TODO: change this?
+            warn "--[no-]-use-precompiled-#{dashed_name} is ignored when --with-local-#{dashed_name} is given "\
+                   '(local libraries are expected be already built)'
+            next
+          end
+
+          dep_config[:precompiled] = v.present?
         end
       end
 

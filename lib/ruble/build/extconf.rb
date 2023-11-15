@@ -8,7 +8,7 @@ module RuBLE
       class << self
         private :new
         def instance = @instance ||= new
-        delegate :build_config, :write_build_config, *ExtconfConfig::GLOBAL_FLAG_INQUIRERS, to: :instance
+        delegate :build_config, :write_build_config, *ExtConfig::GLOBAL_FLAG_INQUIRERS, to: :instance
 
         def github_deps = @github_deps ||= Set.new
 
@@ -23,7 +23,6 @@ module RuBLE
           nil
         end
       end
-      delegate :github_deps, to: :class
 
       include RuBLE::Build::Data::OS
       include RuBLE::Build::Data::Bundler
@@ -34,11 +33,11 @@ module RuBLE
       configure_github_dep :simpleble, precompiled: true, supports_precompiled: true
       configure_github_dep :boost
 
-      memoize def config = ExtconfConfig.new(ARGV, github_deps:)
-      delegate *ExtconfConfig::GLOBAL_FLAG_INQUIRERS, to: :config
+      memoize def config = ExtConfig.new(ARGV, github_deps: self.class.github_deps)
+      delegate *ExtConfig::GLOBAL_FLAG_INQUIRERS, to: :config
 
       memoize def build_flags
-        config.slice(*ExtconfConfig::GLOBAL_FLAGS).select { _2 }.freeze
+        config.slice(*ExtConfig::GLOBAL_FLAGS).select { _2 }.freeze
       end
 
       memoize def rbconfig_data

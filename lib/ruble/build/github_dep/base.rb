@@ -46,9 +46,9 @@ module RuBLE
 
         memoize def local? = local
         memoize def static? = static
-        memoize def dynamic = !static
-        memoize def dynamic? = dynamic
-        memoize def linkage = (static? ? 'static' : 'dynamic')
+        memoize def shared = !static?
+        memoize def shared? = shared
+        memoize def linkage = (static? ? 'static' : 'shared')
         memoize def precompiled? = precompiled
         memoize def build? = !precompiled?
 
@@ -105,7 +105,7 @@ module RuBLE
             **filter_github_metadata(release_data),
             linkage:,
             static:,
-            dynamic:,
+            shared:,
             precompiled:,
             requested_tag:,
             commit_hash:,
