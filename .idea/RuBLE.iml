@@ -1,7 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module version="4">
+<module type="RUBY_MODULE" version="4">
   <component name="ModuleRunConfigurationManager">
     <shared />
+  </component>
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/features" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/checksums" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="activesupport (v7.1.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ast (v2.4.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="base64 (v0.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bigdecimal (v3.1.4, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v2.4.21, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="climate_control (v0.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.2.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="config (v5.0.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="connection_pool (v2.4.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="debug (v1.8.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="deep_merge (v1.2.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="drb (v2.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-cli (v1.0.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-configurable (v1.1.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-core (v1.0.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-inflector (v1.0.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-initializer (v3.1.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-logic (v1.5.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-monads (v1.6.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-schema (v1.13.3, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-types (v1.7.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="dry-validation (v1.10.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faraday (v2.7.11, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faraday-follow_redirects (v0.3.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faraday-net_http (v3.0.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faraday-retry (v2.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="i18n (v1.14.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="io-console (v0.6.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="irb (v1.9.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="json (v2.6.3, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="language_server-protocol (v3.17.0.3, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="memery (v1.5.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="minitest (v5.20.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mutex_m (v0.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="os (v1.1.4, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="parallel (v1.23.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="parser (v3.2.2.4, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="psych (v5.1.1.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="racc (v1.7.3, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rainbow (v3.1.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rake (v13.1.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rdoc (v6.6.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="regexp_parser (v2.8.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="reline (v0.4.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rexml (v3.2.6, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rice (v4.1.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubocop (v1.57.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubocop-ast (v1.30.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubocop-rake (v0.6.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.13.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="stringio (v3.0.9, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="terrapin (v0.6.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="tty-exit (v0.1.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="tty-option (v0.3.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="tty-screen (v0.8.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="tzinfo (v2.0.6, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="unicode-display_width (v2.5.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="zeitwerk (v2.6.12, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
   </component>
   <component name="RakeTasksCache">
     <option name="myRootTask">

@@ -32,6 +32,7 @@ GEM
     deep_merge (1.2.2)
     drb (2.2.0)
       ruby2_keywords
+    dry-cli (1.0.0)
     dry-configurable (1.1.0)
       dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
@@ -41,6 +42,10 @@ GEM
     dry-inflector (1.0.0)
     dry-initializer (3.1.1)
     dry-logic (1.5.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
+    dry-monads (1.6.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
@@ -122,6 +127,9 @@ GEM
     stringio (3.0.9)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
+    tty-exit (0.1.0)
+    tty-option (0.3.0)
+    tty-screen (0.8.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
@@ -133,9 +141,14 @@ PLATFORMS
 DEPENDENCIES
   activesupport (~> 7.1.2)
   bundler (~> 2.4.21)
-  concurrent-ruby (~> 1.2.2)
   config (~> 5.0)
   debug
+  dry-cli
+  dry-logic
+  dry-monads
+  dry-schema
+  dry-types
+  dry-validation
   faraday (~> 2.7.11)
   faraday-follow_redirects (~> 0.3.0)
   faraday-retry (~> 2.2.0)
@@ -148,6 +161,9 @@ DEPENDENCIES
   rubocop
   rubocop-rake
   terrapin (~> 0.6.0)
+  tty-exit (~> 0.1.0)
+  tty-option (~> 0.3.0)
+  tty-screen (~> 0.8.1)
 
 RUBY VERSION
    ruby 3.2.2p53

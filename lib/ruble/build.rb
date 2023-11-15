@@ -7,12 +7,17 @@ require_relative 'build/core_ext'
 
 module RuBLE
   module Build
+    UNSET = Object.new.tap do |unset|
+      unset.define_singleton_method(:empty?) { true }
+    end.freeze
+
     class << self
       include Memery
       memoize def zeitwerk
         require 'zeitwerk'
         Zeitwerk::Loader.new.tap do |loader|
           loader.inflector.inflect(
+            'cli'        => 'CLI',
             'cli_source' => 'CLISource',
             'cli_flag'   => 'CLIFlag',
             'cmake'      => 'CMake',

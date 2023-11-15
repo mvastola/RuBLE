@@ -2,7 +2,7 @@
 
 module RuBLE
   module Build
-    module GithubRepo
+    module GithubDep
       class Boost < Base
         GITHUB_REPO = 'boostorg/boost'
         OS_ARCHIVE_EXT = {

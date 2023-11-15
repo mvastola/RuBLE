@@ -51,19 +51,26 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'rice', '~> 4.1'
 
-  spec.add_development_dependency 'concurrent-ruby', '~> 1.2.2'
-
   spec.add_development_dependency 'faraday', '~> 2.7.11'
   spec.add_development_dependency 'faraday-follow_redirects', '~> 0.3.0'
   spec.add_development_dependency 'faraday-retry', '~> 2.2.0'
 
-  # Handy Utils
+  # spec.add_development_dependency 'rake-compiler'
+
+  # Support Libraries
   spec.add_development_dependency 'activesupport', '~> 7.1.2'
+  spec.add_development_dependency 'tty-screen', '~> 0.8.1'
+  spec.add_development_dependency 'tty-option', '~> 0.3.0'
+  spec.add_development_dependency 'tty-exit', '~> 0.1.0'
+  spec.add_development_dependency 'dry-validation'
+  spec.add_development_dependency 'dry-schema'
+  spec.add_development_dependency 'dry-cli'
+  spec.add_development_dependency 'dry-types'
+  spec.add_development_dependency 'dry-logic'
+  spec.add_development_dependency 'dry-monads'
   spec.add_development_dependency 'config', '~> 5.0'
   spec.add_development_dependency 'memery', '~> 1.5'
   spec.add_development_dependency 'os', '~> 1.1'
-
-  # spec.add_development_dependency 'rake-compiler'
 
   # TODO: I _think_ c++20 will work too, but need to check
   spec.requirements << 'C++ compiler supporting standard c++23 (e.g. g++-13)'

@@ -2,7 +2,7 @@
 
 module RuBLE
   module Build
-    module GithubRepo
+    module GithubDep
       class Base
         include Memery
         include Data::Extension
@@ -10,25 +10,36 @@ module RuBLE
         GITHUB_API_VERSION = '2022-11-28'
 
         class << self
+          include Memery
           def github_repo = const_get(:GITHUB_REPO)
           def github_repo_url = "https://github.com/#{github_repo}"
           def github_api_base_url = "https://api.github.com/repos/#{github_repo}"
+
+          memoize def dependency_versions
+            YAML.laod_file(Data.ext_dir / 'dependencies.yml').tap(&:deep_symbolize_keys!).freeze
+          end
         end
 
-        attr_reader *%i[requested_tag static precompiled path supported_release_tag]
+        # def cli_flag_prefix = "--#{self.class.name.underscore.gsub('_', '-')}".freeze
+        # def env_prefix = "#{Data.gem_name.upcase}_#{self.class.name.underscore}_".freeze
+
+        attr_reader *%i[requested_tag static precompiled path]
         def initialize(**config)
-          raise "Cannot instantiate #{self.class} directly. Must subclass." if self.class == GithubRepo
+          raise "Cannot instantiate #{self.class} directly. Must subclass." if self.class == GithubDep::Base
 
           config.deep_symbolize_keys!
+          local_dirs = dir_config
           @requested_tag = config.fetch(:tag).to_s.freeze
           @static = config.fetch(:static)
           @path = config.fetch(:path)
           @precompiled = config.fetch(:precompiled)
-          @supported_release_tag = config.fetch(:supported_release_tag)
 
           raise ArgumentError, "Option #{name}.path is not yet supported." if path
         end
 
+        memoize def supported_release_tag
+          GithubDep::Base.dependency_versions.fetch(self.class.name.&underscore.to_sym)
+        end
 
         memoize def gem_spec = Extconf.instance.spec
         memoize def github_repo = self.class.github_repo

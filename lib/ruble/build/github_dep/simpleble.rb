@@ -2,7 +2,7 @@
 
 module RuBLE
   module Build
-    module GithubRepo
+    module GithubDep
       class SimpleBLE < Base
         GITHUB_REPO = 'OpenBluetoothToolbox/SimpleBLE'
         EXTRACT_OS_PATH_PRUNE = {

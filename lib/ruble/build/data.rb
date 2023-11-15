@@ -15,6 +15,7 @@ module RuBLE
         alias_method :this_gem, :spec
 
         memoize def root_dir = bundler.root.cleanpath(false)
+        memoize def ext_dir = (root_dir / spec.extensions.first).parent
         memoize def gem_name = spec.name.freeze
         memoize def gem_version = spec.version.freeze
 
