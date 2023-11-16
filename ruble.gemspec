@@ -59,16 +59,6 @@ Gem::Specification.new do |spec|
 
   # Support Libraries
   spec.add_development_dependency 'activesupport', '~> 7.1.2'
-  spec.add_development_dependency 'tty-screen', '~> 0.8.1'
-  spec.add_development_dependency 'tty-option', '~> 0.3.0'
-  spec.add_development_dependency 'tty-exit', '~> 0.1.0'
-  spec.add_development_dependency 'dry-validation'
-  spec.add_development_dependency 'dry-schema'
-  spec.add_development_dependency 'dry-cli'
-  spec.add_development_dependency 'dry-types'
-  spec.add_development_dependency 'dry-logic'
-  spec.add_development_dependency 'dry-monads'
-  spec.add_development_dependency 'config', '~> 5.0'
   spec.add_development_dependency 'memery', '~> 1.5'
   spec.add_development_dependency 'os', '~> 1.1'
 

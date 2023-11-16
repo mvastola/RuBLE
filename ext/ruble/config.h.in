@@ -6,10 +6,14 @@
 // TODO: defer to single point of truth re: min ruby version elsewhere.
 //   e.g. minimum version already in `.gemspec` and CMakeLists
 
-#cmakedefine RUBLE_DEBUG 1
-#cmakedefine HAVE_VALGRIND 1
+#cmakedefine RUBLE_DEBUG
+#cmakedefine RUBLE_DEVELOPMENT
+#cmakedefine RUBLE_RELEASE
 
-// boost is now required
+#if defined?(RUBLE_DEVELOPMENT) || defined?(RUBLE_DEBUG)
+#cmakedefine HAVE_VALGRIND 1
+#endif
+
 #define BOOST_STACKTRACE_LINK 1
 #define BOOST_ENABLE_ASSERT_DEBUG_HANDLER 1
 

@@ -81,7 +81,7 @@ Style/FrozenStringLiteralComment:
   EnforcedStyle: always_true
   SafeAutoCorrect: true
 Style/HashSyntax:
-  EnforcedStyle: no_mixed_keys
+  EnforcedStyle: ruby19
 Style/Lambda:
   EnforcedStyle: literal
 Style/MultilineBlockChain:

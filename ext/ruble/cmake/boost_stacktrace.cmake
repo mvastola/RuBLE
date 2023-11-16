@@ -44,12 +44,13 @@ endmacro()
 macro(setup_stacktrace_windows)
     find_library(OLE32 ole32)
     find_library(WINDBGENG dbgeng)
+    # TODO: test me!
     target_link_libraries(${EXTENSION_NAME} PUBLIC ole32 dbgeng)
 endmacro()
 
 macro(setup_stacktrace_addr2line)
     # This really only makes sense to use if this is being used on the build machine
-    if (DEV_MODE)
+    if (RUBLE_DEVELOPMENT)
         set(BOOST_STACKTRACE_ADDR2LINE_LOCATION "${CMAKE_ADDR2LINE}")
     endif ()
 endmacro()

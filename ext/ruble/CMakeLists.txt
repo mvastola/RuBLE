@@ -11,24 +11,44 @@ set(CMAKE_TLS_VERIFY ON)
 cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/build-config.cmake")
-if(build_mode_debug OR build_mode_development)
-    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/debug.cmake")
-endif()
 
 set(RUBY_ARCH "${rb_target_cpu}-${rb_target_os}")
 set(RICE_INCLUDE_PATH "${rice_include_dir}")
 set(RICE_VERSION "${rice_version}")
 set(EXTENSION_NAME "${rb_ext_name}")
 set(EXTENSION_VERSION "${rb_ext_version}")
-set(DEBUG_MODE ${build_mode_debug})
-set(DEV_MODE ${build_mode_development})
-set(VERBOSE_MODE ${build_mode_verbose})
-set(RELEASE_MODE ${build_mode_release})
+
+if (NOT DEFINED RUBLE_DEBUG)
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(RUBLE_DEBUG true)
+  else()
+    set(RUBLE_DEBUG ${build_flag_debug})
+  endif()
+endif()
+
+if (NOT DEFINED RUBLE_DEVELOPMENT)
+  set(RUBLE_DEVELOPMENT ${build_flag_development})
+endif()
+
+if (NOT DEFINED RUBLE_VERBOSE)
+  set(RUBLE_VERBOSE ${build_flag_verbose})
+endif()
+
+if (NOT DEFINED RUBLE_RELEASE)
+  set(RUBLE_RELEASE ${build_flag_release})
+endif()
 #cmake_host_system_information(RESULT NPROC QUERY NUMBER_OF_PHYSICAL_CORES)
 
-# I was having trouble with this not finding my personal rvm. we could use build-config.json here
+if(RUBLE_DEBUG OR RUBLE_DEVELOPMENT)
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/debug.cmake")
+endif()
+
+if(NOT DEFINED CMAKE_VERBOSE_MAKEFILE)
+  set(CMAKE_VERBOSE_MAKEFILE ${RUBLE_VERBOSE})
+endif()
+
 find_path(VALGRIND_HEADER_DIR valgrind/valgrind.h)
-set(HAVE_VALGRIND ${VALGRIND_HEADER_DIR})
+set(HAVE_VALGRIND "${VALGRIND_HEADER_DIR}")
 
 
 include_directories(.)
@@ -37,12 +57,17 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 add_library("${EXTENSION_NAME}" SHARED)
 
+# TODO: make target non-specific
 target_compile_options("${EXTENSION_NAME}" PUBLIC
+        ${rb_CFLAGS}
         -ggdb3 # TODO: strip debug info into separate file (don't necessarily need to package it with distributable version)
         -fthreadsafe-statics
 )
 
+# TODO: make target non-specific
 target_link_options("${EXTENSION_NAME}" PUBLIC
+    ${rb_LDFLAGS}
+    ${rb_DLDFLAGS}
     LINKER:-z,defs
     LINKER:-fPIC
     LINKER:--dynamic-list-cpp-typeinfo
@@ -53,10 +78,9 @@ target_link_options("${EXTENSION_NAME}" PUBLIC
 # TODO: should this be debug only? (need to figure out what normal install paths are and where they come from)
 cmake_path(SET CMAKE_INSTALL_PREFIX NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR DEBUG_MODE)
-    set(RUBLE_DEBUG true)
-    set(CMAKE_VERBOSE_MAKEFILE ${build_mode_verbose})
-    # TODO: very few of these are likely needed
+if(RUBLE_DEBUG)
+    # TODO: make target non-specific
+    # TODO: only a few of these are likely needed
     target_compile_options("${EXTENSION_NAME}" PUBLIC
             -ggdb3
             -O0
@@ -74,6 +98,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR DEBUG_MODE)
             -fdiagnostics-color=always
             -fconcepts-diagnostics-depth=1
     )
+    # TODO: make target non-specific (so it applies to boost/simpleble)
     target_link_options("${EXTENSION_NAME}" PUBLIC
             LINKER:--no-strip-discarded
             LINKER:--discard-none
@@ -153,7 +178,7 @@ target_sources("${EXTENSION_NAME}" PUBLIC
     ./bindings/RuBLE.cpp # The only source file that defines exported functions
 )
 
-if (DEV_MODE) # This is probably only wanted locally
+if (RUBLE_DEVELOPMENT) # This is probably only wanted locally
     # TODO(?): `install(EXPORT...` to generate .cmake files for import
     install(TARGETS "${EXTENSION_NAME}" DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME ruble.so)
 endif()

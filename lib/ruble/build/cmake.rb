@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'debug'
 module RuBLE::Build
   module CMake
     CMAKE_LITERALS = {
@@ -11,9 +10,7 @@ module RuBLE::Build
     CMAKE_KEY_SEPARATOR = '_'
     STRINGY_TYPES = [ String, Symbol, Pathname ].freeze
 
-    extend ActiveSupport::Concern
-
-    included do
+    class << self
       def cmake_generate(data, path: nil)
         enum = cmake_serialized_enumerator(data)
         return enum.reduce(String.new) do |memo, obj|
@@ -93,8 +90,10 @@ module RuBLE::Build
             final[k] = hash.delete(k)
           end
 
-          unrecognized_keys = hash.reject { |_k, v| cmake_serializable?(v) }.keys
+          unrecognized_pairs = hash.reject { |_k, v| cmake_serializable?(v) }
+          unrecognized_keys = unrecognized_pairs.keys
           if unrecognized_keys.any?
+            debugger if defined?(debugger)
             raise ArgumentError, "Unrecognized values in hash at keys #{unrecognized_keys}"
           end
 

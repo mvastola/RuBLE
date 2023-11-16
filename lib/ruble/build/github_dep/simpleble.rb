@@ -42,6 +42,9 @@ module RuBLE
           raise "#{self.class.name} currently only supports precompiled libraries" unless precompiled?
         end
 
+        def supports_precompiled? = true
+        def default_use_precompiled = true
+
         # Static makes sense for distribution if we can do it
         memoize def asset_prefix = (static? ? 'simpleble_static' : 'simpleble_shared')
         memoize def asset_name = self.class.os_asset_name
@@ -54,7 +57,7 @@ module RuBLE
 
         memoize def build_config
           super.dup.tap do |data|
-            data[:archive_path] = extract_src_path
+            data[:github][:archive_path] = extract_src_path if github?
           end.freeze
         end
       end

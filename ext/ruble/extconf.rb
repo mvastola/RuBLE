@@ -12,24 +12,19 @@ require 'mkmf-rice'
 # noinspection RubyMismatchedArgumentType
 THIS_DIR = Pathname.new(__dir__)
 
-RuBLE::Build::Extconf.configure
-
-# if @generator.debug?
+if RuBLE::Build::Extconf.development?
   require 'debug'
-#
-#   pp RuBLE::Build::Settings.config
-# end
+  puts "extconf.rb configuration: #{RuBLE::Build::Extconf.config.compact_blank.inspect}"
+end
 
 RuBLE::Build::Extconf.write_build_config(path: THIS_DIR / 'build-config.cmake')
 
 # TODO: need to confirm the values (for install dir, compile args, etc) outputted in Makefile
 #   are the same values CMake gets from parsing 'build-config.json'
-# TODO: confirm dummy_makefile isn't missing any needed fields
-#   currently, I don't see where the build dir is set
 
 create_makefile 'ruble'
-File.open(THIS_DIR / 'Makefile', 'at') do |f|
-  #f.puts 'include cmake.mk'
+File.open(RuBLE::Build::Environment::Extension.ext_dir / 'Makefile', 'at') do |f|
+  f.puts '# include cmake.mk'
 end
 
 # TODO: does setting TARGET_ENTRY in makefile do anything? (if so, use it)

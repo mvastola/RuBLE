@@ -7,14 +7,14 @@ block(PROPAGATE
 
     set(STACKTRACE_BACKEND_PRIORITIES backtrace;addr2line;windgb_cached;windbg;basic;noop)
     set(BOOST_ENABLE_PYTHON OFF)
-    set(BUILD_SHARED_LIBS ${rb_boost_dynamic})
+    set(BUILD_SHARED_LIBS ${rb_boost_shared})
     set(Boost_DEBUG OFF)
-    set(Boost_VERBOSE ${build_mode_verbose})
+    set(Boost_VERBOSE ${RUBLE_VERBOSE})
     set(BUILD_TESTING OFF)
 
     # TODO: handle option to use local boost (in which case we can link dynamically)
     cmake_path(SET CACHE_LOCATION NORMALIZE
-            "${CMAKE_CURRENT_SOURCE_DIR}/../../tmp/${rb_boost_release_tag}")
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../tmp/${rb_boost_github_release_tag}")
 
     set(ADDITIONAL_DEPENDENCIES core;stacktrace)
     set(HEADER_ONLY_LIBS headers;describe)
@@ -31,14 +31,12 @@ block(PROPAGATE
             OUTPUT_VARIABLE LINKED_NAMESPACES)
     list(TRANSFORM BUILD_DEPS PREPEND "boost_"
             OUTPUT_VARIABLE PREFIXED_BUILD_DEPS)
-    #    dump_variables()
-    #    message(FATAL_ERROR "quitting")
 
     include(FetchContent)
     FetchContent_Declare(
             Boost
             SOURCE_DIR "${CACHE_LOCATION}"
-            URL "${rb_boost_asset_browser_download_url}"
+            URL "${rb_boost_github_download_url}"
             DOWNLOAD_EXTRACT_TIMESTAMP ON
             OVERRIDE_FIND_PACKAGE
     )
@@ -57,7 +55,6 @@ block(PROPAGATE
 
 #    message(STATUS ${BOOST_INCLUDE_LIBRARIES})
 #    message(STATUS ${HEADER_ONLY_NAMESPACES})
-    message(STATUS "Boost build target: ${EXTENSION_NAME}")
     target_link_libraries(${EXTENSION_NAME} INTERFACE ${HEADER_ONLY_NAMESPACES})
     target_link_libraries(${EXTENSION_NAME} PRIVATE ${LINKED_NAMESPACES})
     add_dependencies(${EXTENSION_NAME} ${PREFIXED_BUILD_DEPS})
