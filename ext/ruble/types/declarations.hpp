@@ -27,6 +27,11 @@ namespace RuBLE {
 #else
     static constexpr const bool DEBUG = false;
 #endif
+#ifdef RUBLE_DEVELOPER
+    static constexpr const bool DEVELOPER = true;
+#else
+    static constexpr const bool RUBLE_DEVELOPER = false;
+#endif
 
     template<const auto &FIELD_NAMES>
     class NamedBitSet;

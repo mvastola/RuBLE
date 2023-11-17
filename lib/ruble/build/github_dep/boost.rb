@@ -5,14 +5,6 @@ module RuBLE
     module GithubDep
       class Boost < Base
         GITHUB_REPO = 'boostorg/boost'
-        OS_ARCHIVE_EXT = {
-          # ** = TODO: confirm standard tools on this OS support these
-          /\Alinux/                => 'tar.xz',
-          /\A(macos|darwin)/       => 'tar.xz', # **
-          /\A(ms)?win(32|64|dows)/ => '7z',     # **
-          /\Amingw|msys/           => 'tar.gz', # **
-          :fallback                => 'tar.gz', # **
-        }.freeze
 
         def initialize(**kwargs)
           super(**kwargs)
@@ -20,11 +12,15 @@ module RuBLE
         end
 
         memoize def asset_extension
-          OS_ARCHIVE_EXT.detect do |_k, v|
-            OS.host_os === v # rubocop:disable Style/CaseEquality
-          end&.first || OS_ARCHIVE_EXT.fetch(:fallback)
+          case System.host_os
+          when System.target_linux? || System.target_mac? # (confirm builtin support for .tar.xz on mac)
+            'tar.xz'
+          when System.target_win? && !System.target_ming? # (confirm builtin support for .7z on win)
+            '7z'
+          else
+            'tar.gz'
+          end
         end
-
         memoize def asset_filename = "#{release_name}.#{asset_extension}".freeze
         memoize def matching_asset = assets.fetch(asset_filename).freeze
       end

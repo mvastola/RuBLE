@@ -5,7 +5,7 @@ require_relative 'ruble/version'
 require 'zeitwerk'
 loader = Zeitwerk::Loader.for_gem
 loader.inflector.inflect(
-  'ruble'    => 'RuBLE',
+  'ruble'     => 'RuBLE',
   'simpleble' => 'SimpleBLE',
 )
 loader.ignore("#{__dir__}/tasks")
@@ -30,8 +30,6 @@ module RuBLE
       nil
     end
   end
-
-  # Your code goes here...
 end
 
 begin

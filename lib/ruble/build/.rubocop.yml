@@ -4,7 +4,6 @@ inherit_from:
 AllCops:
   include:
     - '**/*.rb'
-  ActiveSupportExtensionsEnabled: true
 
 Metrics/CyclomaticComplexity:
   Enabled: false
@@ -16,4 +15,7 @@ Metrics/ClassLength:
   Enabled: false
 
 Style/RescueModifier:
+  Enabled: false
+
+Style/CaseLikeIf:
   Enabled: false

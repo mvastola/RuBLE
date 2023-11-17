@@ -7,12 +7,16 @@ module RuBLE
     class Settings
       TRUE_VALUES = %w[1 on true yes y t].freeze
       FALSE_VALUES = %w[0 off false no n f].freeze
-      GLOBAL_FLAGS = %i[debug verbose development release].freeze
+      GLOBAL_FLAGS = %i[debug verbose developer release].freeze
       GLOBAL_FLAG_INQUIRERS = GLOBAL_FLAGS.map { :"#{_1}?" }.freeze
 
+      class << self
+        def str_true?(val)  = val.is_a?(String) && TRUE_VALUES.include?(val.strip.downcase)
+        def str_false?(val) = val.is_a?(String) && FALSE_VALUES.include?(val.strip.downcase)
+      end
       include Memery
       attr_reader *%i[remaining_args]
-      def initialize(argv = ARGV, github_deps: [], raise_on_unknown: true)
+      def initialize(argv = ARGV, raise_on_unknown: true)
         @argv = argv.dup
         @raise_on_unknown = raise_on_unknown
       end
@@ -23,10 +27,9 @@ module RuBLE
       end
 
       def validate!
-        if release? && development?
-          raise ArgumentError, 'The --release and --development flags are mutually exclusive'
-        end
-        if raise_on_unknown? && remaining_args&.any?
+        if release? && developer?
+          raise ArgumentError, 'The --release and --developer flags are mutually exclusive'
+        elsif raise_on_unknown? && remaining_args&.any?
           puts parser.help
           raise ArgumentError, "Unrecognized option(s) found on command line: #{remaining_args.inspect}"
         end
@@ -36,16 +39,18 @@ module RuBLE
       def raise_on_unknown? = @raise_on_unknown
 
     private
+      delegate :gem_name, :gem_version, to: RuBLE::Build::Environment::Extension
+
       memoize def merged_config = env_config.deep_merge(cli_settings).freeze
 
       memoize def env_config
-        env_prefix = "#{RuBLE::Build::Environment::Extension.gem_name.upcase}_"
+        env_prefix = "#{gem_name.upcase}_"
         env_config = {}
         all_envs = ENV.select { _1.start_with?(env_prefix) }
                       .transform_keys { _1.to_s.delete_prefix(env_prefix).downcase }
         all_envs.transform_values! do |v|
-          next true if TRUE_VALUES.include?(v.strip.downcase)
-          next false if FALSE_VALUES.include?(v.strip.downcase)
+          next true if self.class.str_true?(v)
+          next false if self.class.str_false?(v)
           next nil if v.blank?
 
           v
@@ -65,6 +70,7 @@ module RuBLE
       memoize def cli_settings = (@cli_config ||= {}).tap { parse_cli! }
 
       memoize def github_deps = GithubDep.deps.keys.freeze
+
       memoize def parse_cli!
         @parsed_args = {}
         @remaining_args = @argv.dup
@@ -75,11 +81,15 @@ module RuBLE
 
       memoize def parser
         ::OptionParser.new do |parser|
-          parser.banner = "Usage: ruby extconf.rb [options]\n\n" \
-                          "Compile the C++ extension for the "\
-                          "#{RuBLE::Build::Environment::Extension.gem_name} gem"
+          parser.banner = "Compile the C++ extension for the "\
+                          "#{gem_name} gem\n"\
+                          "Usage: ruby extconf.rb [options]\n"
+          parser.separator "\nCommon options:"
           add_global_flags(parser:)
-          github_deps.each { |dep_name| add_github_dep_flags(dep_name:, parser:) }
+          github_deps.each do |dep_name|
+            parser.separator "\n#{dep_name.to_s.camelize(:upper)} library:\n"
+            add_github_dep_flags(dep_name:, parser:)
+          end
         end
       end
 
@@ -100,19 +110,19 @@ module RuBLE
             dep_config.delete(:tag)
           end
 
-          if dep_config.key?(:precompiled)
+          if dep_config.key?(:precompiled) && dep_config[:precompiled].blank?
             # TODO: change this?
-            warn "--[no-]-use-precompiled-#{dashed_name} is ignored when --with-local-#{dashed_name} " \
-                 'is given (local libraries are expected be already built)'
+            warn "--no-use-precompiled-#{dashed_name} is ignored when --with-local-#{dashed_name} " \
+                 'is given (local libraries are expected be pre-built)'
             dep_config.delete(:precompiled)
           end
-          dep_config[:local] = v == true ? 'AUTODETECT' : v
+          dep_config[:local] = v
         end
 
         parser.on("--with-#{dashed_name}-release [GIT_RELEASE_TAG]",
-                  "Fetch #{dep_name} from, optionally at the given tag and compile it (unless 'precompiled' is set)." \
-                  'Defaults to the latest stable release (development mode) or latest version officially ' \
-                  'supported by this gem') do |v|
+                  "Fetch #{dep_name} from, optionally at the given tag and compile it (unless " \
+                  "--use-precompiled-#{dashed_name} is set). Defaults to the latest stable release " \
+                  '(in developer mode) or latest version officially supported by this gem') do |v|
           if dep_config.key?(:local)
             warn "Argument --with-#{dashed_name}-release given, but --with-local-#{dashed_name} already present. " \
                  "These are mutually exclusive. Will ignore previous --with-local-#{dashed_name}."
@@ -122,11 +132,11 @@ module RuBLE
           dep_config[:tag] = v == true ? 'default' : v
         end
 
-        parser.on("--[no-]-use-precompiled-#{dashed_name}", "Link precompiled version of #{dep_name}") do |v|
-          if dep_config.key?(:local)
+        parser.on("--[no-]use-precompiled-#{dashed_name}", "Link precompiled version of #{dep_name}") do |v|
+          if dep_config.key?(:local) && v.blank?
             # TODO: change this?
-            warn "--[no-]-use-precompiled-#{dashed_name} is ignored when --with-local-#{dashed_name} is given " \
-                   '(local libraries are expected be already built)'
+            warn "--no-use-precompiled-#{dashed_name} is ignored when --with-local-#{dashed_name} is given " \
+                 '(local libraries are expected be pre-built)'
             next
           end
 
@@ -136,30 +146,31 @@ module RuBLE
 
       def add_global_flags(parser:)
         @cli_config ||= {}
-        parser.on_head('-d', '--[no-]debug', desc: 'Build in debug mode') do |v|
+
+        parser.on('-d', '--[no-]debug', 'Build in debug mode') do |v|
           @cli_config[:debug] = !!v
         end
 
-        parser.on_head('-v', '--[no-]verbose', 'Output extra information (incl. executed commands) during build') do |v|
+        parser.on('-v', '--[no-]verbose', 'Output extra information (incl. executed commands) during build') do |v|
           @cli_config[:verbose] = !!v
         end
 
-        parser.on_head('-l', '--[no-]development', 'Use latest releases of libraries (compatability not assured)') do |v|
-          @cli_config[:development] = !!v
+        parser.on('-l', '--[no-]developer', 'Use latest releases of libraries and other build settings ' \
+                                            "useful for developers of #{gem_name} when working locally") do |v|
+          @cli_config[:developer] = !!v
         end
 
-        parser.on_head('-r', '--release', desc: 'Compile for packaging and distribution on rubygems, etc') do |v|
+        parser.on('-r', '--release', 'Compile for packaging and distribution on rubygems, etc') do |v|
           @cli_config[:release] = !!v
         end
 
-        parser.on_tail('-h', '--help', desc: 'Show usage information') do
-          parser.help
+        parser.on('-h', '--help', 'Show usage information') do
+          puts parser.help
           exit 0
         end
 
-        parser.on_tail('--version', desc: 'Show gem version') do
-          puts "#{RuBLE::Build::Environment::Extension.gem_name} "\
-               "version #{RuBLE::Build::Environment::Extension.gem_version}"
+        parser.on('--version', 'Show gem version') do
+          puts "#{gem_name} version #{gem_version}"
           exit 0
         end
       end

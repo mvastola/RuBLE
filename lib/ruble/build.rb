@@ -9,15 +9,10 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'CMake'
   inflect.acronym 'RuBLE'
   inflect.acronym 'SimpleBLE'
-  inflect.acronym 'OS'
 end
 
 module RuBLE
   module Build
-    UNSET = Object.new.tap do |unset|
-      unset.define_singleton_method(:empty?) { true }
-    end.freeze
-
     class << self
       include Memery
       memoize def zeitwerk
@@ -29,6 +24,18 @@ module RuBLE
         end
       end
       private :zeitwerk
+
+      def run_cmd(*args, chdir: __dir__, path: false, **kwargs)
+        return nil if chdir.nil?
+
+        out, status = ::Open3.capture2(*args, chdir:, err: :close, stdin_data: '', **kwargs)
+        return nil unless status.success?
+
+        out.strip!
+        return out.empty? ? nil : Pathname.new(out).cleanpath(false) if path
+
+        out
+      end
     end
   end
 end

@@ -9,6 +9,153 @@
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/checksums" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -19,23 +166,12 @@
     <orderEntry type="library" scope="PROVIDED" name="bundler (v2.4.21, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="climate_control (v0.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.2.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="config (v5.0.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="connection_pool (v2.4.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="debug (v1.8.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="deep_merge (v1.2.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="drb (v2.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-cli (v1.0.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-configurable (v1.1.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-core (v1.0.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-inflector (v1.0.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-initializer (v3.1.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-logic (v1.5.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-monads (v1.6.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-schema (v1.13.3, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-types (v1.7.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="dry-validation (v1.10.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="faraday (v2.7.11, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="faraday-follow_redirects (v0.3.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faraday-http-cache (v2.5.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="faraday-net_http (v3.0.2, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="faraday-retry (v2.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="i18n (v1.14.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
@@ -64,85 +200,8 @@
     <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.13.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="stringio (v3.0.9, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="terrapin (v0.6.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="tty-exit (v0.1.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="tty-option (v0.3.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="tty-screen (v0.8.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="tzinfo (v2.0.6, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unicode-display_width (v2.5.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="zeitwerk (v2.6.12, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-  </component>
-  <component name="RakeTasksCache">
-    <option name="myRootTask">
-      <RakeTaskImpl id="rake">
-        <subtasks>
-          <RakeTaskImpl id="SimpleBLE">
-            <subtasks>
-              <RakeTaskImpl description="Fetch SimpleBLE release" fullCommand="SimpleBLE:initialize[release]" id="initialize[release]" />
-              <RakeTaskImpl description="" fullCommand="SimpleBLE:download" id="download" />
-              <RakeTaskImpl description="" fullCommand="SimpleBLE:extract" id="extract" />
-              <RakeTaskImpl description="" fullCommand="SimpleBLE:info" id="info" />
-              <RakeTaskImpl description="" fullCommand="SimpleBLE:initialize" id="initialize" />
-              <RakeTaskImpl description="" fullCommand="SimpleBLE:install" id="install" />
-            </subtasks>
-          </RakeTaskImpl>
-          <RakeTaskImpl description="Build ruble-0.0.3.alpha.gem into the pkg directory" fullCommand="build" id="build" />
-          <RakeTaskImpl id="build">
-            <subtasks>
-              <RakeTaskImpl description="Generate SHA512 checksum if ruble-0.0.3.alpha.gem into the checksums directory" fullCommand="build:checksum" id="checksum" />
-            </subtasks>
-          </RakeTaskImpl>
-          <RakeTaskImpl description="Remove any temporary products" fullCommand="clean" id="clean" />
-          <RakeTaskImpl description="Remove any generated files" fullCommand="clobber" id="clobber" />
-          <RakeTaskImpl description="Remove package products" fullCommand="clobber_package" id="clobber_package" />
-          <RakeTaskImpl id="dev">
-            <subtasks>
-              <RakeTaskImpl description="Audit missing symbols in built object files" fullCommand="dev:audit_objfile_symbols[flags]" id="audit_objfile_symbols[flags]" />
-              <RakeTaskImpl description="Compiles code for debugging" fullCommand="dev:build[flags]" id="build[flags]" />
-              <RakeTaskImpl description="Reconfigures only if needed" fullCommand="dev:maybe_reconfigure[flags]" id="maybe_reconfigure[flags]" />
-              <RakeTaskImpl description="Cleans/Clobbers all generated files" fullCommand="dev:pristine[flags]" id="pristine[flags]" />
-              <RakeTaskImpl description="Cleans/Clobbers, generates Makefiles/etc before build" fullCommand="dev:reconfigure[flags]" id="reconfigure[flags]" />
-              <RakeTaskImpl description="" fullCommand="dev:audit_objfile_symbols" id="audit_objfile_symbols" />
-              <RakeTaskImpl description="" fullCommand="dev:build" id="build" />
-              <RakeTaskImpl description="" fullCommand="dev:initialize" id="initialize" />
-              <RakeTaskImpl description="" fullCommand="dev:maybe_reconfigure" id="maybe_reconfigure" />
-              <RakeTaskImpl description="" fullCommand="dev:pristine" id="pristine" />
-              <RakeTaskImpl description="" fullCommand="dev:reconfigure" id="reconfigure" />
-            </subtasks>
-          </RakeTaskImpl>
-          <RakeTaskImpl description="Build the gem file ruble-0.0.3.alpha.gem" fullCommand="gem" id="gem" />
-          <RakeTaskImpl description="Build and install ruble-0.0.3.alpha.gem into system gems" fullCommand="install" id="install" />
-          <RakeTaskImpl id="install">
-            <subtasks>
-              <RakeTaskImpl description="Build and install ruble-0.0.3.alpha.gem into system gems without network access" fullCommand="install:local" id="local" />
-            </subtasks>
-          </RakeTaskImpl>
-          <RakeTaskImpl description="Build all the packages" fullCommand="package" id="package" />
-          <RakeTaskImpl description="Create tag v0.0.3.alpha and build and push ruble-0.0.3.alpha.gem to rubygems.org" fullCommand="release[remote]" id="release[remote]" />
-          <RakeTaskImpl description="Force a rebuild of the package files" fullCommand="repackage" id="repackage" />
-          <RakeTaskImpl description="Run RuboCop" fullCommand="rubocop" id="rubocop" />
-          <RakeTaskImpl id="rubocop">
-            <subtasks>
-              <RakeTaskImpl description="Autocorrect RuboCop offenses (only when it's safe)" fullCommand="rubocop:autocorrect" id="autocorrect" />
-              <RakeTaskImpl description="Autocorrect RuboCop offenses (safe and unsafe)" fullCommand="rubocop:autocorrect_all" id="autocorrect_all" />
-              <RakeTaskImpl description="" fullCommand="rubocop:auto_correct" id="auto_correct" />
-            </subtasks>
-          </RakeTaskImpl>
-          <RakeTaskImpl description="" fullCommand="audit_objfile_symbols" id="audit_objfile_symbols" />
-          <RakeTaskImpl description="" fullCommand="default" id="default" />
-          <RakeTaskImpl description="" fullCommand="dev" id="dev" />
-          <RakeTaskImpl description="" fullCommand="pkg" id="pkg" />
-          <RakeTaskImpl description="" fullCommand="pkg/ruble-0.0.3.alpha" id="pkg/ruble-0.0.3.alpha" />
-          <RakeTaskImpl description="" fullCommand="pkg/ruble-0.0.3.alpha.gem" id="pkg/ruble-0.0.3.alpha.gem" />
-          <RakeTaskImpl description="" fullCommand="release" id="release" />
-          <RakeTaskImpl id="release">
-            <subtasks>
-              <RakeTaskImpl description="" fullCommand="release:guard_clean" id="guard_clean" />
-              <RakeTaskImpl description="" fullCommand="release:rubygem_push" id="rubygem_push" />
-              <RakeTaskImpl description="" fullCommand="release:source_control_push" id="source_control_push" />
-            </subtasks>
-          </RakeTaskImpl>
-        </subtasks>
-      </RakeTaskImpl>
-    </option>
   </component>
 </module>

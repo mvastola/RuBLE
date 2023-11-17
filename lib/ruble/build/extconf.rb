@@ -5,16 +5,26 @@ require 'active_support/all'
 module RuBLE
   module Build
     class Extconf
+      DELEGATED_CLASS_METHODS = [
+        :config,
+        :validate_config!,
+        :build_config,
+        :write_build_config,
+        *Settings::GLOBAL_FLAG_INQUIRERS
+      ].freeze
+
       include Memery
       class << self
         private :new
         def instance = @instance ||= new
-        delegate :config, :build_config, :write_build_config, *Settings::GLOBAL_FLAG_INQUIRERS, to: :instance
+        delegate *DELEGATED_CLASS_METHODS, to: :instance
       end
 
       Environment.modules.each do |mod|
         key = mod.name.demodulize.underscore.to_sym
-        define_method(:"#{key}_info") { mod.info }
+        method = :"#{key}_info"
+        define_method(method) { mod.info }
+        memoize method
       end
 
       GithubDep.deps.each do |sym, klass|
@@ -24,6 +34,7 @@ module RuBLE
 
       memoize def config = config_parser.config
       delegate *Settings::GLOBAL_FLAG_INQUIRERS, to: :config_parser
+      def validate_config! = config_parser.validate!
 
       memoize def build_flags
         Settings::GLOBAL_FLAGS
@@ -53,4 +64,9 @@ module RuBLE
       memoize def config_parser = Settings.new(ARGV)
     end
   end
+end
+
+RuBLE::Build::Extconf.validate_config!
+if RuBLE::Build::Extconf.developer?
+  puts "extconf.rb configuration: #{RuBLE::Build::Extconf.config.compact_blank.inspect}"
 end

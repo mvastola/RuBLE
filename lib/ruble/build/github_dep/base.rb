@@ -6,7 +6,13 @@ module RuBLE
       class Base
         include Memery
 
+        System = Environment::System
         HTTP_TIMEOUT = 15
+        # Github's limit is 60 requests/hr, by setting the cache timeout to 15 mins
+        #   we need to be under 15 requests per run of extconf (reality should be ~6/run max)
+        #   this might need to be tweaked if we have lots of people developing on shared IPs,
+        #   since limits are per-IP
+        HTTP_CACHE_TIMEOUT = 15.minutes
         GITHUB_API_VERSION = '2022-11-28'
         GITHUB_METADATA_FILTER_REGEX = /(\A|_)(mentions|reactions|node_id|body|gravatar)(\z|_)/
 
@@ -22,21 +28,28 @@ module RuBLE
           end
 
           memoize def faraday_cache
-            faraday_cache_path = Environment::Extension.ext_dir / '.tmp/cache/faraday'
-            faraday_cache_path.mkpath
-            ActiveSupport::Cache::FileStore.new(faraday_cache_path).tap(&:cleanup)
+            return unless faraday_cache?
+
+            cache_path = (Environment::Extension.root_dir / 'tmp/cache/faraday').tap(&:mkpath)
+            ActiveSupport.cache_format_version = 7.1
+            ActiveSupport::Cache::FileStore.new(cache_path, expires_in: HTTP_CACHE_TIMEOUT).tap(&:cleanup)
+          end
+
+          memoize def faraday_cache?
+            require 'faraday-http-cache'
+            true
+          rescue LoadError
+            false
           end
         end
 
-        # def cli_flag_prefix = "--#{self.class.name.underscore.gsub('_', '-')}".freeze
-        # def env_prefix = "#{Data.gem_name.upcase}_#{self.class.name.underscore}_".freeze
-
         memoize def default_local_path = false
-        memoize def default_link_statically = !local? || Extconf.release? # !Extconf.development?)
+        memoize def default_link_statically = !local? || Extconf.release? # !Extconf.developer?)
         memoize def default_use_precompiled = false
         memoize def include_prereleases? = false
         memoize def supports_precompiled? = false
         memoize def supports_local_path? = false
+        memoize def supports_shared_link? = Extconf.developer?
 
         attr_reader *%i[requested_tag static precompiled local local_path]
         def initialize(**config)
@@ -56,24 +69,32 @@ module RuBLE
               raise ArgumentError, "Local path given for #{self.class} (#{@local_path}) must exist!"
             end
           end
-
-
-          if precompiled? && !supports_precompiled?
-            raise ArgumentError, "Precompiled releases of #{name} are not available."
-          end
-          raise ArgumentError, "Using a prebuilt local copy of #{name} is not yet supported." if local
+          validate_config!
         end
 
-        memoize def name = self.class.name || 'ANONYMOUS'
+        memoize def validate_config!
+          if shared? && !supports_shared_link?
+            raise ArgumentError, "#{name} can only be linked as a shared library "\
+                                 "with current settings (developer mode likely required)." 
+          elsif precompiled? && !supports_precompiled?
+            raise ArgumentError, "Precompiled releases of #{name} are not available."
+          elsif local?
+            raise ArgumentError, "Using a prebuilt local copy of #{name} is not yet supported." 
+          end
+        end
+
+        memoize def name = self.class.name.demodulize.freeze || 'ANONYMOUS'
         memoize def github_repo = self.class.github_repo
         memoize def github_repo_url = self.class.github_repo_url
         memoize def github_api_base_url = self.class.github_api_base_url
+        delegate :target_cpu, :target_os, to: System
 
         alias_method :local?, :local
         memoize def github? = !local?
         memoize def source = (local? ? 'local' : 'github')
         memoize def local_path? = local_path.present?
         memoize def local_path_autodetect? = local? && !local_path?
+        alias_method :local_path_autodetect, :local_path_autodetect?
 
         memoize def shared = !static?
         alias_method :static?, :static
@@ -82,13 +103,13 @@ module RuBLE
         memoize def precompiled? = precompiled
 
         memoize def default_release_tag
-          Extconf.development? ? latest_release_tag : supported_release_tag
+          Extconf.developer? ? latest_release_tag : supported_release_tag
         end
 
         memoize def supported_release_tag
-          GithubDep::Base.dependency_versions.
-            fetch(name.underscore.to_sym).
-            fetch(:supported_release_tag)
+          GithubDep::Base.dependency_versions
+            .fetch(name.underscore.to_sym)
+            .fetch(:supported_release_tag)
         end
 
         memoize def latest_release_tag
@@ -134,7 +155,7 @@ module RuBLE
             shared:,
             precompiled:,
             github_repo_url:,
-            "#{source}":     send(:"#{source}_build_config"),
+            "#{source}": send(:"#{source}_build_config"), # rubocop:disable Layout/HashAlignment
           }
         end
 
@@ -143,11 +164,7 @@ module RuBLE
         memoize def local_build_config
           raise "This function shouldn't be called outside of local mode" unless local?
 
-          {
-            enabled:               true,
-            local_path:            local_path,
-            local_path_autodetect: local_autodetect?,
-          }
+          { enabled: true, local_path:, local_path_autodetect: }
         end
 
         memoize def github_build_config
@@ -186,15 +203,21 @@ module RuBLE
             f.request  :retry
             f.response :raise_error
             f.response :follow_redirects
-            f.response :logger
+            # prevent running over rate limit in developer mode
+            if GithubDep::Base.faraday_cache?
+              f.use :http_cache,
+                    store:        GithubDep::Base.faraday_cache,
+                    serializer:   Marshal,
+                    compressor:   false,
+                    shared_cache: false
+            end
+            # f.response :logger
           end
         end
 
         def filter_github_metadata(data)
           data.reject! do |k, v|
-            next true if v == ''
-
-            k.to_s.match?(GITHUB_METADATA_FILTER_REGEX)
+            v == '' || k.to_s.match?(GITHUB_METADATA_FILTER_REGEX)
           end
           data.transform_values! { _1.is_a?(Hash) ? filter_github_metadata(_1) : _1 }
         end

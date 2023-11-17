@@ -83,6 +83,7 @@ namespace RuBLE {
     #endif
         Rice::detail::Registries::instance.instances.isEnabled = true;
         rb_mRuBLE = Rice::define_module("RuBLE");
+//        rb_mRuBLE.
         rubyQueue = RubyQueue::instance();
 
     #ifdef RUBLE_DEBUG

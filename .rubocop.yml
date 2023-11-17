@@ -9,6 +9,7 @@ AllCops:
     - "**/.git/**/*"
   AutoCorrect: true
   NewCops: enable
+  ActiveSupportExtensionsEnabled: true
   StyleGuideBaseURL: https://rubystyle.guide
 #Rails:
 #  StyleGuideBaseURL: https://rails.rubystyle.guide

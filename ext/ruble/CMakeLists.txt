@@ -3,6 +3,7 @@ project(RuBLE LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23) # TODO: see if this will compile with C++20 (I think it will)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_SHARED_LIBRARY_PREFIX  "") # So target file isn't libruble.so
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_TLS_VERIFY ON)
@@ -11,6 +12,7 @@ set(CMAKE_TLS_VERIFY ON)
 cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/build-config.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/helpers.cmake")
 
 set(RUBY_ARCH "${rb_target_cpu}-${rb_target_os}")
 set(RICE_INCLUDE_PATH "${rice_include_dir}")
@@ -22,24 +24,24 @@ if (NOT DEFINED RUBLE_DEBUG)
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(RUBLE_DEBUG true)
   else()
-    set(RUBLE_DEBUG ${build_flag_debug})
+    set(RUBLE_DEBUG ${build_flags_debug})
   endif()
 endif()
 
-if (NOT DEFINED RUBLE_DEVELOPMENT)
-  set(RUBLE_DEVELOPMENT ${build_flag_development})
+if (NOT DEFINED RUBLE_DEVELOPER)
+  set(RUBLE_DEVELOPER ${build_flags_developer})
 endif()
 
 if (NOT DEFINED RUBLE_VERBOSE)
-  set(RUBLE_VERBOSE ${build_flag_verbose})
+  set(RUBLE_VERBOSE ${build_flags_verbose})
 endif()
 
 if (NOT DEFINED RUBLE_RELEASE)
-  set(RUBLE_RELEASE ${build_flag_release})
+  set(RUBLE_RELEASE ${build_flags_release})
 endif()
 #cmake_host_system_information(RESULT NPROC QUERY NUMBER_OF_PHYSICAL_CORES)
 
-if(RUBLE_DEBUG OR RUBLE_DEVELOPMENT)
+if(RUBLE_DEBUG OR RUBLE_DEVELOPER)
     include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/debug.cmake")
 endif()
 
@@ -53,19 +55,26 @@ set(HAVE_VALGRIND "${VALGRIND_HEADER_DIR}")
 
 include_directories(.)
 # For config.h
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+message("Current bin dir: ${CMAKE_BINARY_DIR}")
+include_directories("${CMAKE_BINARY_DIR}")
 
-add_library("${EXTENSION_NAME}" SHARED)
+add_library(${EXTENSION_NAME} SHARED)
 
+# TODO: these REPLACEs will likely cause problems if there are any pathnames with spaces in the RbConfig vars
+string(REPLACE " " ";" rb_CFLAGS ${rb_CFLAGS})
+list(REMOVE_ITEM rb_CFLAGS "-Wold-style-definition" "-Wimplicit-int" "-Wimplicit-function-declaration")
 # TODO: make target non-specific
-target_compile_options("${EXTENSION_NAME}" PUBLIC
+target_compile_options(${EXTENSION_NAME} PUBLIC
         ${rb_CFLAGS}
         -ggdb3 # TODO: strip debug info into separate file (don't necessarily need to package it with distributable version)
         -fthreadsafe-statics
 )
 
+# TODO: these REPLACEs will likely cause problems if there are any pathnames with spaces in the RbConfig vars
+string(REPLACE " " ";" rb_LDFLAGS ${rb_LDFLAGS})
+string(REPLACE " " ";" rb_DLDFLAGS ${rb_DLDFLAGS})
 # TODO: make target non-specific
-target_link_options("${EXTENSION_NAME}" PUBLIC
+target_link_options(${EXTENSION_NAME} PUBLIC
     ${rb_LDFLAGS}
     ${rb_DLDFLAGS}
     LINKER:-z,defs
@@ -81,7 +90,7 @@ cmake_path(SET CMAKE_INSTALL_PREFIX NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../..
 if(RUBLE_DEBUG)
     # TODO: make target non-specific
     # TODO: only a few of these are likely needed
-    target_compile_options("${EXTENSION_NAME}" PUBLIC
+    target_compile_options(${EXTENSION_NAME} PUBLIC
             -ggdb3
             -O0
             -fdiagnostics-color=always
@@ -99,7 +108,7 @@ if(RUBLE_DEBUG)
             -fconcepts-diagnostics-depth=1
     )
     # TODO: make target non-specific (so it applies to boost/simpleble)
-    target_link_options("${EXTENSION_NAME}" PUBLIC
+    target_link_options(${EXTENSION_NAME} PUBLIC
             LINKER:--no-strip-discarded
             LINKER:--discard-none
             LINKER:--ld-generated-unwind-info
@@ -117,9 +126,9 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ruby.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/simpleble.cmake")
 
-configure_file(config.h.in config.h)
+configure_file(config.h.in "${CMAKE_BINARY_DIR}/config.h")
 
-target_precompile_headers("${EXTENSION_NAME}" PRIVATE
+target_precompile_headers(${EXTENSION_NAME} PRIVATE
         ${CMAKE_BINARY_DIR}/config.h
         ./management/RegistryFactory.hpp
         ./management/Registry.hpp
@@ -153,7 +162,7 @@ target_precompile_headers("${EXTENSION_NAME}" PRIVATE
         ./concerns/CharacteristicValueTracker.hpp
         ./concerns/Rubyable.hpp
 )
-target_sources("${EXTENSION_NAME}" PRIVATE
+target_sources(${EXTENSION_NAME} PRIVATE
         ./management/RubyQueue.cpp
         ./management/Registry.cpp
         ./bindings/Service.cpp
@@ -174,13 +183,13 @@ target_sources("${EXTENSION_NAME}" PRIVATE
 )
 
 # TODO: does PUBLIC vs PRIVATE in target_sources actually do anything here?
-target_sources("${EXTENSION_NAME}" PUBLIC
+target_sources(${EXTENSION_NAME} PUBLIC
     ./bindings/RuBLE.cpp # The only source file that defines exported functions
 )
 
-if (RUBLE_DEVELOPMENT) # This is probably only wanted locally
+if (RUBLE_DEVELOPER) # This is probably only wanted locally
     # TODO(?): `install(EXPORT...` to generate .cmake files for import
-    install(TARGETS "${EXTENSION_NAME}" DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME ruble.so)
+    install(TARGETS ${EXTENSION_NAME} DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME ruble.so)
 endif()
 
 #print_target_properties(ruble)

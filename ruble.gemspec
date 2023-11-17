@@ -4,8 +4,8 @@ require_relative 'lib/ruble/version'
 Gem::Specification.new do |spec|
   spec.name = 'ruble'
   spec.version = RuBLE::VERSION
-  spec.authors = ['Mike Vastola']
-  spec.email = ['Mike@Vasto.la']
+  spec.authors = [ 'Mike Vastola' ]
+  spec.email = %w[Mike@Vasto.la]
 
   spec.summary = 'Ru(by Simple)BLE library'
   spec.description = 'RuBLE is a ruby interface to the SimpleBLE library, providing '\
@@ -33,13 +33,15 @@ Gem::Specification.new do |spec|
       spec/
       features/
       tasks/dev
+      .ruby-version
       .envrc
       .idea
       .run
       .github
       .gitmodules
+      CMakeLists.txt
     ]
-    (File.expand_path(f) == __FILE__) || f.start_with?(*ignore_paths)
+    File.expand_path(f) == __FILE__ || f.start_with?(*ignore_paths)
   end
   spec.bindir = 'exe'
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
@@ -60,7 +62,6 @@ Gem::Specification.new do |spec|
   # Support Libraries
   spec.add_development_dependency 'activesupport', '~> 7.1.2'
   spec.add_development_dependency 'memery', '~> 1.5'
-  spec.add_development_dependency 'os', '~> 1.1'
 
   # TODO: I _think_ c++20 will work too, but need to check
   spec.requirements << 'C++ compiler supporting standard c++23 (e.g. g++-13)'

@@ -50,7 +50,7 @@ endmacro()
 
 macro(setup_stacktrace_addr2line)
     # This really only makes sense to use if this is being used on the build machine
-    if (RUBLE_DEVELOPMENT)
+    if (RUBLE_DEVELOPER)
         set(BOOST_STACKTRACE_ADDR2LINE_LOCATION "${CMAKE_ADDR2LINE}")
     endif ()
 endmacro()
