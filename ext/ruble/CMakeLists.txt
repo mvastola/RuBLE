@@ -38,25 +38,24 @@ if (NOT DEFINED RUBLE_RELEASE)
 endif()
 #cmake_host_system_information(RESULT NPROC QUERY NUMBER_OF_PHYSICAL_CORES)
 
-if(RUBLE_DEBUG OR RUBLE_DEVELOPER)
+#if(RUBLE_DEBUG OR RUBLE_DEVELOPER)
     include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/debug.cmake")
-endif()
+#endif()
 
-if(NOT DEFINED CMAKE_VERBOSE_MAKEFILE)
-  set(CMAKE_VERBOSE_MAKEFILE ${RUBLE_VERBOSE})
+if(RUBLE_VERBOSE)
+  set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
 
 find_path(VALGRIND_HEADER_DIR valgrind/valgrind.h)
 set(HAVE_VALGRIND "${VALGRIND_HEADER_DIR}")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 
-include_directories(.)
 # For config.h
 message("Current bin dir: ${CMAKE_BINARY_DIR}")
 include_directories("${CMAKE_BINARY_DIR}")
 
-add_library(${EXTENSION_NAME} SHARED
-        include/dbgeng.h)
+add_library(${EXTENSION_NAME} SHARED)
 
 # TODO: these REPLACEs will likely cause problems if there are any pathnames with spaces in the RbConfig vars
 string(REPLACE " " ";" rb_CFLAGS ${rb_CFLAGS})
@@ -75,11 +74,10 @@ string(REPLACE " " ";" rb_DLDFLAGS ${rb_DLDFLAGS})
 target_link_options(${EXTENSION_NAME} PUBLIC
     ${rb_LDFLAGS}
     ${rb_DLDFLAGS}
-    LINKER:-z,defs
     LINKER:-fPIC
     LINKER:--dynamic-list-cpp-typeinfo
-    LINKER:--export-dynamic
-    LINKER:--demangle
+    #    LINKER:--export-dynamic
+    #LINKER:--demangle
 )
 
 # TODO: should this be debug only? (need to figure out what normal install paths are and where they come from)
@@ -119,12 +117,13 @@ if(RUBLE_DEBUG)
             LINKER:--ctf-variables
     )
 endif()
-
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/ruby.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/boost.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/simpleble.cmake")
 
 configure_file(config.h.in "${CMAKE_BINARY_DIR}/config.h")
+
+target_include_directories(${EXTENSION_NAME} BEFORE PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_precompile_headers(${EXTENSION_NAME} PRIVATE
         ${CMAKE_BINARY_DIR}/config.h
@@ -185,6 +184,7 @@ target_sources(${EXTENSION_NAME} PUBLIC
     ./bindings/RuBLE.cpp # The only source file that defines exported functions
 )
 
+target_link_libraries(${EXTENSION_NAME} PUBLIC stdc++)
 if (RUBLE_DEVELOPER) # This is probably only wanted locally
     cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
     message(STATUS "Install dir is ${INSTALL_DIR}")

@@ -39,10 +39,11 @@ block(PROPAGATE
         BOOST_STACKTRACE_LINK
         BOOST_STACKTRACE_BACKTRACE_INCLUDE_FILE
         BOOST_STACKTRACE_ADDR2LINE_LOCATION
+        BOOST_STACKTRACE_BACKEND_IS_WINDBG
         BOOST_VERSION_STR
+        BOOST_STACKTRACE_DBGENG_H_FULL_PATH
 )
 
-    set(STACKTRACE_BACKEND_PRIORITIES backtrace;addr2line;windgb_cached;windbg;basic;noop)
     set(BOOST_ENABLE_PYTHON OFF)
     set(BUILD_SHARED_LIBS ${rb_boost_shared})
     set(Boost_DEBUG OFF) # TODO: does this have anything to do with debug compiler flags?
@@ -57,7 +58,17 @@ block(PROPAGATE
     set(HEADER_ONLY_LIBS headers;describe)
     set(LINKED_LIBS exception;endian;algorithm) # + detected stacktrace backend
     set(STACKTRACE_BACKEND_PRIORITIES backtrace;addr2line;windgb_cached;windbg;basic;noop)
+    set(STACKTRACE_BACKENDS_SHORT backtrace;addr2line;windgb_cached;windbg;basic;noop)
 
+    list(TRANSFORM STACKTRACE_BACKEND_PRIORITIES
+        PREPEND "stacktrace_"
+        OUTPUT_VARIABLE STACKTRACE_BACKENDS)
+    set(STACKTRACE_BACKENDS_TO_FIND "${STACKTRACE_BACKENDS}")
+    if(CACHE{BOOST_STACKTRACE_BACKEND}) # simple speedup try the last working backend first
+      set(STACKTRACE_BACKEND_PRIORITIES "$CACHE{BOOST_STACKTRACE_BACKEND}")
+      set(STACKTRACE_BACKENDS_TO_FIND "stacktrace_$CACHE{BOOST_STACKTRACE_BACKEND}")
+    endif()
+    
     set(ALL_LIBS ${HEADER_ONLY_LIBS} ${LINKED_LIBS})
     set(BUILD_DEPS ${ALL_LIBS})
     set(BOOST_INCLUDE_LIBRARIES ${ADDITIONAL_DEPENDENCIES} ${BUILD_DEPS})
@@ -82,9 +93,9 @@ block(PROPAGATE
     find_package(
             Boost
             REQUIRED
-            ${BOOST_INCLDUE_LIBRARIES}
+            ${BOOST_INCLDUE_LIBRARIES} "$CACHE{BOOST_STACKTRACE_BACKEND}"
             OPTIONAL_COMPONENTS
-            ${STACKTRACE_BACKENDS}
+            ${STACKTRACE_BACKENDS_TO_FIND}
             PATHS "${CACHE_LOCATION}" "${CACHE_LOCATION}/tools/cmake"
             EXCLUDE_FROM_ALL ON
             NO_DEFAULT_PATH
@@ -93,7 +104,7 @@ block(PROPAGATE
     cmake_path(SET boost_config_include_dir NORMALIZE "${boost_config_SOURCE_DIR}/include")
     get_boost_version(BOOST_VERSION_STR "${boost_config_include_dir}")
     message(STATUS "Library Boost version ${BOOST_VERSION_STR} "
-                   "linked ${rb_boost_linkage}ly from ${BOOST_SOURCE_DIR}")
+      "linked ${rb_boost_linkage}ly from ${Boost_SOURCE_DIR}") # BOOST_SOURCE_DIR
     target_link_libraries(${EXTENSION_NAME} INTERFACE ${HEADER_ONLY_NAMESPACES})
     target_link_libraries(${EXTENSION_NAME} PRIVATE ${LINKED_NAMESPACES})
     add_dependencies(${EXTENSION_NAME} ${PREFIXED_BUILD_DEPS})
