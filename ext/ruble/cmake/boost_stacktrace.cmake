@@ -44,6 +44,8 @@ endmacro()
 macro(setup_stacktrace_windows)
     find_library(OLE32 ole32)
     find_library(WINDBGENG dbgeng)
+    dump_variables()
+    message(FATAL_ERROR quitting)
     # TODO: test me!
     target_link_libraries(${EXTENSION_NAME} PUBLIC ole32 dbgeng)
 endmacro()
@@ -83,6 +85,8 @@ if(STACKTRACE_BACKEND STREQUAL "backtrace")
 elseif(STACKTRACE_BACKEND STREQUAL "addr2line")
     setup_stacktrace_addr2line()
 elseif(WINDOWS AND STACKTRACE_BACKEND_IS_WINDBG)
+    # FIXME: Alert to https://github.com/boostorg/stacktrace/issues/133 somehow
+    # Test if mingw includes this change https://github.com/mirror/mingw-w64/commit/ce5a9f624dfc691082dad2ea2af7b1985e3476b5
     setup_stacktrace_windows()
 endif()
 

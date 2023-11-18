@@ -55,7 +55,8 @@ include_directories(.)
 message("Current bin dir: ${CMAKE_BINARY_DIR}")
 include_directories("${CMAKE_BINARY_DIR}")
 
-add_library(${EXTENSION_NAME} SHARED)
+add_library(${EXTENSION_NAME} SHARED
+        include/dbgeng.h)
 
 # TODO: these REPLACEs will likely cause problems if there are any pathnames with spaces in the RbConfig vars
 string(REPLACE " " ";" rb_CFLAGS ${rb_CFLAGS})

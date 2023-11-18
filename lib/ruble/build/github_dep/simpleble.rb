@@ -41,12 +41,19 @@ module RuBLE
         memoize def matching_asset = assets.fetch(asset_filename).freeze
 
         memoize def extract_src_path
+          os_key = [
+            System.target_mac? && :macos,
+            System.target_win? && :windows,
+            System.target_linux? && :linux,
+          ].detect(&:itself)
+
           os_map = {
             macos:   'Users/runner/work/SimpleBLE/SimpleBLE/build/install',
             windows: 'install',
             linux:   'SimpleBLE/SimpleBLE/build_simpleble/install',
           }
-          os_map.fetch(System.target_os.to_sym).freeze
+          
+          os_map.fetch(os_key).freeze
         end
 
         memoize def build_config

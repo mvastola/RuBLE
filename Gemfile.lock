@@ -93,6 +93,7 @@ GEM
     zeitwerk (2.6.12)
 
 PLATFORMS
+  x86_64-cygwin
   x86_64-linux
 
 DEPENDENCIES

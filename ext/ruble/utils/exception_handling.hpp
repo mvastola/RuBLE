@@ -1,7 +1,10 @@
 #pragma once
 
 #include "config.h"
+#ifdef BOOST_STACKTRACE_USE_BACKTRACE
 #include <backtrace.h>
+#endif
+
 #include <boost/stacktrace.hpp>
 #include <boost/exception/all.hpp>
 #include <iostream>     // std::cerr

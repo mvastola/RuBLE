@@ -12,9 +12,12 @@ macro(ConfigurePrecompiledSimpleBLE)
             #            OVERRIDE_FIND_PACKAGE
     )
     FetchContent_MakeAvailable(simpleble)
-    set(simpleble_DIR ${simpleble_SOURCE_DIR}/${rb_simpleble_github_archive_path})
+    cmake_path(SET simpleble_DIR NORMALIZE 
+	    "${simpleble_SOURCE_DIR}/${rb_simpleble_github_archive_path}/../lib/cmake/simpleble")
+
     find_package(simpleble REQUIRED CONFIG PATHS "${simpleble_DIR}" NO_DEFAULT_PATH)
     cmake_path(SET SIMPLEBLE_PC_DIR NORMALIZE "${simpleble_DIR}/../../pkgconfig")
+    message(STATUS "SimpleBLE PC Dir: ${SIMPLEBLE_PC_DIR}")
     get_pkg_config_lib_version(SIMPLEBLE_VERSION simpleble "${SIMPLEBLE_PC_DIR}")
 endmacro()
 

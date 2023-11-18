@@ -3,15 +3,15 @@
 module RuBLE::Build
   module Environment
     module System
-      BUILD_CONFIG_KEY = :rb
-      REQUIRED_KEYS = %w[CFLAGS LDFLAGS target_os target_cpu].freeze
+      BUILD_CONFIG_KEY      = :rb
+      REQUIRED_KEYS         = %w[CFLAGS LDFLAGS target_os target_cpu].freeze
 
       CPU_64BIT_REGEX       = /[x_-]64(\b|[^0-9])/i
       CPU_ARM_REGEX         = /\A(arm|aarch)(64)?(v[0-9]+)?(e[lb])?([sh]f)?(\b|[^a-z])/i
       OS_LINUX_REGEX        = /\Alinux(\b|_)/
       OS_MAC_REGEX          = /\Adarwin(\b|[^a-z])/
       OS_WIN_REGEX          = /\A(ms)?win(dows)?(\b|[^a-z])/i
-      OS_WIN_MING_ISH_REGEX = /\A(cygwin|msvc|musl|mingw?|msys)[^a-z]/
+      OS_WIN_MING_ISH_REGEX = /\A(cygwin|msvc|musl|mingw?|msys)(\b|[^a-z])/
 
       class << self
         include Memery
