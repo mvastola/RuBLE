@@ -16,8 +16,8 @@ namespace RuBLE {
             _addr_type(_peripheral->address_type()),
             _on_connected(std::make_shared<Callback>(1)),
             _on_disconnected(std::make_shared<Callback>(1)),
-            _self(Peripheral_DO(*this)),
-            _service_registry(serviceRegistryFactory->registry(this)) {
+            _service_registry(serviceRegistryFactory->registry(this)),
+            _self(Peripheral_DO(*this)) {
         _peripheral->set_callback_on_connected([this]() {
             RubyQueue::FnType fn = [this]() -> void { _on_connected->fire(self()); };
             if (_on_connected) rubyQueue->push(fn);

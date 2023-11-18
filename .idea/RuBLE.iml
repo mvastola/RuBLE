@@ -117,6 +117,17 @@
       <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
@@ -130,6 +141,28 @@
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
@@ -154,6 +187,24 @@
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
@@ -182,7 +233,6 @@
     <orderEntry type="library" scope="PROVIDED" name="memery (v1.5.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="minitest (v5.20.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="mutex_m (v0.2.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="os (v1.1.4, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="parallel (v1.23.0, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="parser (v3.2.2.4, RVM: ruby-3.2.2 [global]) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="psych (v5.1.1.1, RVM: ruby-3.2.2 [global]) [gem]" level="application" />

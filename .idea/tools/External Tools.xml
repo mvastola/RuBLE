@@ -1,0 +1,9 @@
+<toolSet name="External Tools">
+  <tool name="compile_boost_version_tester" description="Build Boost Version Tester" showInMainMenu="false" showInEditor="false" showInProject="false" showInSearchPopup="false" disabled="false" useConsole="true" showConsoleOnStdOut="false" showConsoleOnStdErr="true" synchronizeAfterRun="true">
+    <exec>
+      <option name="COMMAND" value="g++" />
+      <option name="PARAMETERS" value="-std=c++20 -O0 -ggdb3 -o tmp/boost_version ext/ruble/cmake/get_boost_version.cpp" />
+      <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
+    </exec>
+  </tool>
+</toolSet>

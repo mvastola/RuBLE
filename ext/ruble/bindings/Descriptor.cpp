@@ -3,7 +3,7 @@
 
 namespace RuBLE {
     Descriptor::Descriptor(BluetoothUUID uuid, Descriptor::Owner *owner) :
-        _owner(owner), _uuid(std::move(uuid)),  _self(DataObject(*this))  {}
+        _uuid(std::move(uuid)),  _owner(owner), _self(DataObject(*this))  {}
 
     Descriptor::Descriptor(const SimpleBLE::Descriptor &descriptor, Descriptor::Owner *owner) :
             Descriptor(const_cast<SimpleBLE::Descriptor&>(descriptor).uuid(), owner) {}

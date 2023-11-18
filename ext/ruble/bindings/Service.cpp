@@ -11,8 +11,8 @@ namespace RuBLE {
     Service::Service(const SimpleBLE::Service &service, Owner *owner) :
             _owner(owner),
             _service(std::make_shared<SimpleBLE::Service>(service)),
-            _uuid(_service->uuid()),
             _characteristic_registry(characteristicRegistryFactory->registry(this)),
+            _uuid(_service->uuid()),
             _self(DataObject(*this)) {}
 
     Object Service::self() const {

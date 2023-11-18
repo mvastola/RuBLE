@@ -61,7 +61,7 @@ namespace RuBLE {
 
         ByteArray value = service()->read(uuid());
         record_new_value(value);
-        return std::move(value);
+        return value;
     }
 
     ByteArray Characteristic::read(const BluetoothUUID &descriptor) {

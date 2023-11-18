@@ -8,9 +8,6 @@ set(CMAKE_SHARED_LIBRARY_PREFIX  "") # So target file isn't libruble.so
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_TLS_VERIFY ON)
 
-# relies on extconf.rb having been run
-cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
-
 include("${CMAKE_CURRENT_SOURCE_DIR}/build-config.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/helpers.cmake")
 
@@ -62,7 +59,7 @@ add_library(${EXTENSION_NAME} SHARED)
 
 # TODO: these REPLACEs will likely cause problems if there are any pathnames with spaces in the RbConfig vars
 string(REPLACE " " ";" rb_CFLAGS ${rb_CFLAGS})
-list(REMOVE_ITEM rb_CFLAGS "-Wold-style-definition" "-Wimplicit-int" "-Wimplicit-function-declaration")
+list(REMOVE_ITEM rb_CFLAGS "-Wold-style-definition" "-Wimplicit-int" "-Wimplicit-function-declaration" "-Wno-self-assign" "-Wno-parentheses-equality" "-Wno-constant-logical-operand")
 # TODO: make target non-specific
 target_compile_options(${EXTENSION_NAME} PUBLIC
         ${rb_CFLAGS}
@@ -188,6 +185,8 @@ target_sources(${EXTENSION_NAME} PUBLIC
 )
 
 if (RUBLE_DEVELOPER) # This is probably only wanted locally
+    cmake_path(SET INSTALL_DIR NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
+    message(STATUS "Install dir is ${INSTALL_DIR}")
     # TODO(?): `install(EXPORT...` to generate .cmake files for import
     install(TARGETS ${EXTENSION_NAME} DESTINATION "${INSTALL_DIR}" CONFIGURATIONS Debug RENAME ruble.so)
 endif()

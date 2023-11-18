@@ -66,6 +66,8 @@ namespace Rice {
 //  CLion seemed to be suggesting that many of the functions above were unused,
 //  which would tend to cause hard-to-detect errors, so just to be safe,
 //  assert that these templated versions of Rice::ruby_mark exist.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress"
 static_assert(&Rice::ruby_mark<RuBLE::Callback>);
 static_assert(&Rice::ruby_mark<RuBLE::Adapter>);
 static_assert(&Rice::ruby_mark<RuBLE::AdapterRegistry>);
@@ -79,4 +81,4 @@ static_assert(&Rice::ruby_mark<RuBLE::ServiceRegistryFactory>);
 static_assert(&Rice::ruby_mark<RuBLE::Characteristic>);
 static_assert(&Rice::ruby_mark<RuBLE::CharacteristicRegistry>);
 static_assert(&Rice::ruby_mark<RuBLE::CharacteristicRegistryFactory>);
-
+#pragma GCC diagnostic pop

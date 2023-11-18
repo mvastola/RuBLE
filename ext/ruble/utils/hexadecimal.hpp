@@ -40,7 +40,7 @@ namespace RuBLE::Utils {
         template <bool prefix = true, std::integral T = void>
         std::string ref_to_hex_string(const T &num) {
             constexpr std::size_t result_len = std::max(std::size_t(2), sizeof (T) * 2) + (prefix ? 2 : 0);
-            constexpr const auto fmt_str = prefix ? "{:#0{}x}" : "{:0{}x}";
+            constexpr const auto fmt_str = prefix ? "{:#{}x}" : "{:{}x}";
             return std::format(fmt_str, num, result_len);
         }
 

@@ -111,6 +111,6 @@ extern "C" [[maybe_unused]] void Init_RuBLE() {
     RuBLE::Init_RuBLE();
 }
 
-extern "C" [[maybe_unused]] void Init_ruBLE() {
+extern "C" [[maybe_unused]] void Init_ruble() {
     RuBLE::Init_RuBLE();
 }

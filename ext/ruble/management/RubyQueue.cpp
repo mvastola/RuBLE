@@ -26,7 +26,10 @@ namespace RuBLE {
             // TODO: figure out how/if to handle case where thread creation fails
             // TODO: wrap this in rice's `protect` fn
             RubyThreadId tid = rb_thread_create(runThread, this);
-            if constexpr (DEBUG) std::cerr << "RubyQueue thread ID: " << tid << std::endl;
+            if constexpr (DEBUG) {
+                std::cerr << "RubyQueue thread ID: ";
+                std::cerr << Utils::to_hex_string(tid) << std::endl;
+            }
             _rb_thread.store(tid);
         }
     }

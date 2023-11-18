@@ -45,4 +45,4 @@ namespace RuBLE {
 }
 
 extern "C" [[maybe_unused]] void Init_RuBLE();
-extern "C" [[maybe_unused]] void Init_ruBLE();
+extern "C" [[maybe_unused]] void Init_ruble();

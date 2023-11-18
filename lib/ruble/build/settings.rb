@@ -25,6 +25,8 @@ module RuBLE
         define_method(:"#{flag}?") { merged_config.fetch(flag, false) }
         memoize :"#{flag}?"
       end
+      def irb! = @irb = true
+      def irb? = @irb.present?
 
       def validate!
         if release? && developer?
@@ -163,6 +165,8 @@ module RuBLE
         parser.on('-r', '--release', 'Compile for packaging and distribution on rubygems, etc') do |v|
           @cli_config[:release] = !!v
         end
+
+        parser.on('--irb') { irb! }
 
         parser.on('-h', '--help', 'Show usage information') do
           puts parser.help

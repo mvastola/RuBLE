@@ -10,6 +10,7 @@ module RuBLE
         :validate_config!,
         :build_config,
         :write_build_config,
+        :irb?,
         *Settings::GLOBAL_FLAG_INQUIRERS
       ].freeze
 
@@ -33,7 +34,7 @@ module RuBLE
       end
 
       memoize def config = config_parser.config
-      delegate *Settings::GLOBAL_FLAG_INQUIRERS, to: :config_parser
+      delegate *Settings::GLOBAL_FLAG_INQUIRERS, :irb?, to: :config_parser
       def validate_config! = config_parser.validate!
 
       memoize def build_flags

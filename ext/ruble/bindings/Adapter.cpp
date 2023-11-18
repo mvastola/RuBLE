@@ -11,14 +11,14 @@
 namespace RuBLE {
     using Rice::String;
     Adapter::Adapter(const SimpleBLE::Adapter &adapter) :
+            _self(Adapter_DO(*this)),
             _adapter(std::make_shared<SimpleBLE::Adapter>(adapter)),
             _addr(_adapter->address()),
-            _peripheral_registry(peripheralRegistryFactory->registry(this)),
             _on_scan_start(std::make_shared<Callback>(1)),
             _on_scan_stop(std::make_shared<Callback>(1)),
             _on_scan_update(std::make_shared<Callback>(2)),
             _on_scan_find(std::make_shared<Callback>(2)),
-            _self(Adapter_DO(*this)) {
+            _peripheral_registry(peripheralRegistryFactory->registry(this)) {
         get().set_callback_on_scan_start([this]() {
             RubyQueue::FnType fn = [this]() -> void { _on_scan_start->fire(self()); };
             if (_on_scan_start) rubyQueue->push(fn);

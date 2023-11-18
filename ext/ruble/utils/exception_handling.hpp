@@ -23,7 +23,7 @@ namespace boost {
 
 namespace RuBLE::ExceptionHandling {
     [[noreturn]] void throw_exception();
-    [[maybe_unused]] void abort_with_stack();
+    [[maybe_unused,noreturn]] void abort_with_stack();
 
     using traced = boost::error_info<struct tag_stacktrace, boost::stacktrace::stacktrace>;
 

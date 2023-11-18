@@ -36,7 +36,7 @@ namespace RuBLE::ExceptionHandling {
         });
     }
 
-    [[maybe_unused]] void abort_with_stack() {
+    [[maybe_unused,noreturn]] void abort_with_stack() {
         try {
             std::cerr << boost::stacktrace::stacktrace();
         } catch (const std::exception &ex2) {
