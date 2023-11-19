@@ -75,7 +75,7 @@ module RuBLE
         memoize def validate_config!
           if shared? && !supports_shared_link?
             raise ArgumentError, "#{name} can only be linked as a shared library "\
-                                 "with current settings (developer mode likely required)." 
+                                 'with current settings (developer mode likely required).' 
           elsif precompiled? && !supports_precompiled?
             raise ArgumentError, "Precompiled releases of #{name} are not available."
           elsif local?
@@ -101,6 +101,9 @@ module RuBLE
         alias_method :shared?, :shared
         memoize def linkage = (static? ? 'static' : 'shared')
         memoize def precompiled? = precompiled
+        memoize def download_type
+          precompiled? ? 'precompiled' : 'source' unless local?
+        end
 
         memoize def default_release_tag
           Extconf.developer? ? latest_release_tag : supported_release_tag
@@ -154,10 +157,17 @@ module RuBLE
             static:,
             shared:,
             precompiled:,
+            download_type:,
             github_repo_url:,
             "#{source}": send(:"#{source}_build_config"), # rubocop:disable Layout/HashAlignment
           }
         end
+
+        memoize def precompiled_binary_url
+          matching_asset.fetch(:browser_download_url) if supports_precompiled?
+        end
+        memoize def source_tarball_url = release.fetch(:tarball_url)
+        memoize def download_url = precompiled? ? precompiled_binary_url : source_tarball_url
 
       protected
 
@@ -171,15 +181,17 @@ module RuBLE
           raise "This function shouldn't be called in local mode" if local?
 
           release_data = release.dup.tap { _1.delete(:assets) }
-          release_data[:author]&.reject! { |k, _v| k.to_s.end_with?('_url') }
+          release_data[:author]&.reject! { |k, _v| k.to_s =~ /(?<!tarball)_url/ }
           asset_data = matching_asset.dup.tap { _1.delete(:uploader) }
 
           config = {
             commit_hash:,
             requested_tag:,
-            release_tag:   real_tag_name,
-            download_url:  asset_data.fetch(:browser_download_url),
-          }
+            download_url:,
+            precompiled_binary_url:,
+            source_tarball_url:,
+            release_tag: real_tag_name, # rubocop:disable Layout/HashAlignment
+          }.compact
 
           if Extconf.verbose?
             config.reverse_merge! filter_github_metadata(release_data)

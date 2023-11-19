@@ -173,7 +173,7 @@ module RuBLE
           exit 0
         end
 
-        parser.on('--version', 'Show gem version') do
+        parser.on('-V', '--version', 'Show gem version') do
           puts "#{gem_name} version #{gem_version}"
           exit 0
         end

@@ -6,12 +6,6 @@ module RuBLE
       class SimpleBLE < Base
         GITHUB_REPO = 'OpenBluetoothToolbox/SimpleBLE'
 
-        def initialize(**kwargs)
-          super(**kwargs)
-
-          raise "#{self.class.name} currently only supports precompiled libraries" unless precompiled?
-        end
-
         def supports_precompiled? = true
         def default_use_precompiled = true
 
@@ -41,6 +35,8 @@ module RuBLE
         memoize def matching_asset = assets.fetch(asset_filename).freeze
 
         memoize def extract_src_path
+          return './' unless precompiled?
+
           os_key = [
             System.target_mac? && :macos,
             System.target_win? && :windows,
@@ -49,7 +45,7 @@ module RuBLE
 
           os_map = {
             macos:   'Users/runner/work/SimpleBLE/SimpleBLE/build/install',
-            windows: 'install',
+            windows: './',
             linux:   'SimpleBLE/SimpleBLE/build_simpleble/install',
           }
           

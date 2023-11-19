@@ -21,8 +21,9 @@ module RuBLE
             'tar.gz'
           end
         end
-        memoize def asset_filename = "#{release_name}.#{asset_extension}".freeze
-        memoize def matching_asset = assets.fetch(asset_filename).freeze
+        memoize def asset_filename     = "#{release_name}.#{asset_extension}".freeze
+        memoize def matching_asset     = assets.fetch(asset_filename).freeze
+        memoize def source_tarball_url = matching_asset.fetch(:browser_download_url)
       end
     end
   end
