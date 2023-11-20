@@ -261,6 +261,8 @@
       <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/CMakeFiles" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
@@ -369,6 +371,8 @@
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
+      <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />

@@ -9,7 +9,7 @@ macro(ConfigureCompiledSimpleBLE)
             OVERRIDE_FIND_PACKAGE
     )
     FetchContent_MakeAvailable(simpleble)
-    find_package(simpleble REQUIRED NO_DEFAULT_PATH EXCLUDE_FROM_ALL ON)
+    find_package(simpleble REQUIRED NO_DEFAULT_PATH) # EXCLUDE_FROM_ALL ON)
     cmake_path(SET SIMPLEBLE_PC_DIR NORMALIZE "${simpleble_BINARY_DIR}")
 
     dump_variables()
