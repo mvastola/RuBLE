@@ -40,6 +40,23 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
     $ gem install RuBLE
 
+## Building on Windows
+
+Building in cygwin appears to not be supported. This is due to the SimpleBLE library not supporting CYGWIN when building from source.  (NOTE: Still need to re-confirm the precompiled library didn't work either.)
+
+<!--The best way I've found to build on Windows is:
+
+1. Use RubyInstaller with the DevKit(SP?) 
+Find a stable way to configure ruby if no rvm. 
+2. Inside msys, be sure to run the following:
+    ```sh
+    $ pacman -S mingw-w64-x86_64-cmake make # TODO: there's more I'm forgetting
+    CMAKE=/mingw64/bin/cmake
+3. ...
+
+-->
+
+
 ## Usage
 
 TODO: Write usage instructions here

@@ -22,9 +22,10 @@ RuBLE::Build::Extconf.write_build_config(path: THIS_DIR / 'build-config.cmake')
 # TODO: need to confirm the values (for install dir, compile args, etc) outputted in Makefile
 #   are the same values CMake gets from reading 'build-config.json'
 
-create_makefile 'ruble'
+create_makefile 'PLACEHOLDER'
 File.open(RuBLE::Build::Environment::Extension.ext_dir / 'Makefile', 'at') do |f|
   f.puts '# include cmake.mk'
 end
+
 
 # TODO: does setting TARGET_ENTRY in makefile do anything? (if so, use it)

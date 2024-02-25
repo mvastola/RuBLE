@@ -37,6 +37,8 @@ module RuBLE::Build::Environment
         "#{github_url}/releases/download/#{tag}/#{asset}".freeze if tag
       end
 
+      memoize def my_ruby_home = ENV['MY_RUBY_HOME']
+
       memoize def debug_asset_name = "#{name}.#{target_os}-#{target_cpu}.so.debug"
       memoize def debug_info_url   = github_release_asset(asset: debug_asset_name)
 
@@ -72,6 +74,7 @@ module RuBLE::Build::Environment
           version: gem_version.to_s,
           path:    full_path.to_s,
           ext_dir:,
+          my_ruby_home:,
           package: {
             linker_metadata: linker_package_metadata.to_json,
           },

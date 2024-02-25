@@ -28,7 +28,7 @@ module RuBLE
       def run_cmd(*args, chdir: __dir__, path: false, **kwargs)
         return nil if chdir.nil?
 
-        out, status = ::Open3.capture2(*args, chdir:, err: :close, stdin_data: '', **kwargs)
+        out, status = ::Open3.capture2(*args, chdir:, stdin_data: '', **kwargs)
         return nil unless status.success?
 
         out.strip!
