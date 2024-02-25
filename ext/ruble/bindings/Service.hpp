@@ -1,6 +1,5 @@
 #pragma once
 
-#include "common.hpp"
 #include "types/declarations.hpp"
 #include "types/ruby.hpp"
 #include "utils/hash.hpp"
@@ -17,7 +16,7 @@ namespace RuBLE {
     protected:
         Owner *_owner;
         std::shared_ptr<SimpleBLE::Service> _service;
-        mutable std::shared_ptr<CharacteristicRegistry> _characteristic_registry;
+        std::shared_ptr<CharacteristicRegistry> _characteristic_registry;
         BluetoothUUID _uuid;
         VALUE _self = Qnil;
 
@@ -38,8 +37,7 @@ namespace RuBLE {
 
 
         [[nodiscard]] ByteArray data() const;
-        [[nodiscard]] Rice::Object characteristics_rb() const;
-        [[nodiscard]] const std::shared_ptr<CharacteristicMap> &characteristics() const;
+        [[nodiscard]] const std::map<BluetoothUUID, std::shared_ptr<Characteristic>> &characteristics() const;
         [[nodiscard]] std::shared_ptr<Characteristic> operator[](const BluetoothUUID &charUuid) const;
 
         [[nodiscard]] ByteArray read(const BluetoothUUID &characteristic);

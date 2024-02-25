@@ -39,17 +39,11 @@ namespace RuBLE {
     SimpleBLE::Characteristic &Characteristic::get() { return *_characteristic; }
     const SimpleBLE::Characteristic &Characteristic::get() const { return *_characteristic; }
 
-    Rice::Object Characteristic::descriptors_rb() const {
-        using DescriptorMapPtr = std::shared_ptr<DescriptorMap>;
-        static auto toRuby = Rice::detail::To_Ruby<DescriptorMapPtr>{};
-        DescriptorMapPtr ptr(descriptors());
-        return toRuby.convert(ptr);
-    }
-
-    const std::shared_ptr<DescriptorMap> &Characteristic::descriptors() const {
-        if (_descriptors) return _descriptors;
-        _descriptors = Descriptor::make_map(_characteristic->descriptors(), const_cast<Characteristic*>(this));
-        return _descriptors;
+    const std::map<BluetoothUUID, std::shared_ptr<Descriptor>> &Characteristic::descriptors() const {
+        if (_descriptors) return *_descriptors;
+        auto result = Descriptor::make_map(_characteristic->descriptors(), const_cast<Characteristic*>(this));
+        _descriptors = std::move(result);
+        return *_descriptors;
     }
 
     std::shared_ptr<Descriptor> Characteristic::operator[](const BluetoothUUID &descUuid) const {

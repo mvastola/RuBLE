@@ -30,7 +30,7 @@ namespace RuBLE {
             return _track_values.value_or(can_notify());
         }
 
-        [[nodiscard]] constexpr std::shared_ptr<ByteArray> last_value() const {
+        [[nodiscard]] constexpr const std::shared_ptr<ByteArray> &last_value() const {
             return _value;
         }
 

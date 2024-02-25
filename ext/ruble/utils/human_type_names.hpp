@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <rice/rice.hpp>
+#include <rice/stl.hpp>
 
 
 namespace RuBLE::Utils {

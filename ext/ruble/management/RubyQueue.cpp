@@ -7,7 +7,7 @@ using namespace std::chrono_literals;
 namespace RuBLE {
     constinit std::shared_ptr<RubyQueue> RubyQueue::_instance {};
 
-    std::shared_ptr<RubyQueue> RubyQueue::instance() {
+    const std::shared_ptr<RubyQueue> &RubyQueue::instance() {
         if (!_instance) _instance = std::shared_ptr<RubyQueue>(new RubyQueue());
         return _instance;
     }

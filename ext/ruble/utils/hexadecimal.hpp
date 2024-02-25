@@ -26,7 +26,7 @@ namespace RuBLE::Utils {
         template <bool prefix, typename T> requires std::is_pointer_v<T>
         std::string to_hex_addr(const T &ptr);
         template <bool prefix, typename T>
-        std::string to_hex_addr(std::shared_ptr<T> ptr);
+        std::string to_hex_addr(const std::shared_ptr<T> &ptr);
         template <bool prefix, typename T> requires std::is_base_of_v<Rice::Object, T>
         std::string to_hex_addr(const T &obj);
         template <bool prefix, typename T>
@@ -50,7 +50,7 @@ namespace RuBLE::Utils {
         }
 
         template <bool prefix = true, typename T = void>
-        std::string sptr_to_hex_addr(std::shared_ptr<T> ptr) {
+        std::string sptr_to_hex_addr(const std::shared_ptr<T> &ptr) {
             return to_hex_addr<prefix>(ptr.get());
         }
 
@@ -101,7 +101,7 @@ namespace RuBLE::Utils {
         template <bool prefix = true, typename T = void> requires std::is_pointer_v<T>
         std::string to_hex_addr(const T &ptr) { return ptr_to_hex_addr(ptr); }
         template <bool prefix = true, typename T = void>
-        std::string to_hex_addr(std::shared_ptr<T> ptr) { return sptr_to_hex_addr(ptr); }
+        std::string to_hex_addr(const std::shared_ptr<T> &ptr) { return sptr_to_hex_addr(ptr); }
         template <bool prefix = true, typename T = void> requires std::is_base_of_v<Rice::Object, T>
         std::string to_hex_addr(const T &obj) { return rb_to_hex_addr(obj); }
         template <bool prefix = true, typename T = void>

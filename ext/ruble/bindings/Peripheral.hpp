@@ -1,6 +1,5 @@
 #pragma once
 
-#include "common.hpp"
 #include "containers/Callback.hpp"
 #include "containers/NamedBitSet.hpp"
 #include "containers/NamedBitSet.ipp"
@@ -20,6 +19,7 @@ namespace RuBLE {
 
         using DataObject [[maybe_unused]] = Data_Object<Peripheral>;
         using Owner = Adapter;
+        using ServiceMap = std::map<BluetoothUUID, std::shared_ptr<Service>>;
         using PartialResourceIdentifier = std::string_view;
         static bool unpair_all_on_exit;
     protected:
@@ -29,10 +29,10 @@ namespace RuBLE {
         SimpleBLE::BluetoothAddressType _addr_type;
         std::shared_ptr<Callback> _on_connected;
         std::shared_ptr<Callback> _on_disconnected;
-        mutable std::shared_ptr<ServiceRegistry> _service_registry;
+        std::shared_ptr<ServiceRegistry> _service_registry;
         StatusFlagSet _service_cache_tag;
         VALUE _self = Qnil;
-//        std::optional<PartialResourceIdentifier> _resource_identifier;
+        std::optional<PartialResourceIdentifier> _resource_identifier;
 
     public:
 //        static std::shared_ptr<Peripheral> create(const SimpleBLE::Peripheral &peripheral);
@@ -71,8 +71,8 @@ namespace RuBLE {
         void connect();
         void disconnect();
         void unpair();
-        [[nodiscard]] const std::shared_ptr<ServiceMap> &services() const;
-        [[nodiscard]] std::shared_ptr<ServiceMap> services_rb() const;
+
+        [[nodiscard]] const std::map<BluetoothUUID, std::shared_ptr<Service>> &services() const;
         std::shared_ptr<Service> operator[](const BluetoothUUID &svcUuid) const;
 
         [[nodiscard]] ByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic);

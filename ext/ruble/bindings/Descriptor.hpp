@@ -1,14 +1,12 @@
 #pragma once
 
-#include "common.hpp"
 #include "types/declarations.hpp"
-#include "utils/inspection.hpp"
-#include "Characteristic.hpp"
-
 #include <utility>
 #include <compare>
+#include "utils/inspection.hpp"
 
 namespace RuBLE {
+    class Characteristic;
     class Descriptor {
     public:
         using DataObject = Descriptor_DO;
@@ -18,11 +16,11 @@ namespace RuBLE {
         Owner *_owner = nullptr;
         VALUE _self = Qnil;
     public:
-        static std::shared_ptr<DescriptorMap> make_map(const auto &range, Descriptor::Owner *owner) {
-            std::shared_ptr<DescriptorMap> result = std::make_shared<DescriptorMap>();
+        static std::map<BluetoothUUID, std::shared_ptr<Descriptor>> make_map(const auto &range, Descriptor::Owner *owner) {
+            std::map<BluetoothUUID, std::shared_ptr<Descriptor>> result;
             for (const auto &descriptor : range) {
                 auto descPtr = std::make_shared<Descriptor>(descriptor, owner);
-                result->emplace(descPtr->uuid(), std::move(descPtr));
+                result.emplace(descPtr->uuid(), std::move(descPtr));
             }
             return result;
         }
