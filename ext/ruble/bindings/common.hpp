@@ -22,6 +22,9 @@ namespace RuBLE {
     extern Peripheral_DT rb_cPeripheral;
     extern Adapter_DT rb_cAdapter;
 
+    using CharacteristicMap = std::map<BluetoothUUID, std::shared_ptr<Characteristic>>;
+    using DescriptorMap = std::map<BluetoothUUID, std::shared_ptr<Descriptor>>;
+    using ServiceMap = std::map<BluetoothUUID, std::shared_ptr<Service>>;
 
     extern std::shared_ptr<AdapterRegistryFactory> adapterRegistryFactory;
     extern std::shared_ptr<AdapterRegistry> adapterRegistry;

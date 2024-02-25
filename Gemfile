@@ -2,10 +2,10 @@
 
 source 'https://rubygems.org'
 
-ruby '3.2.2'
+ruby '3.3.0'
 gemspec development_group: :build
 
-gem 'bundler', '~> 2.4.21'
+gem 'bundler', '~> 2.5.6'
 
 group :build do # TODO: put these into gemspec if they really get used
   gem 'rainbow', '~> 3.1' # TODO: use this more to show progress messages

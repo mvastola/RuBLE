@@ -33,9 +33,10 @@ namespace RuBLE {
 //    using ProxyRefVector = std::vector<ProxyRef>;
         using ProxyPtrVector = std::vector<ProxyPtr>;
         using Collection = std::map<Key, ProxyPtr>;
+        using CollectionIterator = typename Collection::iterator;
 
-        using ForEachFn = std::function<void(typename Collection::mapped_type &)>;
-        using ForEachFnConst = std::function<void(typename Collection::mapped_type &)>;
+//        using ForEachFn = std::function<void(typename Collection::mapped_type &)>;
+//        using ForEachFnConst = std::function<void(typename Collection::mapped_type &)>;
         static constexpr const bool is_owned = !std::is_same_v<Owner, nullptr_t>;
 
         void ruby_mark() const {
@@ -63,7 +64,7 @@ namespace RuBLE {
         // FIXME: why am I getting a warning that _self is uninitialized with the constructor below?
         Registry() requires std::is_same_v<Owner, nullptr_t> : Registry(nullptr) {}
 
-        Object self() const { return _self; }
+        [[nodiscard]] Object self() const { return _self; }
         constexpr const Owner *owner() const { return _owner; }
         constexpr Owner *owner() { return _owner; }
 
@@ -88,13 +89,13 @@ namespace RuBLE {
         const ProxyPtr &operator[](const Key &addr) const { return _registry->at(addr); }
         const ProxyPtr &at(const Key &addr) const { return _registry->at(addr); }
         ProxyPtr &at(const Key &addr) { return _registry->at(addr); }
-        constexpr const Collection &data() const;
+        const std::shared_ptr<Collection> &data() const { return _registry; }
 
         ProxyPtr fetch(const Value &value) const {
             const std::lock_guard<std::mutex> lock(*_mtx); // needed to avoid race condition
 
             Key key = key_from_value(value);
-            typename decltype(_registry)::element_type::iterator found = _registry->find(key);
+            CollectionIterator found = _registry->find(key);
             if (found != _registry->end()) return found->second;
 
             if (rb_during_gc()) {
@@ -161,8 +162,8 @@ namespace RuBLE {
         friend class std::hash<Registry<Key, ProxyClass, Value>>;
     };
 
-    template<typename Key, class ProxyClass, class Value>
-    constexpr const Registry<Key, ProxyClass, Value>::Collection &Registry<Key, ProxyClass, Value>::data() const { return *_registry; }
+//    template<typename Key, class ProxyClass, class Value>
+//    constexpr std::shared_ptr<Registry<Key, ProxyClass, Value>::Collection> &Registry<Key, ProxyClass, Value>::data() { return *_registry; }
 
     extern std::shared_ptr<AdapterRegistry> adapterRegistry;
 }

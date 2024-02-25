@@ -34,14 +34,14 @@ namespace RuBLE {
         const std::shared_ptr<RegistryMapType> _registries {};
 
     public:
-        static const std::shared_ptr<RegistryFactory> &instance();
+        static std::shared_ptr<RegistryFactory> instance();
 
-        const std::shared_ptr<RegistryType> &registry(RegistryOwner *owner) const;
+        std::shared_ptr<RegistryType> registry(RegistryOwner *owner) const;
 
-        const std::shared_ptr<RegistryType> &registry() const requires std::same_as<RegistryOwner, nullptr_t>;
+        std::shared_ptr<RegistryType> registry() const requires std::same_as<RegistryOwner, nullptr_t>;
 
         template<class... Types>
-        [[maybe_unused]] static const std::shared_ptr<RegistryType> &getRegistry(const Types &... args);
+        [[maybe_unused]] static std::shared_ptr<RegistryType> getRegistry(const Types &...args);
 
         void ruby_mark() const;
     };
@@ -58,7 +58,7 @@ namespace RuBLE {
 
     template<class RegistryType>
     template<class... Types>
-    const std::shared_ptr<RegistryType> &RegistryFactory<RegistryType>::getRegistry(const Types &... args) {
+    std::shared_ptr<RegistryType> RegistryFactory<RegistryType>::getRegistry(const Types &... args) {
         return instance()->registry(args...);
     }
 
@@ -66,13 +66,13 @@ namespace RuBLE {
     RegistryFactory<RegistryType>::RegistryFactory() : _registries(std::make_shared<RegistryMapType>()) {}
 
     template<class RegistryType>
-    const std::shared_ptr<RegistryType> &
+    std::shared_ptr<RegistryType>
     RegistryFactory<RegistryType>::registry() const requires std::same_as<RegistryOwner, nullptr_t> {
         return this->registry(nullptr);
     }
 
     template<class RegistryType>
-    const std::shared_ptr<RegistryType> &RegistryFactory<RegistryType>::registry(RegistryOwner *owner) const {
+    std::shared_ptr<RegistryType> RegistryFactory<RegistryType>::registry(RegistryOwner *owner) const {
         RegistryMapKey index;
         if constexpr (RegistryType::is_owned) {
             index = RegistryKeyHasher(*owner);
@@ -95,7 +95,7 @@ namespace RuBLE {
     }
 
     template<class RegistryType>
-    const std::shared_ptr<RegistryFactory<RegistryType>> &RegistryFactory<RegistryType>::instance() {
+    std::shared_ptr<RegistryFactory<RegistryType>> RegistryFactory<RegistryType>::instance() {
         static std::mutex _static_mtx;
         if (!_instance) {
             std::lock_guard<std::mutex> _lock(_static_mtx);

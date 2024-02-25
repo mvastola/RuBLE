@@ -32,7 +32,6 @@ namespace RuBLE {
 
     std::string Peripheral::identifier() const { return _peripheral->identifier(); }
 
-
     std::map<uint16_t, ByteArray> Peripheral::manufacturer_data() const {
         auto data = _peripheral->manufacturer_data();
         return { data.begin(), data.end() };
@@ -80,7 +79,17 @@ namespace RuBLE {
 
     void Peripheral::unpair() { _peripheral->unpair(); }
 
-    const std::map<BluetoothUUID, std::shared_ptr<Service>> &Peripheral::services() const {
+    std::shared_ptr<ServiceMap> Peripheral::services_rb() const {
+//        return services();
+//        using ServiceMapPtr = std::shared_ptr<ServiceMap>;
+//        static auto toRuby = Rice::detail::To_Ruby<ServiceMapPtr>{};
+        std::shared_ptr<ServiceMap> ptr = std::make_shared<ServiceMap>(*services());
+        return ptr;
+//        Rice::Data_Object<ServiceMap> rubyObj(services());
+//        return toRuby.convert(ptr);
+    }
+
+    const std::shared_ptr<ServiceMap> &Peripheral::services() const {
         if (!rb_during_gc()) {
             // we can't create new services during GC
             for (const auto &c : _peripheral->services()) _service_registry->fetch(c);

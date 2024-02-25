@@ -25,11 +25,19 @@ namespace RuBLE {
 
     ByteArray Service::data() const { return _service->data(); }
 
-    const std::map<BluetoothUUID, std::shared_ptr<Characteristic>> &Service::characteristics() const {
+    Rice::Object Service::characteristics_rb() const {
+        using CharacteristicMapPtr = std::shared_ptr<CharacteristicMap>;
+        static auto toRuby = Rice::detail::To_Ruby<CharacteristicMapPtr>{};
+        CharacteristicMapPtr ptr(characteristics());
+        return toRuby.convert(ptr);
+    }
+
+    const std::shared_ptr<CharacteristicMap> &Service::characteristics() const {
         if (!rb_during_gc()) {
             // we can't create new characteristics during GC
             for (const auto &c : _service->characteristics()) _characteristic_registry->fetch(c);
         }
+        std::shared_ptr<CharacteristicMap> ptr = _characteristic_registry->data();
         return _characteristic_registry->data();
 //        std::vector<SimpleBLE::Characteristic> unwrappedCharacteristics = _service->characteristics();
 //        auto objects = _characteristic_registry->map_to_objects(unwrappedCharacteristics);
@@ -97,7 +105,7 @@ namespace RuBLE {
 
     void Service::ruby_mark() const {
         rb_gc_mark(self());
-        for (const auto &[uuid, characteristic]: characteristics())
+        for (const auto &[uuid, characteristic]: *(characteristics()))
             Rice::ruby_mark(characteristic.get());
     }
 
@@ -105,7 +113,7 @@ namespace RuBLE {
         rb_cService = define_class_under<Service>(rb_mRuBLE, "Service")
                 .define_method("uuid", &Service::uuid) // returns BluetoothUUID
                 .define_method("data", &Service::data) // returns SimpleBLE::ByteArray
-                .define_method("characteristics", &Service::characteristics) // returns std::vector<Characteristic>
+                .define_method("characteristics", &Service::characteristics_rb) // returns std::vector<Characteristic>
                 .define_method("inspect", &Service::to_s);
         define_class_under<std::shared_ptr<RuBLE::Service>>(rb_mRuBLE, "ServicePtr");
     }

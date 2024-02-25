@@ -11,8 +11,8 @@ tmp/
 *.so
 *.log
 Makefile
-tmp/
 .gdb_history
 *.patch
 mkmf.log
 cmake-build*
+/contrib/

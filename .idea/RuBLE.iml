@@ -443,6 +443,13 @@
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/CMakeFiles" />
       <excludeFolder url="file://$MODULE_DIR$/ext/ruble/build" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/scopes" />
+      <excludeFolder url="file://$MODULE_DIR$/contrib/SimpleBLE/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/contrib/rice/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/contrib/rice/doc/_build" />
+      <excludeFolder url="file://$MODULE_DIR$/contrib/unused/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/private" />
+      <excludeFolder url="file://$MODULE_DIR$/test/.idea" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

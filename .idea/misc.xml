@@ -3,10 +3,16 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.9" />
   </component>
-  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$/ext/ruble">
+    <contentRoot DIR="$PROJECT_DIR$" />
+  </component>
   <component name="CidrRootsConfiguration">
     <excludeRoots>
+      <file path="$PROJECT_DIR$/contrib" />
+      <file path="$PROJECT_DIR$/ext/ruble/.idea" />
       <file path="$PROJECT_DIR$/ext/ruble/build" />
+      <file path="$PROJECT_DIR$/pkg" />
+      <file path="$PROJECT_DIR$/sig" />
       <file path="$PROJECT_DIR$/tmp" />
       <file path="$PROJECT_DIR$/tmp/x86_64-linux" />
       <file path="$PROJECT_DIR$/tmp/x86_64-linux/ruble" />
