@@ -31,7 +31,7 @@ namespace RuBLE {
 
         get().set_callback_on_scan_updated([this](const SimpleBLE::Peripheral &peripheral) {
             RubyQueue::FnType fn = [this, peripheral]() -> void {
-                const std::shared_ptr<Peripheral> &wrapped = _peripheral_registry->fetch(peripheral);
+                std::shared_ptr<Peripheral> wrapped = _peripheral_registry->fetch(peripheral);
                 _on_scan_update->fire(wrapped->self(), self());
             };
             if (_on_scan_update) rubyQueue->push(fn);
@@ -39,7 +39,7 @@ namespace RuBLE {
 
         get().set_callback_on_scan_found([this](const SimpleBLE::Peripheral &peripheral) {
             RubyQueue::FnType fn = [this, peripheral]() -> void {
-                const std::shared_ptr<Peripheral> &wrapped = _peripheral_registry->fetch(peripheral);
+                std::shared_ptr<Peripheral> wrapped = _peripheral_registry->fetch(peripheral);
                 _on_scan_find->fire(wrapped->self(), self());
             };
             if (_on_scan_find) rubyQueue->push(fn);

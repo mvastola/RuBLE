@@ -48,7 +48,7 @@ namespace RuBLE {
         RubyQueue &operator=(const RubyQueue&) = delete;
         // TODO: add a function that waits for queue to be settled
 
-        static const std::shared_ptr<RubyQueue> &instance();
+        static std::shared_ptr<RubyQueue> instance();
         [[nodiscard]] Object rb_thread() const;
 
         void push(QueueItemType fn);

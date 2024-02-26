@@ -1,5 +1,6 @@
 #pragma once
 
+#include "common.hpp"
 #include "management/RubyQueue.hpp"
 #include "containers/NamedBitSet.hpp"
 #include "bindings/Descriptor.hpp"
@@ -35,18 +36,17 @@ namespace RuBLE {
         using DataObject = Data_Object<Characteristic>;
         using Owner = Service;
         using CallbackFnType [[maybe_unused]] = std::function<void(ByteArray payload)>;
-        using DescriptorMap = std::map<BluetoothUUID, std::shared_ptr<Descriptor>>;
     protected:
         Owner *_owner;
         std::shared_ptr<SimpleBLE::Characteristic> _characteristic;
         BluetoothUUID _uuid;
         std::shared_ptr<Callback> _on_notify;
         std::shared_ptr<Callback> _on_indicate;
-        mutable std::optional<CapabilityFlags> _capabilities;
+        mutable std::shared_ptr<CapabilityFlags> _capabilities;
         // NB: this is the only class where we're not using a Registry<>
         // This can be a case study in if we can remove a ton of the registry stuff
         // now that I figured out garbage collection
-        mutable std::optional<DescriptorMap> _descriptors;
+        mutable std::shared_ptr<DescriptorMap> _descriptors;
 
         VALUE _self = Qnil;
 
@@ -67,7 +67,10 @@ namespace RuBLE {
 //        constexpr ResourceUniqueIdentifier<Characteristic> full_resource_identifier() const;
 //        constexpr BluetoothUUID this_resource_identifier() const;
 
-        [[nodiscard]] const std::map<BluetoothUUID, std::shared_ptr<Descriptor>> &descriptors() const;
+        [[nodiscard]] const std::shared_ptr<DescriptorMap> &descriptors() const;
+        [[nodiscard]] Rice::Object descriptors_rb() const;
+
+
         [[nodiscard]] std::shared_ptr<Descriptor> operator[](const BluetoothUUID &descUuid) const;
         [[nodiscard]] constexpr const CapabilityFlags &capabilities() const;
 
@@ -110,12 +113,11 @@ namespace RuBLE {
 
     constexpr const BluetoothUUID &Characteristic::uuid() const { return _uuid; }
 
-
 //    constexpr BluetoothUUID Characteristic::this_resource_identifier() const { return _uuid; }
 
     constexpr const Characteristic::CapabilityFlags &Characteristic::capabilities() const {
         if (_capabilities) return *_capabilities;
-        _capabilities = std::make_optional<CapabilityFlags>(_characteristic->capabilities());
+        _capabilities = std::make_shared<CapabilityFlags>(_characteristic->capabilities());
         return *_capabilities;
     }
 

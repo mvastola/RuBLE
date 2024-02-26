@@ -17,7 +17,6 @@
 namespace RuBLE {
     template<typename T>
     concept UnsignedIntegral = std::is_integral_v<T> && std::is_unsigned_v<T>;
-
     // TODO: Need to test this out
     class ByteArray : public Rubyable<ByteArray> {
     public:

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.25.1) # TODO: see if this can/should be lowered
+project(RuBLE LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23) # TODO: see if this will compile with C++20 (I think it will)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -44,7 +45,6 @@ endif()
 if(RUBLE_VERBOSE)
   set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
-project(RuBLE LANGUAGES CXX)
 
 find_path(VALGRIND_HEADER_DIR valgrind/valgrind.h)
 set(HAVE_VALGRIND "${VALGRIND_HEADER_DIR}")
@@ -61,6 +61,7 @@ add_library(${EXTENSION_NAME} SHARED)
 string(REPLACE " " ";" rb_CFLAGS ${rb_CFLAGS})
 list(REMOVE_ITEM rb_CFLAGS "-Wold-style-definition" "-Wimplicit-int" "-Wimplicit-function-declaration" "-Wno-self-assign" "-Wno-parentheses-equality" "-Wno-constant-logical-operand")
 # TODO: make target non-specific
+
 target_compile_options(${EXTENSION_NAME} PUBLIC
         ${rb_CFLAGS}
         -ggdb3 # TODO: strip debug info into separate file (don't necessarily need to package it with distributable version)
@@ -81,7 +82,8 @@ target_link_options(${EXTENSION_NAME} PUBLIC
 )
 
 # TODO: should this be debug only? (need to figure out what normal install paths are and where they come from)
-cmake_path(SET CMAKE_INSTALL_PREFIX NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
+cmake_path(SET CMAKE_INSTALL_PREFIX
+        NORMALIZE "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/ruble")
 
 if(RUBLE_DEBUG)
     # TODO: make target non-specific
