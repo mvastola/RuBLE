@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.25.1) # TODO: see if this can/should be lowered
-project(RuBLE LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23) # TODO: see if this will compile with C++20 (I think it will)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -45,6 +44,7 @@ endif()
 if(RUBLE_VERBOSE)
   set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
+project(RuBLE LANGUAGES CXX)
 
 find_path(VALGRIND_HEADER_DIR valgrind/valgrind.h)
 set(HAVE_VALGRIND "${VALGRIND_HEADER_DIR}")
