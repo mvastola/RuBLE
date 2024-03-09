@@ -14,9 +14,10 @@ end
 
 gem 'rake', '~> 13.0'
 
-group :dev do
+group :dev, :development do
   gem 'debug'
   gem 'faraday-http-cache'
   gem 'rubocop', require: false
   gem 'rubocop-rake', require: false
+  gem 'steep', '~> 1.6.0', require: false
 end

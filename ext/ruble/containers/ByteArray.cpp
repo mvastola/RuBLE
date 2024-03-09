@@ -33,10 +33,6 @@ namespace RuBLE {
 
     std::string ByteArray::inspect() const { return to_s(); }
 
-    void ByteArray::ruby_mark() const {
-        Rubyable::ruby_mark();
-    }
-
     void Init_ByteArray() {
         rb_cByteArray = define_class_under<ByteArray>(rb_mRuBLE, "ByteArray")
                 .define_singleton_function("new", &ByteArray::from_ruby)

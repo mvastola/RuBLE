@@ -1,150 +1,160 @@
+# vim: syntax=ruby:
 module RuBLE
   VERSION: String
+
+  class UUID = String
+  class BluetoothAddress = String
+
+  def self.loader: () -> untyped # really Zeitwerk::Loader
+  def self.shutdown: () -> void
+  def self.demangle: (String symbol_name) -> String?
 
   class Error < StandardError
   end
 
-  class PeripheralRegistry
-    def to_s: () -> Integer
-    def size: () -> Integer
-  end
+  class Adapter
+    def self.get_adapters: () -> Array[Adapter]
+    def self.bluetooth_enabled?: () -> bool
 
-  class ServiceRegistry
-    def to_s: () -> Integer
-    def size: () -> Integer
-  end
-
-  class CharacteristicRegistry
-    def to_s: () -> Integer
-    def size: () -> Integer
-  end
-
-  class BluetoothAddressType
-    include Enumerable
-    include Comparable
-    def to_s: () -> untyped
-    def to_i: () -> untyped
-    def <=>: () -> untyped
-    def eql?: () -> untyped
-    def hash: () -> untyped
-    def ===: () -> untyped
-    def inspect: () -> untyped
-  end
-
-  class Service
-    def []: () -> untyped
-    def characteristics: () -> untyped
-    def uuid: () -> untyped
-    def data: () -> untyped
-    def characteristic_registry: () -> untyped
-    def inspect: () -> untyped
-  end
-
-  class DescriptorMap
-    def []: () -> untyped
-    def descriptors: () -> untyped
-  end
-
-
-  class ByteArray
-    def !: () -> untyped
-    def %: () -> untyped
-    def &: () -> untyped
-    def <=>: () -> untyped
-    def data: () -> untyped
-    def get: () -> untyped
-    def inspect: () -> untyped
-    def to_s: () -> untyped
-    def to_i: () -> untyped
-    def |: () -> untyped
-    def ~: () -> untyped
-  end
-
-  class Descriptor
-    def write: () -> untyped
-    def read: () -> untyped
-    def uuid: () -> untyped
-    def inspect: () -> untyped
-  end
-
-  class Characteristic
-    def can_read?: () -> untyped
-    def uuid: () -> untyped
-    def can_write_command?: () -> untyped
-    def can_notify?: () -> untyped
-    def can_write_request?: () -> untyped
-    def capabilities: () -> untyped
-    def write_request: () -> untyped
-    def can_indicate?: () -> untyped
-    def set_on_notify: () -> untyped
-    def write_command: () -> untyped
-    def inspect: () -> untyped
-    def set_on_indicate: () -> untyped
-    def to_s: () -> untyped
-    def value_tracking?: () -> untyped
-    def value_tracking=: () -> untyped
-    def value_tracking: () -> untyped
-    def write: () -> untyped
-    def last_value: () -> untyped
-    def read: () -> untyped
-    class CapabilityType
-      include Enumerable
-      include Comparable
-      def to_s: () -> untyped
-      def to_i: () -> untyped
-      def <=>: () -> untyped
-      def eql?: () -> untyped
-      def hash: () -> untyped
-      def ===: () -> untyped
-      def inspect: () -> untyped
-    end
-
+    def address: () -> BluetoothAddress
+    def get_paired_peripherals: () -> Array[Peripheral]
+    def identifier: () -> String
+    def initialized?: () -> bool
+    def on_scan_find: (^(Peripheral, Adapter) -> void callback) -> void
+    def on_scan_start: (^(instance) -> void callback) -> void
+    def on_scan_stop: (^(Adapter) -> void callback) -> void
+    def on_scan_update: (^(Peripheral, Adapter) -> void callback) -> void
+    def peripheral_registry: () -> PeripheralRegistry
+    def scanning?: () -> bool
+    def scan_for: (Integer milliseconds) -> void
+    def scan_get_results: () -> Array[Peripheral]
+    def scan_start: () -> void
+    def scan_stop: () -> void
   end
 
   class Peripheral
-    def connectable?: () -> untyped
-    def paired?: () -> untyped
-    def unpair: () -> untyped
-    def services: () -> untyped
-    def service_registry: () -> untyped
-    def manufacturer_data: () -> untyped
-    def on_connect: () -> untyped
-    def on_disconnect: () -> untyped
-    def inspect: () -> untyped
-    def identifier: () -> untyped
-    def []: () -> untyped
-    def initialized?: () -> untyped
-    def address: () -> untyped
-    def address_type: () -> untyped
-    def rssi: () -> untyped
-    def tx_power: () -> untyped
-    def mtu: () -> untyped
-    def connect: () -> untyped
-    def disconnect: () -> untyped
-    def connected?: () -> untyped
+    attr_accessor self.unpair_all_on_exit: bool
+
+    def address: () -> BluetoothAddress
+    def address_type: () -> BluetoothAddressType
+    def connectable?: () -> bool
+    def connected?: () -> bool
+    def connect: () -> void
+    def disconnect: () -> void
+    def identifier: () -> String
+    def initialized?: () -> bool
+    def inspect: () -> String
+    def manufacturer_data: () -> Hash[Integer, ByteArray]
+    def mtu: () -> Integer
+    def on_connect: (^(Peripheral) -> void callback) -> void
+    def on_disconnect: (^(Peripheral) -> void callback) -> void
+    def paired?: () -> bool
+    def rssi: () -> Integer
+    def services: () -> Hash[UUID, Service]
+    def service_registry: () -> ServiceRegistry
+    def tx_power: () -> Integer
+    def unpair: () -> void
+    def []: (UUID service_uuid) -> Service
   end
 
-  class Adapter
-    def on_scan_update: () -> untyped
-    def peripheral_registry: () -> untyped
-    def identifier: () -> untyped
-    def scan_start: () -> untyped
-    def scan_stop: () -> untyped
-    def initialized?: () -> untyped
-    def address: () -> untyped
-    def scanning?: () -> untyped
-    def scan_for: () -> untyped
-    def get_paired_peripherals: () -> untyped
-    def scan_get_results: () -> untyped
-    def on_scan_stop: () -> untyped
-    def on_scan_start: () -> untyped
-    def on_scan_find: () -> untyped
+  class Service
+    def characteristics: () -> Hash[UUID, Characteristic]
+    def characteristic_registry: () -> CharacteristicRegistry
+    def data: () -> ByteArray
+    def inspect: () -> String
+    def uuid: () -> UUID
+    def []: (UUID characteristic_uuid) -> Characteristic
+  end
+
+  interface _CharacteristicValueTracker
+    def last_value: () -> ByteArray?
+    def value_tracking: () -> bool?
+    def value_tracking=: (bool value) -> void
+    def value_tracking?: () -> bool
+  end
+
+  class Characteristic
+    include _CharacteristicValueTracker
+
+    def can_indicate?: () -> bool
+    def can_notify?: () -> bool
+    def can_read?: () -> bool
+    def can_write_command?: () -> bool
+    def can_write_request?: () -> bool
+    def capabilities: () -> Array[String]
+    def inspect: () -> String
+    def read: (?bool force) -> ByteArray
+    def set_on_indicate: (^(ByteArray, Characteristic) -> void callback) -> void
+    def set_on_notify: (^(ByteArray, Characteristic) -> void callback) -> void
+    def to_s: () -> String
+    def uuid: () -> UUID
+    def write: (String descriptor_uuid, ByteArray data) -> void
+    def write_command: (ByteArray data) -> void
+    def write_request: (ByteArray data) -> void
+
+    class CapabilityType
+      include Comparable
+      include Enumerable[untyped] # TODO: find out type
+
+      def to_i: () -> Integer
+    end
+  end
+
+  class Descriptor
+    def inspect: () -> String
+    def read: () -> ByteArray
+    def uuid: () -> UUID
+    def write: (ByteArray data) -> void
+  end
+
+  class ByteArray
+    def self.new: () -> instance | (ByteArray|Numeric|String|Symbol|bool? value) -> instance
+    def ~: () -> Integer
+    def data: () -> String
+    def get: () -> String
+    def inspect: () -> String
+    def to_i: () -> Integer
+    def to_s: () -> String
+    def !: () -> bool
+    def %: () -> Integer
+    def &: () -> Integer
+    def <=>: () -> Integer
+    def |: () -> Integer
+  end
+
+  class DescriptorMap
+    def descriptors: () -> Hash[UUID, Descriptor]
+    def []: (UUID descriptor_uuid) -> Descriptor
+  end
+
+  interface _Registry
+    def size: () -> Integer
+    def to_s: () -> String
   end
 
   class AdapterRegistry
-    def to_s: () -> untyped
-    def size: () -> untyped
+    include _Registry
+
+    attr_reader self.registry: instance
   end
 
+  class PeripheralRegistry
+    include _Registry
+  end
+
+  class ServiceRegistry
+    include _Registry
+  end
+
+  class CharacteristicRegistry
+    include _Registry
+  end
+
+  class BluetoothAddressType
+    include Comparable
+    include Enumerable[untyped] # TODO: find out type
+
+    def to_i: () -> Integer
+  end
 end
 

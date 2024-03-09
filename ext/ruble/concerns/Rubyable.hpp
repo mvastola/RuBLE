@@ -13,7 +13,7 @@ namespace RuBLE {
     protected:
         VALUE _self = Qnil;
 
-        virtual constexpr VALUE &get_or_allocate_rb_object() {
+        virtual const VALUE &get_or_allocate_rb_object() {
             if (_self != Qnil) return _self;
             if (in_ruby) {
                 _self = Rice::Data_Object<T>(*dynamic_cast<T*>(this));

@@ -122,8 +122,6 @@ namespace RuBLE {
             const UnsignedIntegral auto &val = *reinterpret_cast<const T*>(_data.data());
             return boost::endian::little_to_native(val);
         }
-
-        void ruby_mark() const;
     };
 
     constexpr ByteArray::ByteArray() : _data(), Rubyable<ByteArray>() {}

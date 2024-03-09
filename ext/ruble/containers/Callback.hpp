@@ -6,7 +6,7 @@
 
 using namespace std::string_literals;
 namespace RuBLE {
-    struct Callback {
+    class Callback {
     protected:
         std::size_t  _arg_count;
         VALUE _cb = Qnil;

@@ -8,12 +8,15 @@ I'm reasonably far along now (actually, theoretically, this is fully-functional)
 
 - See [Known Issues](#known-issues) just below
 - Make tests (/ figure out how to mock bluetooth devices!)
-- Create gem on rubygems, and automate building/packaging for different OSes
+- Check type signatures with [`steep`](https://github.com/soutaro/steep/blob/master/guides/src/getting-started/getting-started.md)
+- Automate building/packaging for different OSes
     - Implement `rake-compiler`-compatible rake tasks for compiling gem 
-    - Forward all relevant configuration options to cmake somehow
+    - Add commands to run cmake to `ext/ruble/cmake.mk` (which should be included from `ext/ruble/Makefile` per `extconf.rb`)
+- Set up CI/CD testing/packaging
 - See lots of tiny todos in the comments throughout my code (`grep -rIn TODO` should flag them all)
-- Documentation
-- RBS file
+- Write method documentation
+- Add type signatures for `RuBLE::Build` (?) for internal development
+- See if `rbs prototype runtime` would work for C extensions
 
 ## Known Issues
 - For some reason, if ruby crashes (e.g. segfaults) while a device is connected, the device seems to be invisible to ruby once restarting, until one disconnects the bluetooth adapter from the device through other means
@@ -40,9 +43,16 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
     $ gem install RuBLE
 
+## Building on MacOS
+
+MacOS is not yet supported.
+
 ## Building on Windows
 
-Building in cygwin appears to not be supported. This is due to the SimpleBLE library not supporting CYGWIN when building from source.  (NOTE: Still need to re-confirm the precompiled library didn't work either.)
+Windows is not yet supported.
+
+~~Building in cygwin appears to not be supported. This is due to the SimpleBLE library not supporting CYGWIN when building from source.  (NOTE: Still need to re-confirm the precompiled library didn't work either.)~~
+
 
 <!--The best way I've found to build on Windows is:
 

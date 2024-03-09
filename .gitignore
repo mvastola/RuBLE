@@ -16,3 +16,4 @@ Makefile
 mkmf.log
 cmake-build*
 /contrib/
+/.gem_rbs_collection

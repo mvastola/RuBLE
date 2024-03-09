@@ -93,3 +93,12 @@ end
 
 show_module('RuBLE', RuBLE)
 
+# Regexps to run on result:
+# - :%s/\(def \w\+?:.* -> \)untyped/\1bool/c
+# - :%s/\(def =\{2,3\}:.* -> \)untyped/\1bool/c
+# - :%s/\(def <=>:.* -> \)untyped/\1Integer/c
+# - :%s/\(def hash:.* -> \)untyped/\1Integer/c
+# - :%s/\(def to_i\(nt\)\?:.* -> \)untyped/\1Integer/c
+# - :%s/\(def to_s\(tr\)\?:.* -> \)untyped/\1String/c
+# - :%s/\(def inspect:.* -> \)untyped/\1String/c
+
