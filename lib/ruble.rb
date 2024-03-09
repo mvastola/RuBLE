@@ -3,7 +3,9 @@
 require_relative 'ruble/version'
 
 require 'zeitwerk'
-loader = Zeitwerk::Loader.for_gem
+in_gem = Pathname.new('../').expand_path(__dir__) == Bundler.root
+Thread.main[:ruble_zeitwerk] = loader = in_gem ? Zeitwerk::Loader.for_gem : Zeitwerk::Loader.new
+
 loader.inflector.inflect(
   'ruble'     => 'RuBLE',
   'simpleble' => 'SimpleBLE',
@@ -22,6 +24,8 @@ module RuBLE
   # TODO: is this used? (should it be?)
   class Error < StandardError; end
   class << self
+    def loader = Thread.main[:ruble_zeitwerk]
+
     def try_demangle(symbol)
       require 'open3'
       demangled, status = Open3.capture2('c++filt', stdin_data: symbol)
@@ -41,4 +45,3 @@ rescue LoadError => ex
   end
   raise
 end
-

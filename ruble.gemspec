@@ -62,6 +62,7 @@ Gem::Specification.new do |spec|
   # Support Libraries
   spec.add_development_dependency 'activesupport', '~> 7.1.2'
   spec.add_development_dependency 'memery', '~> 1.5'
+  spec.add_development_dependency 'typeprof', '~> 0.21.11'
 
   # TODO: I _think_ c++20 will work too, but need to check
   spec.requirements << 'C++ compiler supporting standard c++23 (e.g. g++-13)'

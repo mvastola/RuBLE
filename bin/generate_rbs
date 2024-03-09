@@ -1,0 +1,111 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# TODO: see if I can bypass needing to prefix commands with `bundle exec` via this:
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
+require "bundler/setup" # Set up gems listed in the Gemfile.
+Bundler.require
+
+require_relative '../lib/ruble'
+RuBLE.loader.eager_load
+
+@indent_level = 0
+@modules_visited ||= Set.new
+
+def write(line = '', lines_before: 0, lines_after: 0)
+  STDOUT.print("\n" * lines_before)
+  STDOUT.puts("%{indent}%{line}" % { line:, indent: " " * 2 * @indent_level }) unless line.nil?
+  STDOUT.print("\n" * lines_after)
+end
+
+def indented(prefix = nil, suffix = nil, lines_before: 0, lines_after: 0, &block)
+  write(prefix, lines_before:)
+  @indent_level += 1
+  yield
+  @indent_level -= 1
+  write(suffix, lines_after:)
+end
+
+
+def show_submodules(name, value, mod_q)
+  if value.is_a?(Module)
+    mod_q << [name, value]
+  else
+    write "#{name}: #{value.class} = #{value}"
+  end
+end
+
+def each_constant(mod, **kwargs, &block)
+  kwargs[:if] ||= ->(*args) { kwargs[:unless][args] } if kwargs[:unless]
+  condition ||= kwargs[:if] || Proc.new { true }
+  mod.constants.each do |const_name|
+    const_value = mod.const_get(const_name)
+    next unless condition[const_value, const_name, mod]
+    block.call(const_value, const_name, mod)
+  end
+end
+def each_valued_constant(mod, &block) = each_constant(mod, unless: Proc.new { _1.is_a?(Module) }, &block)
+def each_submodule(mod, &block) = each_constant(mod, if: Proc.new { _1.is_a?(Module) }, &block)
+
+def show_includes(mod)
+  (mod.included_modules - Object.included_modules).each do |inc|
+    write "include #{inc}"
+  end
+end
+
+def module_declaration(name, mod)
+  is_class = mod.is_a?(Class)
+  mod_kywd = is_class ? 'class' : 'module'
+  has_subclass = is_class && mod.superclass != Object
+  subclass = " #{mod.superclass.name}" if has_subclass
+  "#{mod_kywd} #{name} #{subclass}".strip
+end
+
+def singleton_class(&block) = indented('class << self', 'end', &block)
+
+def show_method(method, method_name, mod, static:)
+  method_name = "self.#{method_name}" if static
+  write "def #{method_name}: () -> untyped"
+end
+
+def gather_owned_methods(mod, static:)
+  public_methods_getter = static ? :public_methods : :public_instance_methods
+  protected_methods_getter = static ? :protected_methods : :protected_instance_methods
+  method_getter = static ? :method : :instance_method
+
+  methods = mod.send(public_methods_getter) + mod.send(protected_methods_getter)
+  methods.to_h do |method_name|
+    method = mod.send(method_getter, method_name)
+    is_owned = method.owner == mod
+    [method_name, is_owned ? method : nil ]
+  end.compact
+end
+
+
+def show_module(name, mod)
+  indented module_declaration(name, mod), 'end', lines_after: 1 do
+    each_valued_constant(mod) do |const_value, const_name|
+      write "#{const_name}: #{const_value.class} = #{const_value}"
+    end
+    show_includes(mod)
+
+    static_methods = gather_owned_methods(mod, static: true)
+    unless static_methods.empty?
+      indented 'class << self', 'end' do
+        static_methods.each do |method_name, method|
+          show_method(method, method_name, mod, static: true)
+        end
+      end
+    end
+
+    gather_owned_methods(mod, static: false).each do |method_name, method|
+      show_method(method, method_name, mod, static: false)
+    end
+
+    each_submodule(mod) do |const_value, const_name|
+      show_module(const_name, const_value)
+    end
+  end
+end
+
+show_module('RuBLE', RuBLE)
