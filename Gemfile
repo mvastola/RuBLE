@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '3.3.0'
+ruby '3.2.2'
 gemspec development_group: :build
 
 gem 'bundler', '~> 2.5.6'

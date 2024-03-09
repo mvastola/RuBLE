@@ -10,7 +10,6 @@ require_relative '../lib/ruble'
 RuBLE.loader.eager_load
 
 @indent_level = 0
-@modules_visited ||= Set.new
 
 def write(line = '', lines_before: 0, lines_after: 0)
   STDOUT.print("\n" * lines_before)
@@ -24,15 +23,6 @@ def indented(prefix = nil, suffix = nil, lines_before: 0, lines_after: 0, &block
   yield
   @indent_level -= 1
   write(suffix, lines_after:)
-end
-
-
-def show_submodules(name, value, mod_q)
-  if value.is_a?(Module)
-    mod_q << [name, value]
-  else
-    write "#{name}: #{value.class} = #{value}"
-  end
 end
 
 def each_constant(mod, **kwargs, &block)
@@ -57,11 +47,9 @@ def module_declaration(name, mod)
   is_class = mod.is_a?(Class)
   mod_kywd = is_class ? 'class' : 'module'
   has_subclass = is_class && mod.superclass != Object
-  subclass = " #{mod.superclass.name}" if has_subclass
+  subclass = " < #{mod.superclass.name}" if has_subclass
   "#{mod_kywd} #{name} #{subclass}".strip
 end
-
-def singleton_class(&block) = indented('class << self', 'end', &block)
 
 def show_method(method, method_name, mod, static:)
   method_name = "self.#{method_name}" if static
@@ -89,13 +77,8 @@ def show_module(name, mod)
     end
     show_includes(mod)
 
-    static_methods = gather_owned_methods(mod, static: true)
-    unless static_methods.empty?
-      indented 'class << self', 'end' do
-        static_methods.each do |method_name, method|
-          show_method(method, method_name, mod, static: true)
-        end
-      end
+    gather_owned_methods(mod, static: true).each do |method_name, method|
+      show_method(method, method_name, mod, static: true)
     end
 
     gather_owned_methods(mod, static: false).each do |method_name, method|
@@ -109,3 +92,4 @@ def show_module(name, mod)
 end
 
 show_module('RuBLE', RuBLE)
+

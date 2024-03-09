@@ -34,7 +34,7 @@ namespace RuBLE {
 
         define_class_under<std::shared_ptr<ServiceMap>>(rb_mRuBLE, "ServiceMap");
         rb_cPeripheral
-            .define_method("services", &Peripheral::services, Rice::Return().keepAlive())
+            .define_method("services", &Peripheral::services_rb)
             .define_method("[]", &Peripheral::operator[])
             .define_attr("service_registry", &Peripheral::_service_registry, Rice::AttrAccess::Read)
         ;

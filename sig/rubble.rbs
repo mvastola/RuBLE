@@ -1,4 +1,150 @@
 module RuBLE
   VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+
+  class Error < StandardError
+  end
+
+  class PeripheralRegistry
+    def to_s: () -> Integer
+    def size: () -> Integer
+  end
+
+  class ServiceRegistry
+    def to_s: () -> Integer
+    def size: () -> Integer
+  end
+
+  class CharacteristicRegistry
+    def to_s: () -> Integer
+    def size: () -> Integer
+  end
+
+  class BluetoothAddressType
+    include Enumerable
+    include Comparable
+    def to_s: () -> untyped
+    def to_i: () -> untyped
+    def <=>: () -> untyped
+    def eql?: () -> untyped
+    def hash: () -> untyped
+    def ===: () -> untyped
+    def inspect: () -> untyped
+  end
+
+  class Service
+    def []: () -> untyped
+    def characteristics: () -> untyped
+    def uuid: () -> untyped
+    def data: () -> untyped
+    def characteristic_registry: () -> untyped
+    def inspect: () -> untyped
+  end
+
+  class DescriptorMap
+    def []: () -> untyped
+    def descriptors: () -> untyped
+  end
+
+
+  class ByteArray
+    def !: () -> untyped
+    def %: () -> untyped
+    def &: () -> untyped
+    def <=>: () -> untyped
+    def data: () -> untyped
+    def get: () -> untyped
+    def inspect: () -> untyped
+    def to_s: () -> untyped
+    def to_i: () -> untyped
+    def |: () -> untyped
+    def ~: () -> untyped
+  end
+
+  class Descriptor
+    def write: () -> untyped
+    def read: () -> untyped
+    def uuid: () -> untyped
+    def inspect: () -> untyped
+  end
+
+  class Characteristic
+    def can_read?: () -> untyped
+    def uuid: () -> untyped
+    def can_write_command?: () -> untyped
+    def can_notify?: () -> untyped
+    def can_write_request?: () -> untyped
+    def capabilities: () -> untyped
+    def write_request: () -> untyped
+    def can_indicate?: () -> untyped
+    def set_on_notify: () -> untyped
+    def write_command: () -> untyped
+    def inspect: () -> untyped
+    def set_on_indicate: () -> untyped
+    def to_s: () -> untyped
+    def value_tracking?: () -> untyped
+    def value_tracking=: () -> untyped
+    def value_tracking: () -> untyped
+    def write: () -> untyped
+    def last_value: () -> untyped
+    def read: () -> untyped
+    class CapabilityType
+      include Enumerable
+      include Comparable
+      def to_s: () -> untyped
+      def to_i: () -> untyped
+      def <=>: () -> untyped
+      def eql?: () -> untyped
+      def hash: () -> untyped
+      def ===: () -> untyped
+      def inspect: () -> untyped
+    end
+
+  end
+
+  class Peripheral
+    def connectable?: () -> untyped
+    def paired?: () -> untyped
+    def unpair: () -> untyped
+    def services: () -> untyped
+    def service_registry: () -> untyped
+    def manufacturer_data: () -> untyped
+    def on_connect: () -> untyped
+    def on_disconnect: () -> untyped
+    def inspect: () -> untyped
+    def identifier: () -> untyped
+    def []: () -> untyped
+    def initialized?: () -> untyped
+    def address: () -> untyped
+    def address_type: () -> untyped
+    def rssi: () -> untyped
+    def tx_power: () -> untyped
+    def mtu: () -> untyped
+    def connect: () -> untyped
+    def disconnect: () -> untyped
+    def connected?: () -> untyped
+  end
+
+  class Adapter
+    def on_scan_update: () -> untyped
+    def peripheral_registry: () -> untyped
+    def identifier: () -> untyped
+    def scan_start: () -> untyped
+    def scan_stop: () -> untyped
+    def initialized?: () -> untyped
+    def address: () -> untyped
+    def scanning?: () -> untyped
+    def scan_for: () -> untyped
+    def get_paired_peripherals: () -> untyped
+    def scan_get_results: () -> untyped
+    def on_scan_stop: () -> untyped
+    def on_scan_start: () -> untyped
+    def on_scan_find: () -> untyped
+  end
+
+  class AdapterRegistry
+    def to_s: () -> untyped
+    def size: () -> untyped
+  end
+
 end
+

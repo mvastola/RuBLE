@@ -71,8 +71,9 @@ namespace RuBLE {
         void connect();
         void disconnect();
         void unpair();
-        [[nodiscard]] const std::shared_ptr<ServiceMap> &services() const;
-        [[nodiscard]] std::shared_ptr<ServiceMap> services_rb() const;
+        [[nodiscard]] std::shared_ptr<ServiceMap> &services() const;
+        [[nodiscard]] Rice::Object services_rb() const;
+
         std::shared_ptr<Service> operator[](const BluetoothUUID &svcUuid) const;
 
         [[nodiscard]] ByteArray read(BluetoothUUID const &service, BluetoothUUID const &characteristic);

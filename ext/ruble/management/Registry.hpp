@@ -89,7 +89,7 @@ namespace RuBLE {
         const ProxyPtr &operator[](const Key &addr) const { return _registry->at(addr); }
         const ProxyPtr &at(const Key &addr) const { return _registry->at(addr); }
         ProxyPtr &at(const Key &addr) { return _registry->at(addr); }
-        const std::shared_ptr<Collection> &data() const { return _registry; }
+        std::shared_ptr<Collection> &data() const { return _registry; }
 
         ProxyPtr fetch(const Value &value) const {
             const std::lock_guard<std::mutex> lock(*_mtx); // needed to avoid race condition
